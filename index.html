@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bee's Grad Planner 🐝</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ─── Loading overlay ──────────────────────────────────────────────────── -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-box">
+    <div class="loading-bee">🐝</div>
+    <div class="loading-text">Loading your planner…</div>
+  </div>
+</div>
+
+<!-- ─── Header ──────────────────────────────────────────────────────────── -->
+<header class="app-header">
+  <div class="header-bee">
+    <div class="bee-logo">🐝</div>
+    <div class="header-text">
+      <div class="hello-text">Hello, Bee!</div>
+      <div class="subtext">GSU · Computer Science · Grad Planner</div>
+    </div>
+  </div>
+
+  <div class="header-progress">
+    <div class="prog-group">
+      <div class="prog-label">Required</div>
+      <div class="prog-track"><div class="prog-fill" id="reqBar"></div></div>
+      <div class="prog-val" id="reqBarLabel">0/32 cr</div>
+    </div>
+    <div class="prog-divider">·</div>
+    <div class="prog-group">
+      <div class="prog-label">Electives</div>
+      <div class="prog-track"><div class="prog-fill prog-fill--elec" id="elecBar"></div></div>
+      <div class="prog-val" id="elecBarLabel">0/12 cr</div>
+    </div>
+    <div class="prog-divider">·</div>
+    <div class="prog-group">
+      <div class="prog-label">To Graduate</div>
+      <div class="prog-track"><div class="prog-fill prog-fill--total" id="totalBar"></div></div>
+      <div class="prog-val" id="totalBarLabel">0/44 cr</div>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <div class="sync-indicator" id="syncIndicator">
+      <span class="sync-dot" id="syncDot"></span>
+      <span class="sync-text" id="syncText">Connecting…</span>
+    </div>
+    <button class="btn-ghost" id="resetBtn">↺ Reset</button>
+  </div>
+</header>
+
+<!-- ─── Grad Banner ──────────────────────────────────────────────────────── -->
+<div id="graduationBanner" class="hidden">
+  🎉✨ You've planned all 44 credits — you're ready to graduate, Bee! Check with your advisor to confirm. ✨🎉
+</div>
+
+<!-- ─── App Body ─────────────────────────────────────────────────────────── -->
+<div class="app-body">
+
+  <!-- ── Sidebar ────────────────────────────────────────────────────────── -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">Course Library</span>
+      <button class="collapse-btn" id="collapseBtn" title="Collapse">◀</button>
+    </div>
+    <div class="sidebar-body" id="sidebarContent">
+      <div class="lib-section-header" data-type="required">
+        <span class="lib-toggle-icon">▼</span>
+        <span class="lib-section-name">⭐ Required Courses</span>
+        <span class="lib-badge lib-badge--req" id="requiredBadge">32 cr</span>
+      </div>
+      <div class="course-list" id="requiredCourses"></div>
+
+      <div class="lib-section-header" data-type="elective" style="margin-top:12px">
+        <span class="lib-toggle-icon">▼</span>
+        <span class="lib-section-name">💜 Electives</span>
+        <span class="lib-badge lib-badge--elec" id="electiveBadge">need 12 cr</span>
+      </div>
+      <div class="course-list" id="electiveCourses"></div>
+    </div>
+  </aside>
+
+  <!-- ── Main Panel ─────────────────────────────────────────────────────── -->
+  <main class="main-panel">
+    <div class="planner-toolbar">
+      <div class="planner-title">
+        <span id="plannerTitleText">Semester Planner</span>
+        <span class="planner-hint" id="plannerHint">Drag courses from the library · max 18 credits · click any card for details</span>
+      </div>
+      <div class="view-toggle">
+        <button class="view-btn view-btn--active" id="btnPlanner">📋 Planner</button>
+        <button class="view-btn" id="btnCalendar">🗓 Calendar</button>
+      </div>
+    </div>
+
+    <!-- Planner View -->
+    <div class="planner-view" id="plannerView">
+      <div class="semesters-grid">
+        <div class="sem-col" id="col-fall2026">
+          <div class="sem-col-header sem-col-header--fall">
+            <div class="sem-col-title">🍂 Fall 2026</div>
+            <div class="sem-credit-bar-wrap">
+              <div class="sem-credit-bar"><div class="sem-credit-fill" id="bar-fall2026"></div></div>
+              <span class="sem-credit-label" id="label-fall2026">0 / 18 cr</span>
+            </div>
+          </div>
+          <div class="sem-drop-zone" id="zone-fall2026"></div>
+        </div>
+
+        <div class="sem-col" id="col-spring2027">
+          <div class="sem-col-header sem-col-header--spring">
+            <div class="sem-col-title">🌸 Spring 2027</div>
+            <div class="sem-credit-bar-wrap">
+              <div class="sem-credit-bar"><div class="sem-credit-fill" id="bar-spring2027"></div></div>
+              <span class="sem-credit-label" id="label-spring2027">0 / 18 cr</span>
+            </div>
+          </div>
+          <div class="sem-drop-zone" id="zone-spring2027"></div>
+        </div>
+
+        <div class="sem-col" id="col-summer2027">
+          <div class="sem-col-header sem-col-header--summer">
+            <div class="sem-col-title">☀️ Summer 2027</div>
+            <div class="sem-credit-bar-wrap">
+              <div class="sem-credit-bar"><div class="sem-credit-fill" id="bar-summer2027"></div></div>
+              <span class="sem-credit-label" id="label-summer2027">0 / 18 cr</span>
+            </div>
+          </div>
+          <div class="sem-drop-zone" id="zone-summer2027"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendar View -->
+    <div class="calendar-view hidden" id="calendarView">
+      <div class="cal-sem-tabs" id="calSemTabs"></div>
+      <div class="cal-wrap">
+        <div class="cal-header-row">
+          <div class="cal-gutter"></div>
+          <div class="cal-day-head">MON</div>
+          <div class="cal-day-head">TUE</div>
+          <div class="cal-day-head">WED</div>
+          <div class="cal-day-head">THU</div>
+          <div class="cal-day-head">FRI</div>
+        </div>
+        <div class="cal-body-wrap">
+          <div class="cal-time-gutter" id="calTimeGutter"></div>
+          <div class="cal-day-cols">
+            <div class="cal-day-grid" id="calDay-M"></div>
+            <div class="cal-day-grid" id="calDay-T"></div>
+            <div class="cal-day-grid" id="calDay-W"></div>
+            <div class="cal-day-grid" id="calDay-Th"></div>
+            <div class="cal-day-grid" id="calDay-F"></div>
+          </div>
+        </div>
+      </div>
+      <div class="cal-legend" id="calLegend"></div>
+    </div>
+  </main>
+</div>
+
+<!-- ─── Course Detail Modal ──────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal-box">
+    <button class="modal-x" id="modalClose">×</button>
+
+    <div class="modal-top">
+      <div class="modal-code" id="modalCode"></div>
+      <div class="modal-course-title" id="modalTitle"></div>
+      <div class="modal-meta-row">
+        <span class="modal-meta-pill" id="modalCredits"></span>
+        <span class="modal-meta-pill modal-meta-pill--type" id="modalType"></span>
+      </div>
+    </div>
+
+    <div class="modal-scroll">
+
+      <!-- Quick add -->
+      <div class="modal-section">
+        <div class="modal-section-label">📅 Add to Semester</div>
+        <div class="quick-add-row" id="quickAdd"></div>
+      </div>
+
+      <!-- Description -->
+      <div class="modal-section">
+        <div class="modal-section-label">📖 About</div>
+        <p class="modal-desc" id="modalDescription"></p>
+        <div class="modal-prereq-row">
+          <span class="prereq-label">Prerequisites:</span>
+          <span class="prereq-val" id="modalPrereqs"></span>
+        </div>
+      </div>
+
+      <!-- Schedule blocks editor -->
+      <div class="modal-section" id="blockEditorSection">
+        <div class="modal-section-label">
+          🗓 Schedule Blocks
+          <span class="block-editor-hint" id="blockEditorHint"></span>
+        </div>
+        <div class="blocks-list" id="blocksList"></div>
+        <button class="add-block-btn" id="addBlockBtn">＋ Add Meeting Block</button>
+        <div class="block-save-row hidden" id="blockSaveRow">
+          <button class="save-blocks-btn" id="saveBlocksBtn">💾 Save Schedule</button>
+          <span class="save-status" id="saveStatus"></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ─── Toast ─────────────────────────────────────────────────────────────── -->
+<div id="toastContainer"></div>
+
+<!-- ─── Firebase (compat SDK) ────────────────────────────────────────────── -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<script src="js/data.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
