@@ -828,3 +828,78 @@ a { color: inherit; }
   .semesters-grid { grid-template-columns: 1fr; overflow-y: auto; }
   .header-progress { display: none; }
 }
+
+/* ─── Completed course card (sidebar library) ────────────────────────────── */
+.lib-card--completed {
+  opacity: .8;
+  cursor: default;
+  background: var(--green-100) !important;
+  border-color: #86efac !important;
+}
+.lib-card--completed:hover { transform: none !important; box-shadow: none !important; }
+.lib-card--completed .lib-card-code { color: var(--green-600) !important; }
+
+.lib-card-done {
+  font-size: .62rem; font-weight: 800;
+  color: var(--green-600);
+  background: #fff; padding: 1px 8px; border-radius: 99px;
+  border: 1.5px solid #86efac;
+}
+
+/* Lock icon for courses with unscheduled prereqs */
+.lib-card-lock {
+  font-size: .75rem; cursor: help; flex-shrink: 0;
+  opacity: .65; transition: opacity var(--trans);
+}
+.lib-card-lock:hover { opacity: 1; }
+
+/* ─── Prereq warning strip (semester card — full-width banner) ───────────── */
+.sem-card--prereq-warn {
+  border-left-color: #F59E0B !important;
+}
+
+.prereq-warn-strip {
+  display: flex; align-items: flex-start; gap: 5px;
+  font-size: .7rem; font-weight: 800;
+  color: #78350F;
+  background: linear-gradient(135deg, #FEF3C7, #FFFBEB);
+  border: 1.5px solid #FCD34D;
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+  margin-top: 4px;
+  line-height: 1.4;
+  box-shadow: 0 1px 4px rgba(245,158,11,.15);
+}
+
+/* ─── Prereq chain (modal prerequisites section) ─────────────────────────── */
+.prereq-chain {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  padding-top: 1px;
+}
+
+.prereq-chip {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: .72rem; font-weight: 700; padding: 3px 10px;
+  border-radius: 99px; border: 1.5px solid transparent;
+  white-space: nowrap;
+}
+.prereq-chip--done    { background: var(--green-100);  color: var(--green-600);  border-color: #86efac; }
+.prereq-chip--placed  { background: var(--honey-100);  color: var(--honey-600);  border-color: var(--honey-300); }
+.prereq-chip--missing { background: #FEF3C7;            color: #92400E;           border-color: #FDE68A; }
+
+.prereq-or-group { display: inline-flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.prereq-or-sep {
+  font-size: .65rem; font-weight: 700; color: var(--muted);
+  padding: 0 1px; text-transform: uppercase; letter-spacing: .4px;
+}
+
+/* ─── Quick-add warn button (prereq order issue for that semester) ────────── */
+.qa-btn--warn {
+  border-color: #FDE68A !important; color: #92400E; background: #FFFBEB;
+}
+.qa-btn--warn:hover:not([disabled]) {
+  background: #FEF3C7 !important; border-color: #F59E0B !important; color: #78350F;
+}
+
+/* Ensure modal-prereq-row aligns to top when chip wraps */
+.modal-prereq-row { align-items: flex-start !important; }

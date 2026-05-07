@@ -19,6 +19,77 @@ function asText(v) { return typeof v === 'string' ? v.trim() : ''; }
 function emptySchedule() { return { fall2026:[], spring2027:[], summer2027:[] }; }
 function isValidSemId(id) { return SEMESTERS.some(s=>s.id===id); }
 
+/* ─── Prerequisite helpers ────────────────────────────────────────────────── */
+
+// Index of a semester (0 = Fall 2026, 1 = Spring 2027, 2 = Summer 2027)
+function semIndex(semId) { return SEMESTERS.findIndex(s=>s.id===semId); }
+
+// True if prereqId is satisfied before targetSemId
+// (either in COMPLETED_COURSES or scheduled in a strictly earlier semester)
+function isPrereqSatisfied(prereqId, targetSemId) {
+  if(COMPLETED_COURSES.has(prereqId)) return true;
+  const limit = semIndex(targetSemId);
+  for(let i=0; i<limit; i++) {
+    if(state.schedule[SEMESTERS[i].id].some(e=>e.courseId===prereqId)) return true;
+  }
+  return false;
+}
+
+// True if a prereq condition (string or OR-array) is satisfied for targetSemId
+function conditionSatisfied(cond, targetSemId) {
+  if(Array.isArray(cond)) return cond.some(id=>isPrereqSatisfied(id, targetSemId));
+  return isPrereqSatisfied(cond, targetSemId);
+}
+
+// All unmet conditions for placing courseId in targetSemId
+function getUnmetPrereqs(courseId, targetSemId) {
+  return (PREREQS[courseId]||[]).filter(cond=>!conditionSatisfied(cond, targetSemId));
+}
+
+// Unmet conditions globally (prereq not scheduled anywhere in the plan)
+function getUnmetPrereqsGlobal(courseId) {
+  return (PREREQS[courseId]||[]).filter(cond=>{
+    if(Array.isArray(cond)) return !cond.some(id=>COMPLETED_COURSES.has(id)||scheduledAnywhere(id));
+    return !COMPLETED_COURSES.has(cond) && !scheduledAnywhere(cond);
+  });
+}
+
+function scheduledAnywhere(courseId) {
+  return SEMESTERS.some(s=>state.schedule[s.id].some(e=>e.courseId===courseId));
+}
+
+// Human-readable label for a prereq condition
+function prereqCondLabel(cond) {
+  if(Array.isArray(cond)) return cond.map(id=>{ const c=findCourse(id); return c?`${c.subject} ${c.number}`:id; }).join(' or ');
+  const c=findCourse(cond); return c?`${c.subject} ${c.number}`:cond;
+}
+
+// Status object for a single prereq ID: where is it in the plan?
+function prereqLocation(prereqId) {
+  if(COMPLETED_COURSES.has(prereqId)) return { cls:'prereq-chip--done', icon:'✓', detail:' · completed' };
+  const sid=scheduledIn(prereqId);
+  if(sid) {
+    const sem=SEMESTERS.find(s=>s.id===sid);
+    return { cls:'prereq-chip--placed', icon:'📅', detail:` · ${sem.shortLabel}` };
+  }
+  return { cls:'prereq-chip--missing', icon:'⚠', detail:' · not scheduled' };
+}
+
+// Build HTML for a single prereq condition (string or OR-array)
+function prereqCondHtml(cond) {
+  if(Array.isArray(cond)) {
+    const items=cond.map(id=>{
+      const c=findCourse(id); const label=c?`${c.subject} ${c.number}`:id;
+      const loc=prereqLocation(id);
+      return `<span class="prereq-chip ${loc.cls}">${loc.icon} ${label}${loc.detail}</span>`;
+    });
+    return `<span class="prereq-or-group">${items.join('<span class="prereq-or-sep">or</span>')}</span>`;
+  }
+  const c=findCourse(cond); const label=c?`${c.subject} ${c.number}`:cond;
+  const loc=prereqLocation(cond);
+  return `<span class="prereq-chip ${loc.cls}">${loc.icon} ${label}${loc.detail}</span>`;
+}
+
 function normalizeBlock(block, fallbackId) {
   const rawType = typeof block?.type === 'string' ? block.type : 'Lecture';
   const type = BLOCK_TYPES.includes(rawType) ? rawType : 'Other';
@@ -223,6 +294,12 @@ function addCourse(courseId, semId) {
     toast(`⚠️ Adding ${course.credits} credits would exceed the 18-credit limit for ${sem.label}.`,'warn');
     return false;
   }
+  // Prerequisite order check — warn but still allow the placement
+  const unmet=getUnmetPrereqs(courseId, semId);
+  if(unmet.length) {
+    const labels=unmet.map(prereqCondLabel).join(' and ');
+    toast(`⚠️ ${course.subject} ${course.number} needs ${labels} in an earlier semester.`,'warn');
+  }
   let carriedBlocks = [];
   for(const s of SEMESTERS) {
     const existing = state.schedule[s.id].find(e=>e.courseId===courseId);
@@ -259,8 +336,12 @@ function makeBlock(overrides={}) {
 /* ─── Progress / header ──────────────────────────────────────────────────── */
 function calcProgress() {
   const all=Object.values(state.schedule).flat();
+  const scheduledIds=new Set(all.map(e=>e.courseId));
   let req=0,elec=0;
   all.forEach(({courseId})=>{ const c=findCourse(courseId); if(!c) return; if(isRequired(courseId)) req+=c.credits; else elec+=c.credits; });
+  // Also count completed catalog courses that aren't already placed in a semester
+  COURSES.required.forEach(c=>{ if(COMPLETED_COURSES.has(c.id)&&!scheduledIds.has(c.id)) req+=c.credits; });
+  COURSES.elective.forEach(c=>{ if(COMPLETED_COURSES.has(c.id)&&!scheduledIds.has(c.id)) elec+=c.credits; });
   return {req,elec,total:req+elec};
 }
 
@@ -314,29 +395,39 @@ function renderLibSection(type,courses) {
   list.innerHTML='';
   courses.forEach(c=>list.appendChild(makeLibCard(c)));
   const placed=courses.filter(c=>scheduledIn(c.id));
-  const placedCr=placed.reduce((s,c)=>s+c.credits,0);
+  const completed=courses.filter(c=>COMPLETED_COURSES.has(c.id)&&!scheduledIn(c.id));
+  const doneCr=placed.reduce((s,c)=>s+c.credits,0)+completed.reduce((s,c)=>s+c.credits,0);
+  const doneCount=placed.length+completed.length;
   const totalCr=courses.reduce((s,c)=>s+c.credits,0);
   const el=document.getElementById(`${type}Badge`);
-  if(el) el.textContent=`${placedCr}/${totalCr} cr · ${placed.length}/${courses.length}`;
+  if(el) el.textContent=`${doneCr}/${totalCr} cr · ${doneCount}/${courses.length}`;
 }
 
 function makeLibCard(course) {
   const inSem=scheduledIn(course.id);
   const req=isRequired(course.id);
+  const done=COMPLETED_COURSES.has(course.id);
   const card=document.createElement('div');
-  card.className=`lib-card lib-card--${req?'req':'elec'}${inSem?' lib-card--placed':''}`;
+  card.className=`lib-card lib-card--${req?'req':'elec'}${inSem?' lib-card--placed':''}${done?' lib-card--completed':''}`;
   card.dataset.courseId=course.id;
-  card.draggable=!inSem;
-  const semLabel=inSem ? SEMESTERS.find(s=>s.id===inSem)?.shortLabel||'' : '';
+  card.draggable=!inSem&&!done;
+  const semLabel=inSem?SEMESTERS.find(s=>s.id===inSem)?.shortLabel||'':'';
+  const unmetGlobal=done?[]:getUnmetPrereqsGlobal(course.id);
+  let footerRight;
+  if(done)        footerRight=`<span class="lib-card-done">✓ Done</span>`;
+  else if(inSem)  footerRight=`<span class="lib-card-placed">📅 ${semLabel}</span>`;
+  else            footerRight=`<span class="lib-card-hint">drag to add</span>`;
+  const lockHtml=(!done&&unmetGlobal.length)?`<span class="lib-card-lock" title="Needs first: ${unmetGlobal.map(prereqCondLabel).join(', ')}">🔒</span>`:'';
   card.innerHTML=`
     <div class="lib-card-code">${course.subject} ${course.number}</div>
     <div class="lib-card-title">${course.title}</div>
     <div class="lib-card-footer">
       <span class="lib-card-cr">${course.credits} cr</span>
-      ${inSem?`<span class="lib-card-placed">📅 ${semLabel}</span>`:`<span class="lib-card-hint">drag to add</span>`}
+      ${footerRight}
+      ${lockHtml}
     </div>`;
   card.addEventListener('click',()=>openModal(course.id,inSem||null));
-  if(!inSem) {
+  if(!inSem&&!done) {
     card.addEventListener('dragstart',e=>{
       state.drag={courseId:course.id,fromSemester:null};
       e.dataTransfer.effectAllowed='move';
@@ -365,25 +456,31 @@ function renderSemCol(sem) {
   const entries=state.schedule[sem.id];
   if(!entries.length){ zone.innerHTML=`<div class="drop-hint"><div class="drop-icon">🐝</div>Drop courses here</div>`; return; }
   const conflicts=detectConflicts(sem.id);
-  entries.forEach(e=>{ const c=findCourse(e.courseId); if(c) zone.appendChild(makeSemCard(c,sem.id,e.blocks||[],conflicts.has(e.courseId))); });
+  entries.forEach(e=>{
+    const c=findCourse(e.courseId);
+    if(c) zone.appendChild(makeSemCard(c,sem.id,e.blocks||[],conflicts.has(e.courseId),getUnmetPrereqs(e.courseId,sem.id)));
+  });
 }
 
-function makeSemCard(course,semId,blocks,hasConflict) {
+function makeSemCard(course,semId,blocks,hasConflict,unmetPrereqs) {
   const req=isRequired(course.id);
   const card=document.createElement('div');
-  card.className=`sem-card sem-card--${req?'req':'elec'}`;
+  card.className=`sem-card sem-card--${req?'req':'elec'}${unmetPrereqs?.length?' sem-card--prereq-warn':''}`;
   card.draggable=true;
   card.dataset.courseId=course.id;
 
   // First block for display
   const first=blocks.find(b=>b.days?.length&&b.startTime);
   const moreBlocks=blocks.filter(b=>b.days?.length&&b.startTime).length>1;
+  const prereqLabels=unmetPrereqs?.map(prereqCondLabel)||[];
 
   card.innerHTML=`
     ${hasConflict?'<div class="conflict-badge">⚠️ conflict</div>':''}
     <div class="sem-card-body">
       <div class="sem-card-code">${course.subject} ${course.number}</div>
       <div class="sem-card-title">${course.title}</div>
+      ${prereqLabels.length?`<div class="prereq-warn-strip">⚠ Take first: ${prereqLabels.join(' · ')}</div>`:''}
+
       ${first?`<div class="sem-block-summary">
         ${first.type!=='Lecture'?`<span style="font-size:.6rem;font-weight:800;color:var(--muted)">${first.type}</span>`:''}
         <span class="sem-block-time">${fmtDays(first.days)} · ${fmtTime(first.startTime)}–${fmtTime(first.endTime)}</span>
@@ -687,7 +784,17 @@ function openModal(courseId, semId) {
   document.getElementById('modalCredits').textContent=`${course.credits} credit hours`;
   document.getElementById('modalType').textContent=course.type;
   document.getElementById('modalDescription').textContent=course.description;
-  document.getElementById('modalPrereqs').textContent=course.prerequisites||'None listed';
+
+  // Prerequisite chain — rich status display
+  const conditions=PREREQS[courseId]||[];
+  const prereqEl=document.getElementById('modalPrereqs');
+  if(COMPLETED_COURSES.has(courseId)) {
+    prereqEl.innerHTML='<span class="prereq-chip prereq-chip--done">✓ Already completed before Fall 2026</span>';
+  } else if(!conditions.length) {
+    prereqEl.innerHTML='<span class="prereq-chip prereq-chip--done">✓ No planning prerequisites — ready to schedule</span>';
+  } else {
+    prereqEl.innerHTML=conditions.map(prereqCondHtml).join('');
+  }
 
   renderQuickAdd(courseId);
   renderBlockEditor(courseId,semId);
@@ -701,8 +808,10 @@ function renderQuickAdd(courseId) {
   row.innerHTML=SEMESTERS.map(sem=>{
     const inThis=state.schedule[sem.id].some(e=>e.courseId===courseId);
     const over=!inThis&&semesterCredits(sem.id)+(c?.credits||0)>sem.maxCredits;
-    return `<button class="qa-btn${inThis?' qa-btn--active':''}" data-sem="${sem.id}" ${over?'disabled title="Would exceed 18 credits"':''}>
-      ${inThis?`✓ ${sem.label}`:`+ ${sem.label}`}</button>`;
+    const unmetHere=(!inThis&&!over)?getUnmetPrereqs(courseId,sem.id):[];
+    const hasWarn=unmetHere.length>0;
+    const tipText=over?'Would exceed 18 credits':hasWarn?`Needs in earlier semester: ${unmetHere.map(prereqCondLabel).join(', ')}`:null;
+    return `<button class="qa-btn${inThis?' qa-btn--active':''}${hasWarn?' qa-btn--warn':''}" data-sem="${sem.id}" ${over?'disabled':''} ${tipText?`title="${tipText}"`:''}>${inThis?`✓ ${sem.label}`:hasWarn?`⚠ ${sem.label}`:`+ ${sem.label}`}</button>`;
   }).join('');
   row.querySelectorAll('.qa-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
