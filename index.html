@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bee's Grad Planner 🐝</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ─── Loading overlay ──────────────────────────────────────────────────── -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-box">
+    <div class="loading-bee">🐝</div>
+    <div class="loading-text">Loading your planner…</div>
+  </div>
+</div>
+
+<!-- ─── Header ──────────────────────────────────────────────────────────── -->
+<header class="app-header">
+  <div class="header-bee">
+    <div class="bee-logo">🐝</div>
+    <div class="header-text">
+      <div class="hello-text">Hello, Bee!</div>
+      <div class="subtext">GSU · Computer Science · Grad Planner</div>
+    </div>
+  </div>
+
+  <!-- One meter per Degree Works block, plus total credits (built by app.js) -->
+  <div class="header-progress" id="headerProgress"></div>
+
+  <div class="header-actions">
+    <div class="sync-indicator" id="syncIndicator">
+      <span class="sync-dot" id="syncDot"></span>
+      <span class="sync-text" id="syncText">Connecting…</span>
+    </div>
+    <div class="header-buttons">
+      <button class="btn-ghost" id="recordBtn" title="Academic record: past terms, grades, import">📚 <span class="btn-label">Record</span></button>
+      <button class="btn-ghost" id="resetBtn" title="Clear the planned semesters (the record is kept)">↺ <span class="btn-label">Reset</span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ─── Grad Banner ──────────────────────────────────────────────────────── -->
+<div id="graduationBanner" class="hidden"></div>
+
+<!-- ─── App Body ─────────────────────────────────────────────────────────── -->
+<div class="app-body">
+
+  <!-- ── Sidebar ────────────────────────────────────────────────────────── -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">Degree Audit &amp; Courses</span>
+      <button class="collapse-btn" id="collapseBtn" title="Collapse">◀</button>
+    </div>
+    <div class="sidebar-body" id="sidebarContent">
+      <div class="lib-section-header" data-type="audit">
+        <span class="lib-toggle-icon">▼</span>
+        <span class="lib-section-name">📋 Degree Audit</span>
+        <span class="lib-badge lib-badge--audit" id="auditBadge"></span>
+      </div>
+      <div class="course-list" id="auditCourses"></div>
+
+      <div class="lib-section-header" data-type="core" style="margin-top:12px">
+        <span class="lib-toggle-icon">▼</span>
+        <span class="lib-section-name">🎓 IMPACTS Core &amp; Field of Study</span>
+        <span class="lib-badge lib-badge--req" id="coreBadge"></span>
+      </div>
+      <div class="course-list" id="coreCourses"></div>
+
+      <div class="lib-section-header" data-type="major" style="margin-top:12px">
+        <span class="lib-toggle-icon">▼</span>
+        <span class="lib-section-name">⭐ Major — required courses</span>
+        <span class="lib-badge lib-badge--req" id="majorBadge"></span>
+      </div>
+      <div class="course-list" id="majorCourses"></div>
+
+      <div class="lib-section-header" data-type="elective" style="margin-top:12px">
+        <span class="lib-toggle-icon">▼</span>
+        <span class="lib-section-name">💜 Major — CSC electives</span>
+        <span class="lib-badge lib-badge--elec" id="electiveBadge"></span>
+      </div>
+      <div class="course-list" id="electiveCourses"></div>
+
+      <div class="lib-section-header" data-type="rpe" style="margin-top:12px">
+        <span class="lib-toggle-icon">▼</span>
+        <span class="lib-section-name">🧩 Required Program Electives – CSC</span>
+        <span class="lib-badge lib-badge--elec" id="rpeBadge"></span>
+      </div>
+      <div class="course-list" id="rpeCourses"></div>
+    </div>
+  </aside>
+
+  <!-- ── Main Panel ─────────────────────────────────────────────────────── -->
+  <main class="main-panel">
+    <div class="planner-toolbar">
+      <div class="planner-title">
+        <span id="plannerTitleText">Academic Timeline</span>
+        <span class="planner-hint" id="plannerHint">Past terms are locked · drag courses into upcoming terms · max 18 credits</span>
+      </div>
+      <div class="toolbar-right">
+        <div class="path-switch" id="pathSwitch"></div>
+        <button type="button" class="view-btn view-btn--small hidden" id="historyToggle">📚 Expand all past terms</button>
+        <div class="view-toggle">
+          <button class="view-btn view-btn--active" id="btnPlanner">📋 Planner</button>
+          <button class="view-btn" id="btnCalendar">🗓 Calendar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Planner View: past terms (locked) then upcoming terms (built by board.js) -->
+    <div class="planner-view" id="plannerView">
+      <div class="semesters-grid" id="semestersGrid"></div>
+    </div>
+
+    <!-- Calendar View -->
+    <div class="calendar-view hidden" id="calendarView">
+      <div class="cal-sem-tabs" id="calSemTabs"></div>
+      <div class="cal-wrap">
+        <div class="cal-header-row">
+          <div class="cal-gutter"></div>
+          <div class="cal-day-head">MON</div>
+          <div class="cal-day-head">TUE</div>
+          <div class="cal-day-head">WED</div>
+          <div class="cal-day-head">THU</div>
+          <div class="cal-day-head">FRI</div>
+        </div>
+        <div class="cal-body-wrap">
+          <div class="cal-time-gutter" id="calTimeGutter"></div>
+          <div class="cal-day-cols">
+            <div class="cal-day-grid" id="calDay-M"></div>
+            <div class="cal-day-grid" id="calDay-T"></div>
+            <div class="cal-day-grid" id="calDay-W"></div>
+            <div class="cal-day-grid" id="calDay-Th"></div>
+            <div class="cal-day-grid" id="calDay-F"></div>
+          </div>
+        </div>
+      </div>
+      <div class="cal-legend" id="calLegend"></div>
+    </div>
+  </main>
+</div>
+
+<!-- ─── Course Detail Modal ──────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal-box">
+    <button class="modal-x" id="modalClose">×</button>
+
+    <div class="modal-top">
+      <div class="modal-code" id="modalCode"></div>
+      <div class="modal-course-title" id="modalTitle"></div>
+      <div class="modal-meta-row">
+        <span class="modal-meta-pill" id="modalCredits"></span>
+        <span class="modal-meta-pill modal-meta-pill--type" id="modalType"></span>
+        <span class="modal-meta-pill modal-meta-pill--role" id="modalRole"></span>
+      </div>
+    </div>
+
+    <div class="modal-scroll">
+
+      <!-- Earlier attempts on the record -->
+      <div class="modal-section hidden" id="historySection">
+        <div class="modal-section-label">📜 On the record</div>
+        <div class="attempt-list" id="modalAttempts"></div>
+      </div>
+
+      <!-- Quick add -->
+      <div class="modal-section" id="quickAddSection">
+        <div class="modal-section-label">📅 Add to Semester</div>
+        <div class="quick-add-row" id="quickAdd"></div>
+      </div>
+
+      <!-- Description -->
+      <div class="modal-section">
+        <div class="modal-section-label">📖 About</div>
+        <p class="modal-desc" id="modalDescription"></p>
+        <div class="modal-prereq-row">
+          <span class="prereq-label">Prerequisites:</span>
+          <div class="prereq-chain" id="modalPrereqs"></div>
+        </div>
+        <p class="modal-prereq-text" id="modalPrereqText"></p>
+        <div class="modal-note hidden" id="modalNote"></div>
+        <div class="modal-approval hidden" id="modalApproval"></div>
+      </div>
+
+      <!-- Offering history -->
+      <div class="modal-section" id="offerSection">
+        <div class="modal-section-label">📆 When GSU offered it</div>
+        <div class="offer-grid" id="modalOffered"></div>
+      </div>
+
+      <!-- Schedule blocks editor -->
+      <div class="modal-section" id="blockEditorSection">
+        <div class="modal-section-label">
+          🗓 Schedule Blocks
+          <span class="block-editor-hint" id="blockEditorHint"></span>
+        </div>
+        <div class="blocks-list" id="blocksList"></div>
+        <button class="add-block-btn" id="addBlockBtn">＋ Add Meeting Block</button>
+        <div class="block-save-row hidden" id="blockSaveRow">
+          <button class="save-blocks-btn" id="saveBlocksBtn">💾 Save Schedule</button>
+          <span class="save-status" id="saveStatus"></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ─── Academic Record Editor ───────────────────────────────────────────── -->
+<div class="modal-backdrop" id="recordBackdrop">
+  <div class="modal-box record-modal-box">
+    <button class="modal-x" id="recordClose">×</button>
+
+    <div class="modal-top">
+      <div class="modal-code modal-code--done">📚 Academic record</div>
+      <div class="modal-course-title">Past terms, grades and credits</div>
+      <div class="modal-meta-row">
+        <span class="modal-meta-pill" id="recordSummary"></span>
+        <span class="modal-meta-pill modal-meta-pill--type">Stored only in Firebase — never in the site's code</span>
+      </div>
+    </div>
+
+    <div class="modal-scroll">
+      <div class="modal-section">
+        <div class="record-actions">
+          <button type="button" class="add-block-btn" id="recordAddBtn">＋ Add a course to a past term</button>
+          <button type="button" class="editor-btn" id="recordImportBtn">📥 Import file</button>
+          <button type="button" class="editor-btn" id="recordExportBtn">📤 Download backup</button>
+          <input type="file" id="recordImportFile" accept=".json,application/json" hidden>
+        </div>
+        <div class="import-preview hidden" id="recordImportPreview"></div>
+
+        <form class="editor-form hidden" id="recordForm" autocomplete="off">
+          <div class="modal-section-label" id="recordFormTitle">Add a course</div>
+          <div class="editor-grid">
+            <label class="editor-field">Term<select id="recTerm"></select></label>
+            <label class="editor-field">Course code<input type="text" id="recCode" maxlength="16" placeholder="e.g. MATH 2641" required></label>
+            <label class="editor-field editor-field--wide">Title<input type="text" id="recTitle" maxlength="80" placeholder="e.g. Linear Algebra I"></label>
+            <label class="editor-field">Credits<input type="number" id="recCredits" min="0" max="20" step="0.01" placeholder="3" required></label>
+            <label class="editor-field">Grade<select id="recGrade"></select></label>
+            <label class="editor-field editor-field--wide">Status<select id="recStatus"></select></label>
+            <label class="editor-field editor-field--wide">Counts toward<select id="recLine"></select></label>
+            <label class="editor-check"><input type="checkbox" id="recGpa"> Counts in GPA</label>
+            <label class="editor-check"><input type="checkbox" id="recTransfer"> Transfer course</label>
+            <label class="editor-field editor-field--wide" id="recSchoolWrap">Transfer school<input type="text" id="recSchool" maxlength="60" placeholder="School name"></label>
+            <label class="editor-field editor-field--wide">Note<input type="text" id="recNote" maxlength="300" placeholder="Optional"></label>
+          </div>
+          <div class="editor-hint" id="recHint"></div>
+          <div class="block-save-row">
+            <button type="submit" class="save-blocks-btn">💾 Save</button>
+            <button type="button" class="editor-btn" id="recCancel">Cancel</button>
+            <button type="button" class="editor-btn editor-btn--danger hidden" id="recDelete">🗑 Delete</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-section">
+        <div class="record-legend" id="recordLegend"></div>
+        <div class="editor-list" id="recordList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Enter Final Grades ───────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="gradesBackdrop">
+  <div class="modal-box grades-modal-box">
+    <button class="modal-x" id="gradesClose">×</button>
+
+    <div class="modal-top">
+      <div class="modal-code modal-code--done">🎓 Finish a semester</div>
+      <div class="modal-course-title" id="gradesTitle">Enter final grades</div>
+      <div class="modal-meta-row">
+        <span class="modal-meta-pill" id="gradesSummary"></span>
+        <span class="modal-meta-pill modal-meta-pill--type">The term moves into the locked history</span>
+      </div>
+    </div>
+
+    <div class="modal-scroll">
+      <div class="modal-section">
+        <div class="grades-help">Pick each course's final grade. Choose “Not taken” for a course that was dropped without a W — it goes back to the library. CSC and MATH courses need a C or better to count.</div>
+        <div class="grades-list" id="gradesList"></div>
+        <button type="button" class="add-block-btn" id="gradesAddRow">＋ Add a course taken this term that isn't in the plan</button>
+      </div>
+      <div class="modal-section">
+        <div class="grades-result" id="gradesResult"></div>
+        <div class="block-save-row">
+          <button type="button" class="save-blocks-btn" id="gradesSubmit">🔒 Finish term</button>
+          <button type="button" class="editor-btn" id="gradesCancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Advisor Exceptions ───────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="exceptionBackdrop">
+  <div class="modal-box exception-modal-box">
+    <button class="modal-x" id="exceptionClose">×</button>
+
+    <div class="modal-top">
+      <div class="modal-code modal-code--exception">🖊 Advisor exceptions</div>
+      <div class="modal-course-title" id="exceptionTitle">Record an exception</div>
+      <div class="modal-meta-row">
+        <span class="modal-meta-pill">Record it once the advisor has entered it in Degree Works</span>
+      </div>
+    </div>
+
+    <div class="modal-scroll">
+      <form class="editor-form editor-form--exception" id="exceptionForm" autocomplete="off">
+        <div class="editor-grid">
+          <label class="editor-field editor-field--wide">Type
+            <select id="exType">
+              <option value="substitute">Substitution — a course satisfies this line</option>
+              <option value="waive">Credit waiver — fewer credits, or none, needed</option>
+            </select>
+          </label>
+          <label class="editor-field editor-field--wide">Requirement<select id="exTarget"></select></label>
+          <label class="editor-field" id="exCourseWrap">Course<input type="text" id="exCourse" maxlength="16" placeholder="e.g. CSC 4350" list="exCourseOptions"></label>
+          <label class="editor-field" id="exCreditsWrap">Credits waived<input type="number" id="exCredits" min="0.01" max="20" step="0.01" placeholder="0.67"></label>
+          <label class="editor-check" id="exWholeWrap"><input type="checkbox" id="exWhole"> Whole requirement (course not needed)</label>
+          <label class="editor-check editor-check--wide hidden" id="exPairWrap"><input type="checkbox" id="exPair" checked> <span id="exPairLabel"></span></label>
+          <label class="editor-field editor-field--wide editor-field--full">Note<input type="text" id="exNote" maxlength="200" placeholder="e.g. Entered by the advisor on 01/15/2027"></label>
+        </div>
+        <div class="editor-hint" id="exHint"></div>
+        <div class="block-save-row">
+          <button type="submit" class="save-blocks-btn">💾 Save exception</button>
+          <button type="button" class="editor-btn" id="exCancel">Close</button>
+          <button type="button" class="editor-btn editor-btn--danger hidden" id="exDelete">🗑 Remove</button>
+        </div>
+      </form>
+      <div class="modal-section">
+        <div class="modal-section-label">Recorded exceptions</div>
+        <div class="editor-list" id="exceptionList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<datalist id="exCourseOptions"></datalist>
+
+<!-- ─── Toast ─────────────────────────────────────────────────────────────── -->
+<div id="toastContainer"></div>
+
+<!-- ─── Firebase (compat SDK) ────────────────────────────────────────────── -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<script src="js/data.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/planner.js"></script>
+<script src="js/library.js"></script>
+<script src="js/board.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/modal.js"></script>
+<script src="js/record.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

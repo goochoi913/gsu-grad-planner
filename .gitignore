@@ -1,0 +1,7 @@
+# Personal academic records (degree evaluations, transcripts) — never publish:
+# this repository and its GitHub Pages site are public.
+*.pdf
+
+# Academic record files stay local — the app keeps the record only in Firebase
+*academic-record*.json
+private/
