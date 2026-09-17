@@ -103,6 +103,7 @@
       </div>
       <div class="toolbar-right">
         <div class="path-switch" id="pathSwitch"></div>
+        <button type="button" class="view-btn view-btn--small" id="gpaBtn">📈 GPA projection</button>
         <button type="button" class="view-btn view-btn--small hidden" id="historyToggle">📚 Expand all past terms</button>
         <div class="view-toggle">
           <button class="view-btn view-btn--active" id="btnPlanner">📋 Planner</button>
@@ -245,6 +246,7 @@
             <label class="editor-field editor-field--wide">Status<select id="recStatus"></select></label>
             <label class="editor-field editor-field--wide">Counts toward<select id="recLine"></select></label>
             <label class="editor-check"><input type="checkbox" id="recGpa"> Counts in GPA</label>
+            <label class="editor-check editor-check--wide hidden" id="recR2RWrap"><input type="checkbox" id="recR2R"> Replaced by Repeat to Replace (approved by the Registrar) — left out of the GPA</label>
             <label class="editor-check"><input type="checkbox" id="recTransfer"> Transfer course</label>
             <label class="editor-field editor-field--wide" id="recSchoolWrap">Transfer school<input type="text" id="recSchool" maxlength="60" placeholder="School name"></label>
             <label class="editor-field editor-field--wide">Note<input type="text" id="recNote" maxlength="300" placeholder="Optional"></label>
@@ -294,6 +296,24 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ─── GPA Projection ───────────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="gpaBackdrop">
+  <div class="modal-box gpa-modal-box">
+    <button class="modal-x" id="gpaClose">×</button>
+
+    <div class="modal-top">
+      <div class="modal-code modal-code--gpa">📈 GPA projection</div>
+      <div class="modal-course-title">What-if grades, term by term</div>
+      <div class="modal-meta-row">
+        <span class="modal-meta-pill" id="gpaNow"></span>
+        <span class="modal-meta-pill modal-meta-pill--type">Estimates from the grades you pick — GSU calculates the official GPA after grades post</span>
+      </div>
+    </div>
+
+    <div class="modal-scroll" id="gpaBody"></div>
   </div>
 </div>
 
@@ -357,6 +377,7 @@
 <script src="js/calendar.js"></script>
 <script src="js/modal.js"></script>
 <script src="js/record.js"></script>
+<script src="js/gpa.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

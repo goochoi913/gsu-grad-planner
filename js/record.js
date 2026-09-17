@@ -35,10 +35,10 @@ function initRecordEditor() {
     if(found && confirm(`Delete ${found.rec.code} (${found.term.label}) from the record?`)) { deleteRecordCourse(recEditingId); resetRecordForm(); }
   });
   byId('recordAddBtn').addEventListener('click',()=>{ if(!recordWritable()) return; resetRecordForm(); showRecordForm(true); byId('recCode').focus(); });
-  byId('recGrade').addEventListener('change',syncStatusFromGrade);
+  byId('recGrade').addEventListener('change',()=>{ syncStatusFromGrade(); syncR2RField(); });
   byId('recCode').addEventListener('input',syncFromCode);
   byId('recStatus').addEventListener('change',()=>{ recStatusTouched=true; syncLineField(); });
-  byId('recTransfer').addEventListener('change',()=>byId('recSchoolWrap').classList.toggle('hidden', !byId('recTransfer').checked));
+  byId('recTransfer').addEventListener('change',()=>{ byId('recSchoolWrap').classList.toggle('hidden', !byId('recTransfer').checked); syncR2RField(); });
   byId('recordExportBtn').addEventListener('click',exportRecord);
   byId('recordImportBtn').addEventListener('click',()=>{ if(recordWritable()) byId('recordImportFile').click(); });
   byId('recordImportFile').addEventListener('change',onImportFile);
@@ -121,7 +121,9 @@ function resetRecordForm() {
   byId('recLine').value='auto';
   byId('recGpa').checked=true;
   byId('recSchoolWrap').classList.add('hidden');
+  byId('recR2R').checked=false;
   syncLineField();
+  syncR2RField();
   showRecordForm(false);
   byId('recordList')?.querySelectorAll('.editor-item--editing').forEach(el=>el.classList.remove('editor-item--editing'));
 }
@@ -146,6 +148,8 @@ function startEditingRecord(id) {
   byId('recSchool').value=rec.school;
   byId('recNote').value=rec.note;
   byId('recSchoolWrap').classList.toggle('hidden', !rec.transfer);
+  byId('recR2R').checked=!!rec.r2r;
+  syncR2RField();
   byId('recDelete').classList.remove('hidden');
   byId('recHint').textContent=[rec.equiv?`Satisfied by: ${rec.equiv}.`:'', rec.note].filter(Boolean).join(' ');
   syncLineField();
@@ -155,6 +159,26 @@ function startEditingRecord(id) {
 }
 
 function syncLineField() { byId('recLine').disabled = byId('recStatus').value!=='counted'; }
+
+// Repeat to Replace can only remove a GSU grade that is part of the GPA.
+function syncR2RField() {
+  const ok=!byId('recTransfer').checked && hasGradePoints(byId('recGrade').value);
+  byId('recR2RWrap').classList.toggle('hidden', !ok);
+  if(!ok) byId('recR2R').checked=false;
+}
+
+// Warnings before saving an approved Repeat to Replace (catalog 1350.25).
+function r2rSaveWarnings(termId, code) {
+  const warn=[];
+  const others=state.record.terms.flatMap(t=>t.courses).filter(c=>c.r2r && c.id!==recEditingId).length;
+  if(others>=GPA_RULES.r2rMaxCourses) warn.push(`Repeat to Replace is limited to ${GPA_RULES.r2rMaxCourses} courses, and ${others} are already marked.`);
+  const id=codeToId(code), key=termIdKey(termId);
+  const attempts=state.record.terms.flatMap(t=>t.courses.filter(c=>c.id!==recEditingId && codeToId(c.code)===id).map(c=>({ c, key:t.key })));
+  if(attempts.some(a=>a.key<key)) warn.push('Only the first recorded grade in a course can be replaced, and this course has an earlier attempt.');
+  const grade=byId('recGrade').value;
+  if(!attempts.some(a=>a.key>key && !a.c.transfer && hasGradePoints(a.c.grade) && GRADE_POINTS[a.c.grade]>GRADE_POINTS[grade])) warn.push('The record has no later, higher GSU grade in this course.');
+  return warn;
+}
 
 // A new grade suggests the status (a D in a CSC or MATH course won't count) and GPA use.
 function syncStatusFromGrade() {
@@ -191,11 +215,16 @@ function submitRecordForm() {
   if(!termById(termId)) { toast('Pick the term the course was taken.','warn'); return; }
   if(!(credits>=0 && credits<=20)) { toast('Credits must be between 0 and 20.','warn'); return; }
   const status=byId('recStatus').value;
+  const r2r=!byId('recR2RWrap').classList.contains('hidden') && byId('recR2R').checked;
+  if(r2r) {
+    const warn=r2rSaveWarnings(termId, code);
+    if(warn.length && !confirm(`Mark this grade as replaced anyway?\n\n${warn.join('\n')}`)) return;
+  }
   const fields={
     code, title:byId('recTitle').value.trim()||code, credits:round2(credits), grade:byId('recGrade').value, status,
     line: status==='counted' ? byId('recLine').value : '', gpa:byId('recGpa').checked,
     transfer:byId('recTransfer').checked, school:byId('recTransfer').checked?byId('recSchool').value.trim():'', equiv:recEditingId?findRecordCourse(recEditingId)?.rec.equiv||'':'',
-    note:byId('recNote').value.trim(),
+    note:byId('recNote').value.trim(), r2r,
   };
   const dup=state.record.terms.find(t=>t.id===termId)?.courses.find(c=>c.id!==recEditingId && codeToId(c.code)===codeToId(code));
   if(dup && !confirm(`${termById(termId).label} already has ${dup.code}. Add it again?`)) return;
@@ -264,11 +293,10 @@ function openGradeEntry(semId) {
   if(!sem || sem.id!==SEMESTERS[0].id || !recordWritable()) return;
   gradesSemId=semId;
   gradeRows=[];
+  // Real grades only: expected grades from the GPA projection are never copied in.
   for(const e of state.schedule[semId]) {
     const c=findCourse(e.courseId);
-    const base=c.title.replace(/ \+ Lab$/,'');
-    if(c.parts.length) c.parts.forEach((p,i)=>gradeRows.push({ courseId:c.id, code:p.code, title:i?`${base} Lab`:base, credits:p.credits, grade:'' }));
-    else gradeRows.push({ courseId:c.id, code:c.code, title:c.title, credits:c.credits, grade:'' });
+    courseGradeParts(c).forEach(p=>gradeRows.push({ courseId:c.id, code:p.code, title:p.title, credits:p.credits, grade:'' }));
   }
   byId('gradesTitle').textContent=`Enter final grades — ${sem.label}`;
   byId('gradesSubmit').textContent=`🔒 Finish ${sem.label}`;
@@ -365,7 +393,7 @@ async function submitGrades() {
   byId('gradesResult').innerHTML=`
     <div class="grades-ok">🔒 ${escapeHtml(sem.label)} moved into the history: ${result.term.courses.filter(c=>c.status==='counted').length} counted, ${result.term.courses.filter(c=>c.status!=='counted').length} not counted.</div>
     ${result.blocked.length?`<div class="grades-warn">⚠ These planned courses are now missing a prerequisite:<ul>${result.blocked.map(b=>`<li><b>${escapeHtml(courseCode(b.courseId))}</b> (${escapeHtml(b.sem.label)}) needs ${escapeHtml(b.unmet.map(conditionLabel).join(' and '))}</li>`).join('')}</ul></div>`:''}
-    ${replace.length?`<div class="grades-note">↻ Ask the Registrar for Repeat to Replace on ${escapeHtml(replace.map(c=>c.code).join(' and '))}. Once approved, open 📚 Record and untick “Counts in GPA” on the earlier F.</div>`:''}`;
+    ${replace.length?`<div class="grades-note">↻ Repeat to Replace for ${escapeHtml(replace.map(c=>c.code).join(' and '))}: ${escapeHtml(R2R_HOW_TO)} Once it's approved, open 📚 Record and tick “Replaced by Repeat to Replace” on the earlier F.</div>`:''}`;
   byId('gradesSubmit').textContent='Done';
   byId('gradesSubmit').disabled=true;
   toast(`🔒 ${sem.label} is now part of the academic history.`,'success');

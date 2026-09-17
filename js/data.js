@@ -72,8 +72,47 @@ const SUBSTITUTIONS = [{"course": "CSC 4350", "line": "major.cap1", "complete": 
 
 /* ─── Grades (GSU catalog 1350) ──────────────────────────────────────────── */
 const GRADE_POINTS = {"A+": 4.3, "A": 4.0, "A-": 3.7, "B+": 3.3, "B": 3.0, "B-": 2.7, "C+": 2.3, "C": 2.0, "C-": 1.7, "D": 1.0, "F": 0.0, "WF": 0.0};
-const GRADE_OPTIONS = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F", "WF", "W", "I", "IP", "S", "U", "K"];
+const GRADE_OPTIONS = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F", "WF", "W", "WM", "I", "IP", "S", "U", "V", "K", "NR"];
 const MIN_GRADE_RULES = {"subjects": {"CSC": "C", "MATH": "C"}, "codes": {"ENGL 1101": "C", "ENGL 1102": "C"}, "fallback": "D"};
+
+/* ─── GPA rules ──────────────────────────────────────────────────────────────
+   Catalog 1350.20 and 1350.25 (same text in 2024–25 and 2026–27), catalog 1330.35
+   and 1360, and the Registrar's Grading and Repeat-to-Replace pages. planner.js applies them.
+   ────────────────────────────────────────────────────────────────────────── */
+const GPA_RULES = {
+  maxGradePoints: 4.3,        // A+ = 4.30
+  r2rMaxCourses: 4,           // "no more than a total of four course grades (from four different courses)"
+  r2rFirstTerm: 'fall2011',   // the repeat must be taken Fall 2011 or later
+};
+const GPA_SOURCES = [
+  { label: 'Catalog 1350 The Grading System (2026–27)', url: 'https://catalogs.gsu.edu/content.php?catoid=46&navoid=5905' },
+  { label: 'Catalog 1350 (2024–25 — same text)', url: 'https://catalogs.gsu.edu/content.php?catoid=38&navoid=4999' },
+  { label: 'Registrar: Repeat-to-Replace', url: 'https://registrar.gsu.edu/academic-records/grading/repeat-to-replace/' },
+  { label: 'Registrar: Grading', url: 'https://registrar.gsu.edu/academic-records/grading/' },
+  { label: 'Catalog 1330.35 Taking a Course More Than Once', url: 'https://catalogs.gsu.edu/content.php?catoid=46&navoid=5893' },
+  { label: 'Catalog 1360 Academic Support (standing)', url: 'https://catalogs.gsu.edu/content.php?catoid=46&navoid=5909' },
+];
+const GPA_RULE_SUMMARY = [
+  'Grade points: A+ 4.30 · A 4.00 · A− 3.70 · B+ 3.30 · B 3.00 · B− 2.70 · C+ 2.30 · C 2.00 · C− 1.70 · D 1.00 · F 0 · WF 0 (counts like F).',
+  'Never in a GPA: W, WM, I, IP, S, U, V, K (credit by exam) and NR, plus Learning Support (remedial) courses, CLEP, AP and IB credit.',
+  'GSU GPA = GSU quality points ÷ GSU hours attempted. GSU + transfer GPA adds transfer grades, weighted by the converted semester hours (3.33 for a 5-quarter-hour course).',
+  'Every attempt counts, including repeats — unless Repeat to Replace removes the first grade. The last attempt decides whether a course meets a degree requirement.',
+  'Repeat to Replace: retake the course at GSU and earn a higher grade; only the first recorded grade can be replaced; at most 4 courses; W, S and U can’t be replaced; an approval can’t be undone; every attempt stays on the transcript; the HOPE GPA doesn’t change.',
+  'GPAs are rounded to the hundredth (for example 3.456 → 3.46). Academic standing uses the GSU GPA and term GPA.',
+];
+// How to request Repeat to Replace (Registrar).
+const R2R_HOW_TO = 'Apply after the retake’s final grade is posted: submit the Registrar’s online Repeat-to-Replace Application (original course, term, grade, CRN and instructor, plus the retake’s). In the graduation semester, apply within the first two weeks — it is honored only if the higher grade is needed to graduate.';
+// What the official sources leave open.
+const GPA_OPEN_QUESTIONS = [
+  'Repeat to Replace is written for the institutional (GSU) GPA. The GSU + transfer GPA is the GSU GPA plus transfer grades, so the app removes the replaced grade from both — confirm with the Registrar.',
+  'The catalog’s grade table lists IP as 0.00, but the same section says IP is never used in a GPA. The app leaves IP out.',
+  'The catalog rounds GPAs to the hundredth but doesn’t show an exact .xx5 case; the app rounds it up. The Advisement GPA calculator truncates instead, and it is only an estimate.',
+  'A+ (4.30) counts at GSU, but not every instructor gives it — the “all A” numbers are the safer plan.',
+  'Transfer grades are converted by GSU. Converted points can differ slightly from the letter shown, so GSU + transfer estimates can be off by about 0.01.',
+  'Repeat to Replace doesn’t change the HOPE GPA or other state or federal GPA requirements (such as financial-aid progress).',
+  'Academic standing uses the GSU GPA, so an approved Repeat to Replace raises the GPA used for standing from then on. The policy doesn’t say whether earlier standing is recalculated.',
+  'Repeat to Replace also requires that the first grade wasn’t given for an academic honesty violation, that this is her first undergraduate degree at GSU, and that her college doesn’t bar repeating the course.',
+];
 
 /* ─── Course library ──────────────────────────────────────────────────────────
    section: library section · tag: sub-group · prereq: AND-list of course ids or [any-of] lists
@@ -167,5 +206,5 @@ const DEFAULT_PATH_ID = "three";
 // Earlier suggested paths — an untouched copy of one of these is upgraded automatically.
 const LEGACY_SUGGESTED_PLANS = [{"spring2027": ["CSC3350", "MATH3020", "CSC3320", "ECON2105"], "summer2027": ["MATH2641", "CSC3210"], "fall2027": ["CSC4351", "CSC4520", "PHYS2212", "CSC4710"], "spring2028": ["CSC4352", "CSC4320", "CSC4222", "CSC4850"], "summer2028": ["CSC4370", "ECON2106"]}, {"exam": ["ECON2105"], "spring2027": ["CSC3210", "CSC3320", "MATH3020", "CSC3350", "CSC4710"], "summer2027": ["CSC4520", "CSC4320", "CSC4350", "CSC4222"], "fall2027": ["PHYS2212", "CSC4370", "CSC4810", "MATH2641", "ECON2106"]}];
 
-const DEGREE_RULES = ["Earn a C or higher in every CSC and MATH course. Lower grades don’t count toward the degree, and GSU enforces prerequisites at registration.", "A prerequisite cannot be taken in the same term as the course that needs it.", "Up to 18 credit hours per term, summer included, without special permission (catalog 1330.30). More than 18 needs a petition and an earlier GSU term of 15+ hours with a 3.00 term GPA.", "Summer has no 15-week session. Most courses run 7 weeks (Summer 2027: June 7 – August 2), plus a 3-week May session (May 10 – June 4).", "Keep a 2.0 GPA. At most 12 hours of D grades can count toward the degree.", "Grade points: A+ 4.3 · A 4.0 · A− 3.7 · B+ 3.3 · B 3.0 · B− 2.7 · C+ 2.3 · C 2.0 · C− 1.7 · D 1.0 · F and WF 0. W, I, IP, S, U and K are not in the GPA (catalog 1350).", "Repeat to Replace: after retaking a course for a higher grade, you can ask the Registrar to leave the first grade out of the institutional GPA (catalog 1350.25)."];
+const DEGREE_RULES = ["Earn a C or higher in every CSC and MATH course. Lower grades don’t count toward the degree, and GSU enforces prerequisites at registration.", "A prerequisite cannot be taken in the same term as the course that needs it.", "Up to 18 credit hours per term, summer included, without special permission (catalog 1330.30). More than 18 needs a petition and an earlier GSU term of 15+ hours with a 3.00 term GPA.", "Summer has no 15-week session. Most courses run 7 weeks (Summer 2027: June 7 – August 2), plus a 3-week May session (May 10 – June 4).", "Keep a 2.0 GPA. At most 12 hours of D grades can count toward the degree.", "GPA: A+ 4.30 down to D 1.00; F and WF are 0. W, WM, I, IP, S, U, V, K and NR never count. GPAs round to the hundredth (catalog 1350.20).", "Repeat to Replace: retake the course at GSU for a higher grade, then apply to leave the first grade out of the GPA — at most 4 courses, and it can’t be undone (catalog 1350.25)."];
 const PLANNER_NOTES = ["Optional idea, not used in either path: a GSU-approved CLEP exam (for example Principles of Macroeconomics) could stand in for a 3-credit course later. Talk to your advisor before registering for one."];

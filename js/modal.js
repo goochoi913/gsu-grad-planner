@@ -112,6 +112,21 @@ function renderAttempts(courseId) {
       <span class="attempt-status">${escapeHtml(RECORD_STATUS[rec.status].short)}${rec.transfer?' · transfer':''}</span>
     </button>`).join('');
   box.querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>{ closeModal(); openRecordEditor({ recordId:b.dataset.id }); }));
+  // A planned retake: Repeat to Replace switch for the GPA projection (an estimate — nothing is requested here)
+  const retakes=(state.gpa?.candidates||[]).filter(c=>c.courseId===courseId);
+  retakes.forEach(c=>box.insertAdjacentHTML('beforeend',`
+    <div class="r2r-item r2r-item--${c.status}">
+      <label class="r2r-switch"><input type="checkbox" data-modal-r2r="${escapeHtml(c.codeId)}"${c.on?' checked':''}><span>↻ Repeat to Replace</span></label>
+      <div class="r2r-text">
+        <div>For the GPA projection: leave out the ${escapeHtml(c.first.rec.grade)} from ${escapeHtml(c.first.term.label)} after the ${escapeHtml(c.term.label)} retake${c.code!==findCourse(courseId)?.code?` (${escapeHtml(c.code)})`:''}.</div>
+        <div class="r2r-status">${R2R_STATUS_TEXT[c.status]}${c.note?` — ${escapeHtml(c.note)}`:''}</div>
+      </div>
+    </div>`));
+  if(retakes.length) {
+    box.insertAdjacentHTML('beforeend','<button type="button" class="editor-btn attempt-gpa-btn">📈 See the GPA effect</button>');
+    box.querySelector('.attempt-gpa-btn').addEventListener('click',()=>{ const t=retakes[0].term.id; closeModal(); openGpaPanel(t); });
+    box.querySelectorAll('[data-modal-r2r]').forEach(i=>i.addEventListener('change',()=>{ setRepeatToReplace(i.dataset.modalR2r, i.checked); renderAttempts(courseId); }));
+  }
 }
 
 function renderQuickAdd(courseId) {

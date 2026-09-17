@@ -2,8 +2,9 @@
    Bee's GSU Grad Planner — app.js
    State, Firebase sync (plan + academic record), plan / record / exception
    mutations, suggested paths, header progress, startup.
-   Degree logic: planner.js · Rendering: board.js (timeline), library.js (audit and
-   course library), calendar.js, modal.js, record.js (record, grades, exceptions)
+   Degree and GPA logic: planner.js · Rendering: board.js (timeline), library.js (audit
+   and course library), calendar.js, modal.js, record.js (record, grades, exceptions),
+   gpa.js (GPA projection)
    Plan state per upcoming term id: { courseId, blocks: Block[] }
    Block: { id, type, days[], startTime, endTime, location, instructor, crn }
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -39,6 +40,8 @@ const state = {
   modal: { courseId:null, semId:null, dirty:false },
   firebaseReady: false,
   audit: null,
+  projection: normalizeProjection(null),   // expected grades — kept apart from the record
+  gpa: null,                               // projectGpa() result
 };
 indexRecord(state.record);
 state.summary = summarizeRecord(state.record);
@@ -179,6 +182,7 @@ function announceMigration(info) {
 }
 
 function refreshOpenEditors() {
+  if(isGpaPanelOpen()) renderGpaPanel();
   if(document.getElementById('recordBackdrop')?.classList.contains('open')) renderRecordEditor();
   if(document.getElementById('exceptionBackdrop')?.classList.contains('open')) renderExceptionList();
   if(document.getElementById('modalBackdrop')?.classList.contains('open') && state.modal.courseId && !state.modal.dirty) openModal(state.modal.courseId, scheduledIn(state.modal.courseId));
@@ -205,6 +209,14 @@ async function initFirebase() {
     setSyncStatus('online');
     settle();
   }, () => { recordSeen = true; state.recordStatus = 'offline'; setSyncStatus('error'); render(); settle(); });
+
+  FirebaseService.listen('projection', raw => {
+    projectionLoaded = true;
+    const next = normalizeProjection(raw);
+    if(JSON.stringify(projectionForSave(next)) === JSON.stringify(projectionForSave(state.projection))) return;
+    state.projection = next;
+    render();
+  }, () => { projectionLoaded = true; });
 
   FirebaseService.listen('plan', (raw, exists) => {
     const first = !planSeen;
@@ -409,6 +421,38 @@ async function finishTerm(semId, rows) {
   const blocked = SEMESTERS.flatMap(s => state.schedule[s.id].map(e => ({ courseId:e.courseId, sem:s, unmet:getUnmetPrereqs(e.courseId, s.id) }))).filter(x=>x.unmet.length);
   return { ok, blocked, term: state.record.terms.find(t=>t.id===semId) };
 }
+
+/* ─── GPA projection (expected grades; never part of the record) ────────── */
+let projectionLoaded = false;
+let projectionTimer = null;
+
+function saveProjection() {
+  if(!state.firebaseReady || !projectionLoaded) return;
+  setSyncStatus('saving');
+  clearTimeout(projectionTimer);
+  projectionTimer = setTimeout(async () => {
+    const ok = await FirebaseService.save('projection', projectionForSave(state.projection));
+    setSyncStatus(ok ? 'online' : 'error');
+  }, 400);
+}
+
+function commitProjection(mutate, rerender = true) {
+  const draft = projectionForSave(state.projection);
+  mutate(draft);
+  state.projection = normalizeProjection(draft);
+  if(rerender) render();
+  saveProjection();
+}
+
+function projectedRows(semId) { return state.gpa?.terms.find(t => t.term.id === semId)?.rows || []; }
+function setProjectedGrade(codeId, grade) { commitProjection(p => { if(grade) p.grades[codeId] = grade; else delete p.grades[codeId]; }); }
+function fillTermGrades(semId, grade) {
+  const rows = projectedRows(semId);
+  commitProjection(p => rows.forEach(r => { if(grade) p.grades[r.codeId] = grade; else delete p.grades[r.codeId]; }));
+}
+function clearAllProjectedGrades() { commitProjection(p => { p.grades = {}; }); }
+function setRepeatToReplace(codeId, on) { commitProjection(p => { p.r2r[codeId] = !!on; }); }
+function setGpaTarget(fields) { commitProjection(p => { p.target = { ...p.target, ...fields }; }, false); }
 
 /* ─── Past-term display state ────────────────────────────────────────────── */
 function defaultExpandedTerms() {
@@ -618,6 +662,7 @@ function initSidebar() {
 /* ─── Master render ──────────────────────────────────────────────────────── */
 function render() {
   state.audit = computeAudit(state.record, state.schedule, SEMESTERS);
+  state.gpa = projectGpa(state.record, state.schedule, SEMESTERS, state.projection);
   renderHeaderProgress();
   renderPathSwitch();
   renderLibrary();
@@ -625,6 +670,7 @@ function render() {
   updateHistoryToggle();
   updateGradBanner();
   if(state.view==='calendar') renderCalendar();
+  if(isGpaPanelOpen()) renderGpaPanel();
 }
 
 function hideLoading() { document.getElementById('loadingOverlay')?.classList.add('hidden'); }
@@ -643,6 +689,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initRecordEditor();
   initGradeEntry();
   initExceptionEditor();
+  initGpaPanel();
   document.getElementById('recordBtn').addEventListener('click',()=>openRecordEditor());
 
   render();

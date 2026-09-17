@@ -177,11 +177,13 @@ function makeSemColumn(sem) {
         <div class="sem-credit-bar"><div class="sem-credit-fill" id="bar-${sem.id}"></div></div>
         <span class="sem-credit-label" id="label-${sem.id}">0 / ${sem.maxCredits} cr</span>
       </div>
+      <button type="button" class="term-gpa-line hidden" id="gpaline-${sem.id}"></button>
     </div>
     <div class="sem-drop-zone" id="zone-${sem.id}"></div>`;
   addDropTarget(col, sem.id);
   col.querySelector('.sem-remove-btn').addEventListener('click',e=>{ e.stopPropagation(); removeLastSemester(); });
   col.querySelector('.term-done-btn').addEventListener('click',e=>{ e.stopPropagation(); openGradeEntry(sem.id); });
+  col.querySelector('.term-gpa-line').addEventListener('click',e=>{ e.stopPropagation(); openGpaPanel(sem.id); });
   return col;
 }
 
@@ -209,12 +211,34 @@ function renderSemCol(sem) {
   const canGrade=sem.id===SEMESTERS[0].id && ['ready','missing'].includes(state.recordStatus);
   document.querySelector(`#col-${sem.id} .sem-remove-btn`)?.classList.toggle('hidden', !(isLast && !entries.length && SEMESTERS.length>1));
   document.querySelector(`#col-${sem.id} .term-done-btn`)?.classList.toggle('hidden', !canGrade);
+  renderTermGpaLine(sem);
   if(!entries.length){ zone.innerHTML=`<div class="drop-hint"><div class="drop-icon">🐝</div>Drop courses here</div>`; return; }
   const conflicts=detectConflicts(sem.id);
   entries.forEach(e=>{
     const c=findCourse(e.courseId);
     if(c) zone.appendChild(makeSemCard(c,sem,e.blocks||[],conflicts.has(e.courseId),getUnmetPrereqs(e.courseId,sem.id)));
   });
+}
+
+// Projected GPA after this term (estimate from expected grades; Repeat to Replace as switched).
+function renderTermGpaLine(sem) {
+  const line=document.getElementById(`gpaline-${sem.id}`);
+  const p=state.gpa?.withR2R.find(x=>x.term.id===sem.id);
+  const off=state.gpa?.withoutR2R.find(x=>x.term.id===sem.id);
+  if(!line) return;
+  line.classList.toggle('hidden', !p?.total);
+  line.classList.toggle('term-gpa-line--empty', !!p && !p.graded);
+  if(!p?.total) return;
+  if(!p.graded) {
+    line.innerHTML='📈 Pick expected grades';
+    line.title='Open the GPA projection';
+    return;
+  }
+  const delta=v=>v==null?'':`<span class="gpa-delta gpa-delta--${v>0?'up':v<0?'down':'flat'}">${fmtDelta(v)}</span>`;
+  line.innerHTML=`<span class="tgl-est">📈 est.</span> term <b>${fmtGpa(p.termGpa)}</b> · GSU <b>${fmtGpa(p.cumGsu)}</b>${delta(p.deltaGsu)} · w/ transfer <b>${fmtGpa(p.cumOverall)}</b>${delta(p.deltaOverall)}${p.graded<p.total?` <span class="tgl-partial">· ${p.graded}/${p.total} graded</span>`:''}`;
+  line.title=[`Estimate from ${p.graded} of ${p.total} expected grades${p.replaced?`, with Repeat to Replace on ${p.replaced} earlier grade${p.replaced>1?'s':''}`:''}.`,
+    p.replaced?`Without Repeat to Replace: GSU ${fmtGpa(off.cumGsu)} · with transfer ${fmtGpa(off.cumOverall)}.`:'',
+    'GSU calculates the official GPA after grades post. Click to change grades.'].filter(Boolean).join('\n');
 }
 
 function makeSemCard(course,sem,blocks,hasConflict,unmetPrereqs) {

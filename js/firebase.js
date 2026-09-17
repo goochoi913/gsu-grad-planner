@@ -12,6 +12,7 @@ const firebaseConfig = {
 /* ─── FirebaseService ────────────────────────────────────────────────────────
    planner/sharedSchedule  the plan: upcoming terms, courses, meeting times, view settings
    planner/academicRecord  past terms with grades, and advisor exceptions (stored only here)
+   planner/gpaProjection   expected (what-if) grades, Repeat to Replace switches, GPA target
    ────────────────────────────────────────────────────────────────────────── */
 const FirebaseService = (() => {
   let db = null;
@@ -23,6 +24,7 @@ const FirebaseService = (() => {
       db = firebase.firestore();
       refs.plan = db.collection('planner').doc('sharedSchedule');
       refs.record = db.collection('planner').doc('academicRecord');
+      refs.projection = db.collection('planner').doc('gpaProjection');
       return true;
     } catch (e) {
       console.error('[Firebase] init failed:', e);

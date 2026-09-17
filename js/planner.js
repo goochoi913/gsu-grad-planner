@@ -53,7 +53,7 @@ function subjectLevel(id) {
   return m ? { subject:m[1], level:+m[2] } : { subject:'', level:0 };
 }
 
-/* ─── Grades & GPA (GSU catalog 1350) ───────────────────────────────────── */
+/* ─── Grades (GSU catalog 1350.10) ──────────────────────────────────────── */
 const LETTER_ORDER = ['F','D','C-','C','C+','B-','B','B+','A-','A','A+'];
 const RECORD_STATUS = {
   counted:    { label:'Counts toward the degree',             short:'Counts',      icon:'✓' },
@@ -67,31 +67,61 @@ function minGradeFor(code) {
   const byCode = Object.entries(MIN_GRADE_RULES.codes).find(([c]) => codeToId(c) === id);
   return byCode ? byCode[1] : MIN_GRADE_RULES.subjects[subjectLevel(id).subject] || MIN_GRADE_RULES.fallback;
 }
-// A blank grade, S or K (credit by exam) earns credit; W, I, IP and U do not; letters must reach the minimum.
+// A blank grade, S or K (credit by exam) earns credit; W, WM, I, IP, U, V and NR do not; letters must reach the minimum.
 function gradeMeets(grade, min) {
   if(!grade || grade === 'S' || grade === 'K') return true;
   const rank = LETTER_ORDER.indexOf(grade === 'WF' ? 'F' : grade);
   return rank > 0 && rank >= LETTER_ORDER.indexOf(min || 'D');
 }
 function statusForGrade(code, grade) {
-  if(['W','WF','F','U'].includes(grade)) return 'nocredit';
-  if(grade === 'I' || grade === 'IP') return 'notcounted';
+  if(['W','WM','WF','F','U','V'].includes(grade)) return 'nocredit';
+  if(['I','IP','NR'].includes(grade) || isRemedial(code)) return 'notcounted';
   return gradeMeets(grade, minGradeFor(code)) ? 'counted' : 'notcounted';
 }
 function earnsCredit(rec) { return rec.status === 'counted' || rec.status === 'unused'; }
 function gradeLabel(rec) { return rec.grade ? `${rec.grade}${rec.transfer ? ' (transfer)' : ''}` : '—'; }
 
-// Quality points ÷ hours attempted, rounded to the hundredth (1350.20).
-function gpaOf(recs) {
-  let points = 0, hours = 0;
-  for(const r of recs) {
-    if(!r.gpa || !(r.grade in GRADE_POINTS) || !(r.credits > 0)) continue;
-    points += GRADE_POINTS[r.grade] * r.credits;
-    hours += r.credits;
-  }
-  return { hours:round2(hours), gpa: hours ? Math.round(points / hours * 100) / 100 : null };
+/* ─── GPA engine (GSU catalog 1350.20 and 1350.25) ─────────────────────── */
+// One calculation for the record and for projections (GPA_RULE_SUMMARY in data.js lists the rules):
+// · grade points come from the catalog table; symbols without points (W, WM, I, IP, S, U, V, K, NR) never count
+// · Learning Support / remedial courses (numbers below 1000) never count
+// · the GSU (institutional) GPA uses GSU attempts; the GSU + transfer GPA adds transfer grades,
+//   weighted by the converted semester hours GSU posted (3.33 for a 5-quarter-hour course)
+// · every attempt counts unless Repeat to Replace removed the first grade (`r2r` on that attempt);
+//   `gpa: false` marks attempts Degree Works leaves out ("Not counted")
+// · sums use integer hundredths, and the result is rounded half-up to the hundredth (for example 3.456 → 3.46)
+function hasGradePoints(grade) { return Object.prototype.hasOwnProperty.call(GRADE_POINTS, grade); }
+function isRemedial(code) { const { level } = subjectLevel(codeToId(code)); return level > 0 && level < 1000; }
+function gpaUse(a) {
+  if(!hasGradePoints(a.grade) || !(a.credits > 0)) return { gsu:false, overall:false, why:'no grade points' };
+  if(isRemedial(a.code)) return { gsu:false, overall:false, why:'Learning Support' };
+  if(a.gpa === false) return { gsu:false, overall:false, why:'not counted' };
+  if(a.replaced) return { gsu:false, overall:false, why:'Repeat to Replace' };
+  return { gsu:!a.transfer, overall:true, why:'' };
 }
+// n = Σ grade points × hours (both in hundredths), d = Σ hours (hundredths); GPA = n ÷ (100·d), rounded half-up.
+function roundedGpa(n, d) {
+  if(!d) return null;
+  let q = Math.floor((2 * n + d) / (2 * d));
+  while(q * 2 * d > 2 * n + d) q--;
+  while((q + 1) * 2 * d <= 2 * n + d) q++;
+  return q / 100;
+}
+function gpaFrom(attempts) {
+  let n = 0, d = 0;
+  for(const a of attempts) {
+    const h = Math.round(a.credits * 100);
+    n += Math.round(GRADE_POINTS[a.grade] * 100) * h;
+    d += h;
+  }
+  return { hours:d / 100, points:n / 10000, exact: d ? n / (d * 100) : null, gpa:roundedGpa(n, d), n, d };
+}
+function gpaFor(attempts, scope) { return gpaFrom(attempts.filter(a => gpaUse(a)[scope])); }
 function fmtGpa(g) { return g?.gpa == null ? '—' : g.gpa.toFixed(2); }
+function fmtDelta(v) { return v == null ? '' : v === 0 ? '±0.00' : `${v > 0 ? '▲' : '▼'}${Math.abs(v).toFixed(2)}`; }
+function recordAttemptList(record) {
+  return record.terms.flatMap(term => term.courses.map(c => ({ ...c, replaced:!!c.r2r, term })));
+}
 
 /* ─── Academic record (Firebase; edited in the app) ─────────────────────── */
 // { terms:[{ id, note, courses:[{ id, code, title, credits, grade, status, line, gpa, transfer, school, equiv, note }] }], exceptions:[…] }
@@ -121,6 +151,7 @@ function normalizeRecordCourse(raw, termId, idx, usedIds) {
     line: status === 'counted' ? (recordLineValid(raw.line) ? raw.line : 'auto') : '',
     gpa: typeof raw.gpa === 'boolean' ? raw.gpa : grade in GRADE_POINTS,
     transfer: !!raw.transfer, school: cleanText(raw.school, 60), equiv: cleanText(raw.equiv, 80), note: cleanText(raw.note, 300),
+    r2r: !!raw.r2r && !raw.transfer && grade in GRADE_POINTS,   // first grade removed by an approved Repeat to Replace
   };
 }
 
@@ -175,32 +206,32 @@ function recordForSave(record) {
     version: RECORD_VERSION, source: record.source || '', reported: record.reported || null,
     terms: record.terms.map(t => ({ id:t.id, note:t.note || '', courses: t.courses.map(c => ({
       id:c.id, code:c.code, title:c.title, credits:c.credits, grade:c.grade, status:c.status, line:c.line, gpa:c.gpa,
-      transfer:c.transfer, school:c.school, equiv:c.equiv, note:c.note })) })),
+      transfer:c.transfer, school:c.school, equiv:c.equiv, note:c.note, r2r:c.r2r })) })),
     exceptions: record.exceptions.map(x => ({ id:x.id, type:x.type, target:x.target, course:x.course, credits:x.credits, note:x.note })),
   };
 }
 
-// Term credits and GPAs. Transfer-only terms get an approximate transfer GPA.
+// Term credits and GPAs from the GPA engine. Transfer-only terms get their (approximate) transfer GPA.
 function summarizeRecord(record) {
-  const byTerm = {}, gsuSoFar = [], allSoFar = [];
+  const byTerm = {}, soFar = [];
   for(const t of record.terms) {
-    const gsu = t.courses.filter(c => !c.transfer);
-    gsuSoFar.push(...gsu);
-    allSoFar.push(...t.courses);
+    const mine = t.courses.map(c => ({ ...c, replaced:!!c.r2r, term:t }));
+    soFar.push(...mine);
+    const transferOnly = !t.courses.some(c => !c.transfer);
     byTerm[t.id] = {
       earned: round2(t.courses.filter(earnsCredit).reduce((s, c) => s + c.credits, 0)),
-      transferOnly: !gsu.length,
+      transferOnly,
       school: [...new Set(t.courses.filter(c => c.transfer).map(c => c.school).filter(Boolean))].join(', '),
-      termGpa: gpaOf(gsu.length ? gsu : t.courses),
-      cumGsu: gpaOf(gsuSoFar),
-      cumOverall: gpaOf(allSoFar),
+      termGpa: gpaFor(mine, transferOnly ? 'overall' : 'gsu'),
+      cumGsu: gpaFor(soFar, 'gsu'),
+      cumOverall: gpaFor(soFar, 'overall'),
     };
   }
-  const all = record.terms.flatMap(t => t.courses);
+  const all = recordAttemptList(record);
   return {
     byTerm, courseCount: all.length,
     earned: round2(all.filter(earnsCredit).reduce((s, c) => s + c.credits, 0)),
-    gsu: gpaOf(all.filter(c => !c.transfer)), overall: gpaOf(all),
+    gsu: gpaFor(all, 'gsu'), overall: gpaFor(all, 'overall'),
   };
 }
 
@@ -479,7 +510,7 @@ function computeAudit(record, schedule, semesters) {
     roles[u.kind === 'planned' ? u.courseId : u.rec.id] = role;
   }
   const dHours = round2(units.filter(u => u.kind === 'done' && u.grade === 'D').reduce((s, u) => s + u.credits, 0));
-  const rpeGpa = gpaOf(L['rpe.hours'].units.filter(u => u.kind === 'done').map(u => u.rec));
+  const rpeGpa = gpaFor(L['rpe.hours'].units.filter(u => u.kind === 'done').map(u => u.rec), 'overall');
   return { blocks:blockResults, lines:lineResults, lineById, blockByKey:Object.fromEntries(blockResults.map(b => [b.key, b])),
     total, pending, status, missing, roles, dHours, rpeGpa, plannedCredits, earnedCredits:earned };
 }
@@ -507,18 +538,161 @@ function advisorChecklist(audit, record, semesters, schedule) {
   const small = audit.lineById['rpe.hours'].units.filter(u => u.kind === 'planned' && u.credits < 3);
   if(small.length) items.push({ done:false, text:`Confirm ${small.map(u => `${u.code} (${fmtCredits(u.credits)} cr)`).join(' and ')} counts toward Required Program Electives – CSC.` });
   const plannedIds = new Set(semesters.flatMap(s => (schedule[s.id] || []).map(e => e.courseId)));
+  // Repeat to Replace for a failed first GSU attempt that is planned again or already retaken.
   const retakes = [];
-  for(const [code, list] of RECORD_INDEX.attempts) {
-    const failed = list.filter(a => ['F','WF'].includes(a.rec.grade) && a.rec.gpa && !a.rec.transfer);
-    if(!failed.length) continue;
-    const courseId = catalogIdForCode(code) || code;
-    const passedLater = list.some(a => a.term.key > failed[failed.length - 1].term.key && gradeMeets(a.rec.grade, minGradeFor(a.rec.code)) && earnsCredit(a.rec));
-    if(passedLater || plannedIds.has(courseId)) retakes.push({ code:failed[0].rec.code, passedLater });
+  const attemptsByCode = new Map();
+  for(const term of record.terms) for(const rec of term.courses) {
+    const id = codeToId(rec.code);
+    if(!attemptsByCode.has(id)) attemptsByCode.set(id, []);
+    attemptsByCode.get(id).push({ rec, term });
   }
-  if(retakes.length) items.push({ done:false, text:`Request Repeat to Replace after retaking ${retakes.map(r => r.code).join(' and ')}, so the earlier F grades leave the GSU GPA (then untick “Counts in GPA” on those attempts).` });
+  for(const [codeId, list] of attemptsByCode) {
+    const first = list[0];
+    if(!first || first.rec.transfer || !['F','WF'].includes(first.rec.grade) || first.rec.gpa === false) continue;
+    const retaken = list.slice(1).some(a => !a.rec.transfer && hasGradePoints(a.rec.grade) && GRADE_POINTS[a.rec.grade] > GRADE_POINTS[first.rec.grade]);
+    if(first.rec.r2r) retakes.push({ code:first.rec.code, done:true });
+    else if(retaken || plannedIds.has(catalogIdForCode(first.rec.code) || codeId)) retakes.push({ code:first.rec.code, done:false });
+  }
+  const openRetakes = retakes.filter(r => !r.done);
+  if(openRetakes.length) items.push({ done:false, text:`Request Repeat to Replace for ${openRetakes.map(r => r.code).join(' and ')} after the retake grades post (the Registrar’s online application; at most ${GPA_RULES.r2rMaxCourses} courses, and an approval can’t be undone). Once approved, tick “Replaced by Repeat to Replace” on the earlier F in 📚 Record.` });
+  else if(retakes.length) items.push({ done:true, text:`Repeat to Replace recorded for ${retakes.map(r => r.code).join(' and ')}.` });
   const last = [...semesters].reverse().find(s => (schedule[s.id] || []).length);
   items.push({ done:false, text:`Apply to graduate in PAWS by the deadline for ${last ? last.label : 'your last term'} (registrar.gsu.edu/graduation).` });
   return items;
+}
+
+/* ─── GPA projection (what-if grades) ───────────────────────────────────── */
+// Expected grades live in their own document: { grades:{ codeId: letter }, r2r:{ codeId: on }, target:{ gpa, termId } }.
+// They never mark a course completed and never reach the record, the audit or the plan.
+const PROJECTION_GRADES = ['A+','A','A-','B+','B','B-','C+','C','C-','D','F','WF','W'];
+const CODE_ID_RE = /^[A-Z]{2,5}\d{4}[A-Z]{0,2}$/;
+function normalizeProjection(raw) {
+  const safe = raw && typeof raw === 'object' ? raw : {};
+  const pick = (obj, ok) => Object.fromEntries(Object.entries(obj && typeof obj === 'object' ? obj : {})
+    .filter(([k, v]) => CODE_ID_RE.test(k) && ok(v)).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).slice(0, 200));
+  const t = safe.target && typeof safe.target === 'object' ? safe.target : {};
+  const gpa = numOrNull(t.gpa);
+  return {
+    version: 1,
+    grades: pick(safe.grades, v => PROJECTION_GRADES.includes(v)),
+    r2r: pick(safe.r2r, v => typeof v === 'boolean'),
+    target: { gpa: gpa != null && gpa > 0 && gpa <= GPA_RULES.maxGradePoints ? round2(gpa) : 3, termId: termIdKey(t.termId) >= 0 ? t.termId : '' },
+  };
+}
+function projectionForSave(p) { return { version:1, grades:{ ...p.grades }, r2r:{ ...p.r2r }, target:{ ...p.target } }; }
+
+// A planned course's graded parts: a lecture and its lab get separate grades.
+function courseGradeParts(course) {
+  const base = course.title.replace(/ \+ Lab$/, '');
+  if(!course.parts.length) return [{ code:course.code, codeId:course.id, credits:course.credits, title:course.title, main:true }];
+  return course.parts.map((p, i) => ({ code:p.code, codeId:codeToId(p.code), credits:p.credits, title:i ? `${base} Lab` : base, main:i === 0 }));
+}
+
+/* ─── Repeat to Replace (catalog 1350.25, Registrar) ─────────────────────── */
+function firstRecordedAttempt(record, codeIds) {
+  for(const term of record.terms) for(const rec of term.courses) if(codeIds.includes(codeToId(rec.code))) return { rec, term };
+  return null;
+}
+// Why a course's first recorded grade can't be replaced ('' when it can).
+function r2rBlocker(first) {
+  const { rec, term } = first;
+  if(rec.transfer) return `The first attempt (${term.label}) is transfer credit, which isn’t part of the GSU GPA.`;
+  if(!hasGradePoints(rec.grade) || rec.gpa === false || isRemedial(rec.code)) return `The first recorded grade (${rec.grade || 'none'}, ${term.label}) isn’t part of the GPA, so it can’t be replaced.`;
+  if(term.key < termIdKey(GPA_RULES.r2rFirstTerm)) return 'Only repeats taken from Fall 2011 on qualify.';
+  if(rec.r2r) return 'That grade is already replaced through Repeat to Replace.';
+  return '';
+}
+function r2rUsedCount(record) { return record.terms.reduce((s, t) => s + t.courses.filter(c => c.r2r).length, 0); }
+
+// Planned retakes in term order. status: applies · pending (no expected grade) · lower (not a higher grade)
+// · limit (over the 4-course cap) · blocked (not eligible) · off. `reserved` = counted toward the cap.
+function repeatCandidates(record, schedule, semesters, projection) {
+  const out = [];
+  let used = r2rUsedCount(record);
+  const lastTerm = [...semesters].reverse().find(s => (schedule[s.id] || []).length);
+  for(const term of semesters) for(const entry of schedule[term.id] || []) {
+    const course = findCourse(entry.courseId);
+    if(!course) continue;
+    for(const part of courseGradeParts(course)) {
+      const first = firstRecordedAttempt(record, [part.codeId, ...(part.main ? course.aliases.map(codeToId) : [])]);
+      if(!first) continue;
+      const blocker = r2rBlocker(first);
+      const on = projection.r2r[part.codeId] ?? !blocker;
+      const grade = projection.grades[part.codeId] || '';
+      let status = 'off', note = '', reserved = false;
+      if(on && blocker) { status = 'blocked'; note = blocker; }
+      else if(on && used >= GPA_RULES.r2rMaxCourses) { status = 'limit'; note = `Only ${GPA_RULES.r2rMaxCourses} courses can use Repeat to Replace, and ${used} are already counted.`; }
+      else if(on) {
+        reserved = true;
+        if(!grade) status = 'pending';
+        else if(!hasGradePoints(grade) || GRADE_POINTS[grade] <= GRADE_POINTS[first.rec.grade]) { status = 'lower'; reserved = false; note = `The retake needs a grade higher than the ${first.rec.grade} to replace it.`; }
+        else status = 'applies';
+        if(reserved) used++;
+      }
+      if(on && term.id === lastTerm?.id && status !== 'blocked') note = [note, 'This retake is in the graduation term: apply within the first two weeks, and GSU honors it only if the higher grade is needed to graduate.'].filter(Boolean).join(' ');
+      out.push({ ...part, courseId:course.id, term, first, grade, eligible:!blocker, on, status, note, reserved });
+    }
+  }
+  return out;
+}
+
+// Term-by-term projection: GPAs as toggled (withR2R) and with no Repeat to Replace at all (withoutR2R).
+function projectGpa(record, schedule, semesters, projection) {
+  const base = recordAttemptList(record);
+  const current = { gsu:gpaFor(base, 'gsu'), overall:gpaFor(base, 'overall') };
+  const candidates = repeatCandidates(record, schedule, semesters, projection);
+  const terms = semesters.map(term => {
+    const rows = (schedule[term.id] || []).flatMap(e => {
+      const course = findCourse(e.courseId);
+      return course ? courseGradeParts(course).map(p => ({ ...p, courseId:course.id, grade:projection.grades[p.codeId] || '',
+        candidate:candidates.find(c => c.codeId === p.codeId && c.term.id === term.id) || null })) : [];
+    });
+    return { term, rows, graded:rows.filter(r => r.grade).length, hours:round2(rows.reduce((s, r) => s + r.credits, 0)) };
+  });
+  const delta = (a, b) => a.gpa == null || b.gpa == null ? null : round2(a.gpa - b.gpa);
+  const scenario = useR2R => {
+    const projected = [];
+    return terms.map(t => {
+      const mine = t.rows.filter(r => r.grade).map(r => ({ id:`p-${r.codeId}`, code:r.code, credits:r.credits, grade:r.grade, transfer:false, term:t.term, projected:true }));
+      projected.push(...mine);
+      const replaced = new Set(useR2R ? candidates.filter(c => c.status === 'applies' && c.term.key <= t.term.key).map(c => c.first.rec.id) : []);
+      const all = [...base.map(a => replaced.has(a.id) ? { ...a, replaced:true } : a), ...projected];
+      const termGpa = gpaFor(mine, 'gsu'), cumGsu = gpaFor(all, 'gsu'), cumOverall = gpaFor(all, 'overall');
+      return { term:t.term, graded:t.graded, total:t.rows.length, replaced:replaced.size, termGpa, cumGsu, cumOverall,
+        deltaTerm:delta(termGpa, current.gsu), deltaGsu:delta(cumGsu, current.gsu), deltaOverall:delta(cumOverall, current.overall) };
+    });
+  };
+  return { current, candidates, terms, withR2R:scenario(true), withoutR2R:scenario(false),
+    r2rUsed:r2rUsedCount(record), r2rReserved:candidates.filter(c => c.reserved).length };
+}
+
+// The average grade points needed in every planned course through `termId` for the rounded GPA to reach
+// `target`. With Repeat to Replace, toggled retakes are assumed to beat their old grade.
+const TARGET_LETTERS = ['D','C-','C','C+','B-','B','B+','A-','A','A+'];
+function targetNeeded(record, schedule, semesters, projection, termId, target, scope, useR2R) {
+  const endKey = termIdKey(termId);
+  const upto = semesters.filter(s => s.key <= endKey);
+  const replaced = new Set();
+  let used = r2rUsedCount(record);
+  if(useR2R) for(const c of repeatCandidates(record, schedule, semesters, projection)) {
+    if(!c.eligible || !c.on || c.term.key > endKey || used >= GPA_RULES.r2rMaxCourses) continue;
+    used++;
+    replaced.add(c.first.rec.id);
+  }
+  const now = gpaFor(recordAttemptList(record).map(a => replaced.has(a.id) ? { ...a, replaced:true } : a), scope);
+  const h = upto.flatMap(s => (schedule[s.id] || []).flatMap(e => { const c = findCourse(e.courseId); return c ? courseGradeParts(c) : []; }))
+    .filter(p => !isRemedial(p.code)).reduce((sum, p) => sum + Math.round(p.credits * 100), 0);
+  const result = x => roundedGpa(now.n + Math.round(x * 100) * h, now.d + h);
+  if(!h) return { scope, useR2R, hours:0, status:'none', now:now.gpa, replaced:replaced.size };
+  const reaches = x => result(x) >= target - 1e-9;
+  const exact = ((target - 0.005) * (now.d + h) * 100 - now.n) / (h * 100);
+  let needed = Math.max(0, Math.ceil(exact * 100 - 1e-6) / 100);
+  while(needed <= GPA_RULES.maxGradePoints && !reaches(needed)) needed = round2(needed + 0.01);
+  while(needed > 0 && reaches(round2(needed - 0.01))) needed = round2(needed - 0.01);
+  const status = reaches(0) ? 'already' : needed > GPA_RULES.maxGradePoints ? 'unreachable' : 'reachable';
+  return { scope, useR2R, hours:h / 100, needed, status, now:now.gpa, replaced:replaced.size,
+    atLeast: TARGET_LETTERS.find(l => GRADE_POINTS[l] >= needed - 1e-9) || null,
+    allA: result(GRADE_POINTS.A), allAPlus: result(GRADE_POINTS['A+']) };
 }
 
 /* ─── Suggested paths ────────────────────────────────────────────────────── */
