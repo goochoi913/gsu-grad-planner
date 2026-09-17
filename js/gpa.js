@@ -206,7 +206,7 @@ function gpaRulesHtml() {
     .filter(c => c.transfer && hasGradePoints(c.grade) && c.gpa === false)
     .map(c => `${c.code} ${c.grade} (${t.label})`));
   const open = [...GPA_OPEN_QUESTIONS];
-  if(notCounted.length) open.unshift(`Degree Works leaves ${notCounted.join(' and ')} out as “Not counted”. Her official GSU + transfer GPA matches only without them, but no catalog rule says why (each course was retaken later) — confirm with the Registrar.`);
+  if(notCounted.length) open.unshift(`Degree Works leaves ${notCounted.join(' and ')} out as “Not counted” (“Max of zero classes/credits exceeded”). Her official GSU + transfer GPA matches only without them, but no catalog rule says why (each course was retaken later) — confirm with the Registrar.`);
   return `<details class="modal-section gpa-rules"${gpaRulesOpen ? ' open' : ''}>
     <summary class="modal-section-label">📘 How GSU calculates GPA · open questions</summary>
     <ul class="audit-bullets">${GPA_RULE_SUMMARY.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>

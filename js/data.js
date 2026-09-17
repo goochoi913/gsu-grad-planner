@@ -109,6 +109,7 @@ const GPA_OPEN_QUESTIONS = [
   'The catalog rounds GPAs to the hundredth but doesn’t show an exact .xx5 case; the app rounds it up. The Advisement GPA calculator truncates instead, and it is only an estimate.',
   'A+ (4.30) counts at GSU, but not every instructor gives it — the “all A” numbers are the safer plan.',
   'Transfer grades are converted by GSU. Converted points can differ slightly from the letter shown, so GSU + transfer estimates can be off by about 0.01.',
+  'Degree Works adds “$” to transfer grades (and “%” to Learning Support grades), but no public GSU source defines these marks. The app counts a “$” grade as its letter on transfer credit, which reproduces her official GSU + transfer GPA.',
   'Repeat to Replace doesn’t change the HOPE GPA or other state or federal GPA requirements (such as financial-aid progress).',
   'Academic standing uses the GSU GPA, so an approved Repeat to Replace raises the GPA used for standing from then on. The policy doesn’t say whether earlier standing is recalculated.',
   'Repeat to Replace also requires that the first grade wasn’t given for an academic honesty violation, that this is her first undergraduate degree at GSU, and that her college doesn’t bar repeating the course.',
