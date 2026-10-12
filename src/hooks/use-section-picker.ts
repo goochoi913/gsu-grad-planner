@@ -10,7 +10,7 @@ import {
   partsWithSections,
   scheduleFor,
   sectionByCrn,
-  shortGaps,
+  breaksBetween,
   termEvents,
   useScheduleVersion,
   type CalEvent,
@@ -55,7 +55,7 @@ export interface SectionPicker {
   /** The term's week with the draft in it. */
   events: CalEvent[]
   days: ReturnType<typeof termEvents>['days']
-  /** Breaks next to this course. */
+  /** Every break in the week with the preview in it. */
   gaps: Gap[]
   /** "Section 4" / "Lecture 4 + Lab 12" — what Save would save. */
   label: string
@@ -127,7 +127,7 @@ export function useSectionPicker(course: CatalogCourse, termId: TermId, snap: Pl
     plannedIn: plannedId && !inTerm ? snap.semesters.find((s) => s.id === plannedId) ?? null : null,
     events: preview.events,
     days: preview.days,
-    gaps: shortGaps(preview.events, { courseId: course.id, maxMinutes: 60 }),
+    gaps: breaksBetween(preview.events),
     label,
     save: () => {
       if (!canSave) return false

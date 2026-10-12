@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { LuMapPin, LuTriangleAlert } from 'react-icons/lu'
 import type { DayCode } from '@/lib/schedule-types'
 import { hourRange, type CalEvent, type Gap } from '@/lib/schedule'
-import { DAY_NAMES, fmtHour, fmtTimeRange } from '@/lib/format'
+import { DAY_NAMES, fmtBreak, fmtHour, fmtTimeRange } from '@/lib/format'
 import { courseColor } from '@/lib/colors'
 import { ProfessorLink } from '@/components/bits'
 import { useUi } from '@/components/ui-context'
@@ -56,9 +56,9 @@ function HourLines({ from, to, pxPerHour }: { from: number; to: number; pxPerHou
   )
 }
 
-/** "15 min" between two classes: amber when it's under ten minutes. */
+/** The break between two classes — "15 min", "2 hr 15 min": amber when it's under ten minutes. */
 function GapPill({ gap, top, compact, className }: { gap: Gap; top: number; compact?: boolean; className?: string }) {
-  const label = compact ? `${gap.minutes}m` : gap.minutes ? `${gap.minutes} min` : 'no break'
+  const label = fmtBreak(gap.minutes, compact)
   const tight = gap.minutes < 10
   return (
     <div
@@ -70,7 +70,7 @@ function GapPill({ gap, top, compact, className }: { gap: Gap; top: number; comp
       )}
       style={{ top }}
       data-gap={gap.minutes}
-      title={`${gap.minutes ? `${gap.minutes}-minute break` : 'No break'} between ${gap.before.partTitle} and ${gap.after.partTitle}`}
+      title={`${gap.minutes ? `${fmtBreak(gap.minutes)} break` : 'No break'} between ${gap.before.partTitle} and ${gap.after.partTitle}`}
     >
       {label}
     </div>

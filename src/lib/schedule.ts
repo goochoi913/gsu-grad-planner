@@ -359,10 +359,11 @@ export interface Gap {
 }
 
 /**
- * Short breaks between back-to-back classes (at most `maxMinutes`), optionally only the
- * ones next to a given course. Overlapping classes are clashes, not gaps.
+ * Every break between one class and the next on the same day — however long — optionally
+ * only the ones next to a given course, or up to `maxMinutes`. Overlapping classes are
+ * clashes, not breaks.
  */
-export function shortGaps(events: CalEvent[], { maxMinutes = 60, courseId }: { maxMinutes?: number; courseId?: string } = {}): Gap[] {
+export function breaksBetween(events: CalEvent[], { maxMinutes = Infinity, courseId }: { maxMinutes?: number; courseId?: string } = {}): Gap[] {
   const gaps: Gap[] = []
   for (const day of DAY_ORDER_ALL) {
     const list = events.filter((e) => e.day === day).sort((a, b) => a.start - b.start || a.end - b.end)

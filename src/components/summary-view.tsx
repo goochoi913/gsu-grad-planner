@@ -1,7 +1,7 @@
 import { DEGREE } from '@/data/degree'
 import { advisorChecklist, findCourse, fmtCredits, fmtGpa } from '@/lib/planner'
 import { auditHeadline, blockMeter, roleShort, semesterCredits, statusSentence } from '@/lib/plan-ops'
-import { SCHEDULE_TERM_ID, locationText, partPicks, scheduleFor, termEvents, timedMeetings } from '@/lib/schedule'
+import { SCHEDULE_TERM_ID, breaksBetween, locationText, partPicks, scheduleFor, termEvents, timedMeetings } from '@/lib/schedule'
 import { fmtDaysLong, fmtTimeRange } from '@/lib/format'
 import type { PlannerSnapshot } from '@/lib/store'
 import { AuditIcon } from '@/components/bits'
@@ -108,7 +108,7 @@ export function SummaryView({ snap }: { snap: PlannerSnapshot }) {
           </div>
           {events.length > 0 && (
             <div className="rounded-lg border p-3 print-break-avoid">
-              <WeekCalendar events={events} days={days} />
+              <WeekCalendar events={events} days={days} gaps={breaksBetween(events)} />
             </div>
           )}
         </Section>

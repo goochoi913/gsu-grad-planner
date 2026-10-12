@@ -99,3 +99,12 @@ export function titleCase(text: string): string {
     return out
   })
 }
+
+/** A break between classes: "no break", "40 min", "1 hr 40 min", "2 hr" — compact: "40m", "1h 40m", "2h". */
+export function fmtBreak(minutes: number, compact = false): string {
+  if (minutes <= 0) return compact ? '0m' : 'no break'
+  const h = Math.floor(minutes / 60), m = minutes % 60
+  if (!h) return compact ? `${m}m` : `${m} min`
+  if (!m) return compact ? `${h}h` : `${h} hr`
+  return compact ? `${h}h ${m}m` : `${h} hr ${m} min`
+}

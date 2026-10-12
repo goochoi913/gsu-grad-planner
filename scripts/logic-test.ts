@@ -15,6 +15,7 @@ import * as D from '../src/data/degree'
 import * as P from '../src/lib/planner'
 import * as S from '../src/lib/schedule'
 import * as R from '../src/lib/relevance'
+import * as F from '../src/lib/format'
 import { API_NAMES, scenarios, ser } from './fixtures/scenarios.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -181,9 +182,14 @@ check('picks never change the audit',
 
   // Linear Algebra sec 4 (MW 12:30–1:45) right before CSC 3210 sec 4 (MW 2:00–3:15): a 15-minute break.
   const week = spring([{ courseId: 'CSC3210', blocks: [], sections: { CSC3210: '14634' } }, { courseId: 'MATH2641', blocks: [], sections: { MATH2641: '16637' } }])
-  check('short breaks between classes are found, per day', S.shortGaps(week.events).map((g) => `${g.day} ${g.minutes}`), ['M 15', 'W 15'])
-  check('  … and only next to the course asked about', S.shortGaps(week.events, { courseId: 'CSC4520' }).length, 0)
-  check('  … overlapping classes are clashes, not breaks', S.shortGaps(own.events).length, 0)
+  check('breaks between classes are found, per day', S.breaksBetween(week.events).map((g) => `${g.day} ${g.minutes}`), ['M 15', 'W 15'])
+  check('  … and only next to the course asked about', S.breaksBetween(week.events, { courseId: 'CSC4520' }).length, 0)
+  check('  … overlapping classes are clashes, not breaks', S.breaksBetween(own.events).length, 0)
+  // Wednesday: the lab 9:00–10:40, then Linear Algebra at 12:30 — a long break is still a break.
+  const wed = spring([{ courseId: 'CSC3210', blocks: [], sections: { CSC3210L: '20706' } }, { courseId: 'MATH2641', blocks: [], sections: { MATH2641: '16637' } }])
+  check('  … long ones too (1 hr 50 min on Wednesday)', S.breaksBetween(wed.events).map((g) => `${g.day} ${g.minutes}`), ['W 110'])
+  check('breaks read as minutes, then hours', [0, 5, 40, 60, 110, 135, 255].map((m) => F.fmtBreak(m)), ['no break', '5 min', '40 min', '1 hr', '1 hr 50 min', '2 hr 15 min', '4 hr 15 min'])
+  check('  … and short on a phone', [40, 60, 135].map((m) => F.fmtBreak(m, true)), ['40m', '1h', '2h 15m'])
 
   const entries = [{ courseId: 'CSC3320', blocks: [], sections: { CSC3320: '10643' } }] // MW 2:00–3:15 + Th 9:30–10:20
   const la2 = S.sectionByCrn('spring2027', '16304')! // Linear Algebra sec 2: TTh 9:30–10:45

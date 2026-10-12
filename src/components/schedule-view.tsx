@@ -15,7 +15,7 @@ import type { PlanEntry, Term, TermId } from '@/lib/types'
 import type { DayCode } from '@/lib/schedule-types'
 import { findCourse, fmtCredits } from '@/lib/planner'
 import { semesterCredits } from '@/lib/plan-ops'
-import { isFull, meetingSummary, partPicks, scheduleFor, seatsAsOf, shortGaps, termEvents, useScheduleVersion, type UntimedItem } from '@/lib/schedule'
+import { breaksBetween, isFull, meetingSummary, partPicks, scheduleFor, seatsAsOf, termEvents, useScheduleVersion, type UntimedItem } from '@/lib/schedule'
 import { DAY_NAMES, fmtAgo, fmtDateTime, fmtShortDate } from '@/lib/format'
 import { courseColor } from '@/lib/colors'
 import { usePlanner } from '@/lib/store'
@@ -61,7 +61,8 @@ export function ScheduleView({
   const sched = scheduleFor(term.id)
   const version = useScheduleVersion()
   const { events, untimed, days } = useMemo(() => termEvents(term.id, entries), [term.id, entries, version]) // eslint-disable-line react-hooks/exhaustive-deps
-  const gaps = useMemo(() => shortGaps(events, { maxMinutes: 30 }), [events])
+  // Every break between classes, short or long, labelled on the calendar.
+  const gaps = useMemo(() => breaksBetween(events), [events])
   const [day, setDay] = useState<DayCode>(() => todayCode())
   const conflicts = new Set(events.filter((e) => e.conflict).map((e) => e.partCode)).size
   const mode = prefs.calendarMode

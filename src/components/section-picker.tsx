@@ -7,7 +7,7 @@ import { clashesFor, hourRange, seatsAsOf, timedMeetings, type Gap } from '@/lib
 import { refreshLiveSchedule } from '@/lib/live-schedule'
 import type { PlannerSnapshot } from '@/lib/store'
 import type { SectionPicker } from '@/hooks/use-section-picker'
-import { fmtAgo, fmtDateTime, fmtDaysLong } from '@/lib/format'
+import { fmtAgo, fmtBreak, fmtDateTime, fmtDaysLong } from '@/lib/format'
 import { SectionCard } from '@/components/section-list'
 import { WeekCalendar } from '@/components/calendar'
 import { Button } from '@/components/ui/button'
@@ -159,13 +159,15 @@ export function PickerWeek({ picker, snap, fill, isTouch, stackHeight = 156 }: {
 
 /* ─── Save ───────────────────────────────────────────────────────────────── */
 
-function shortestBreak(gaps: Gap[], courseId: string): string | null {
+function shortestBreak(allGaps: Gap[], courseId: string): string | null {
+  // The break that matters for this choice: the shortest one next to this course.
+  const gaps = allGaps.filter((g) => g.before.courseId === courseId || g.after.courseId === courseId)
   if (!gaps.length) return null
   const g = [...gaps].sort((a, b) => a.minutes - b.minutes)[0]
   const other = g.before.courseId === courseId ? g.after : g.before
   const when = g.before.courseId === courseId ? 'before' : 'after'
   const sameDay = gaps.filter((x) => x.minutes === g.minutes && (x.before.partCode === g.before.partCode && x.after.partCode === g.after.partCode)).map((x) => x.day)
-  return `${g.minutes ? `${g.minutes}-min break` : 'No break'} ${when} ${other.partTitle} (${fmtDaysLong(sameDay.length ? sameDay : [g.day])})`
+  return `${g.minutes ? `${fmtBreak(g.minutes)} break` : 'No break'} ${when} ${other.partTitle} (${fmtDaysLong(sameDay.length ? sameDay : [g.day])})`
 }
 
 export function PickerFooter({ picker, onCancel, onSave }: { picker: SectionPicker; onCancel: () => void; onSave: () => void }) {
