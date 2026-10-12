@@ -5,6 +5,7 @@ import type { Professor } from '@/lib/schedule-types'
 import { professorFor } from '@/lib/schedule'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
+import { CATEGORY, CATEGORY_ORDER, gradeTone, type Category } from '@/lib/colors'
 import { useUi } from '@/components/ui-context'
 
 export const AUDIT_STATUS_LABEL: Record<AuditStatus, string> = {
@@ -17,10 +18,53 @@ export const AUDIT_STATUS_LABEL: Record<AuditStatus, string> = {
 /** One icon per Degree Works status: done, planned, waiting on the advisor, still open. */
 export function AuditIcon({ status, className }: { status: AuditStatus; className?: string }) {
   const cls = cn('size-3.5 shrink-0', className)
-  if (status === 'met') return <LuCircleCheck className={cn(cls, 'text-foreground')} aria-label={AUDIT_STATUS_LABEL.met} />
+  if (status === 'met') return <LuCircleCheck className={cn(cls, 'text-green-600 dark:text-green-400')} aria-label={AUDIT_STATUS_LABEL.met} />
   if (status === 'planned') return <LuCalendarClock className={cn(cls, 'text-muted-foreground')} aria-label={AUDIT_STATUS_LABEL.planned} />
   if (status === 'pending') return <LuHourglass className={cn(cls, 'text-pending')} aria-label={AUDIT_STATUS_LABEL.pending} />
-  return <LuCircleDashed className={cn(cls, 'text-muted-foreground/70')} aria-label={AUDIT_STATUS_LABEL.missing} />
+  return <LuCircleDashed className={cn(cls, 'text-red-500 dark:text-red-400')} aria-label={AUDIT_STATUS_LABEL.missing} />
+}
+
+/** A letter grade as a coloured pill: A green, B light green, C yellow, D orange, F red, W grey. */
+export function GradePill({ grade, className, title }: { grade: string | null | undefined; className?: string; title?: string }) {
+  return (
+    <span
+      title={title}
+      className={cn('mono inline-flex h-[18px] min-w-[22px] shrink-0 items-center justify-center rounded-[5px] px-1 text-[11px] leading-none font-semibold', gradeTone(grade), className)}
+    >
+      {grade || '—'}
+    </span>
+  )
+}
+
+/** Which requirement area a course counts toward, as a small coloured tag. */
+export function CategoryTag({ category, label, className }: { category: Category; label?: string; className?: string }) {
+  const c = CATEGORY[category]
+  return (
+    <span className={cn('inline-flex h-[18px] shrink-0 items-center rounded-[5px] border px-1.5 text-[10.5px] leading-none font-medium whitespace-nowrap', c.tag, className)}>
+      {label ?? c.short}
+    </span>
+  )
+}
+
+export function CategoryDot({ category, className }: { category: Category | null; className?: string }) {
+  if (!category) return null
+  return <span className={cn('inline-block size-2 shrink-0 rounded-full', CATEGORY[category].dot, className)} aria-hidden />
+}
+
+/** The colour key: what each requirement-area colour means. */
+export function CategoryLegend({ className }: { className?: string }) {
+  return (
+    <div className={cn('flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground', className)} aria-label="Colour key">
+      {CATEGORY_ORDER.map((k) => (
+        <Hint key={k} label={CATEGORY[k].hint}>
+          <span className="inline-flex items-center gap-1.5">
+            <CategoryDot category={k} />
+            {CATEGORY[k].label}
+          </span>
+        </Hint>
+      ))}
+    </div>
+  )
 }
 
 /** "★ 3.9 (20)" — a professor's RateMyProfessors score, or nothing when there isn't one. */

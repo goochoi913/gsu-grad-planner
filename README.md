@@ -30,10 +30,21 @@ override in Settings.
 ## Interface
 
 [shadcn/ui](https://ui.shadcn.com) on Tailwind v4 with the **neutral** palette, icons from
-[react-icons](https://react-icons.github.io/react-icons/) (the Lucide set). Colour is spent only
-where it means something: amber for "waiting on an advisor exception", red for a real problem
-(an F, a time conflict, a full section, a term over 18 credits), and soft per-course tints on the
-calendar.
+[react-icons](https://react-icons.github.io/react-icons/) (the Lucide set). The surfaces stay
+neutral; colour marks meaning, so things can be told apart at a glance (`src/lib/colors.ts`):
+
+| Colour | Means |
+|---|---|
+| Blue | **Major — required**: she has to take it |
+| Purple | **CSC elective**: one of the 16 elective credits, her choice |
+| Teal | **Core & Field of Study** (IMPACTS Core, Program Advice, Field of Study) |
+| Pink | **Program elective**: Required Program Electives – CSC, any subject 2000–4000 |
+| Grey | Extra credit — counts only toward the 120 total |
+| Grades | A green · B light green · C yellow · D orange · F red · W grey |
+| Progress | done green, planned light green, waiting on an advisor exception amber, a real problem (an F, a time conflict, a full section, a term over 18 credits) red |
+| Calendar | one soft hue per class |
+
+The logo is a yellow honeycomb cell — Bee's favourite colour.
 
 On a computer: a one-line header, the Degree Works progress rail, then three resizable panes —
 course list, plan, audit — either side panel collapses. On a phone: a bottom tab bar (Plan ·

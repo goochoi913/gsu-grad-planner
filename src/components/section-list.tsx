@@ -101,7 +101,7 @@ export function SectionOption({
       className={cn(
         'group relative rounded-lg border bg-card px-3 py-2.5 text-left transition-colors',
         interactive && 'cursor-pointer hover:border-foreground/25 hover:bg-accent/40 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none',
-        selected && 'border-primary bg-accent/50 ring-1 ring-primary',
+        selected && 'border-green-600 bg-green-50/70 ring-1 ring-green-600 dark:border-green-500 dark:bg-green-500/10 dark:ring-green-500',
       )}
     >
       <div className="flex items-center gap-2">
@@ -109,7 +109,7 @@ export function SectionOption({
           <span
             className={cn(
               'flex size-4 shrink-0 items-center justify-center rounded-full border',
-              selected ? 'border-primary bg-primary text-primary-foreground' : 'border-muted-foreground/40',
+              selected ? 'border-green-600 bg-green-600 text-white dark:border-green-500 dark:bg-green-500' : 'border-muted-foreground/40',
             )}
             aria-hidden
           >

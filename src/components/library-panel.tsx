@@ -7,7 +7,8 @@ import { blockMeter, cleanDescription, coveredBy, failedAttempts, lastPassingAtt
 import { SCHEDULE_TERM_ID, scheduleFor, sectionCount } from '@/lib/schedule'
 import { addCourse, removeCourse, type PlannerSnapshot } from '@/lib/store'
 import { readDrag } from '@/components/board'
-import { Hint } from '@/components/bits'
+import { CategoryDot, Hint } from '@/components/bits'
+import { CATEGORY, categoryOfSection, type Category } from '@/lib/colors'
 import { Button } from '@/components/ui/button'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { Input } from '@/components/ui/input'
@@ -26,6 +27,7 @@ export const EMPTY_FILTER: LibraryFilter = { q: '', group: 'all', toggles: [] }
 
 interface Group {
   key: LibraryFilter['group']
+  category: Category
   title: string
   note?: string
   badge: string
@@ -69,7 +71,7 @@ export function LibraryPanel({
     const elec = audit.lineById['major.elec']
     return [
       {
-        key: 'major', title: 'Major — required', badge: `${meter('major')} · ${majorLines.filter((l) => l.status !== 'missing').length}/${majorLines.length}`,
+        key: 'major', category: 'major', title: 'Major — required', badge: `${meter('major')} · ${majorLines.filter((l) => l.status !== 'missing').length}/${majorLines.length}`,
         subgroups: [
           { courses: majors.filter((c) => c.tag === 'req') },
           { title: 'Pick one: Operating Systems or Programming Language Concepts', courses: majors.filter((c) => c.tag === 'osplc') },
@@ -77,7 +79,7 @@ export function LibraryPanel({
         ],
       },
       {
-        key: 'elective', title: 'Major — CSC electives', badge: `${fmtCredits(elec.done + elec.planned + elec.pendingCredits)}/16 cr`,
+        key: 'elective', category: 'elective', title: 'Major — CSC electives', badge: `${fmtCredits(elec.done + elec.planned + elec.pendingCredits)}/16 cr`,
         note: 'Choose 16 credits (usually 4 courses) of CSC 3000/4000. A second OS/PLC course also counts here.',
         subgroups: [
           { courses: COURSES.filter((c) => c.section === 'elective' && c.tag !== 'rare').sort(byCode) },
@@ -85,14 +87,14 @@ export function LibraryPanel({
         ],
       },
       {
-        key: 'core', title: 'IMPACTS Core & Field of Study', badge: `${meter('core')} · ${meter('fos')}`,
+        key: 'core', category: 'core', title: 'IMPACTS Core & Field of Study', badge: `${meter('core')} · ${meter('fos')}`,
         subgroups: [
           { title: 'IMPACTS Core · Lab Science Sequence', note: audit.lineById['core.labseq'].note, courses: COURSES.filter((c) => c.tag === 'labseq') },
           { title: `Field of Study · pick from this list${fosLeft ? ` (${fmtCredits(fosLeft)} cr to 18)` : ''}`, note: FOS_NOTE, courses: COURSES.filter((c) => c.tag === 'fos') },
         ],
       },
       {
-        key: 'rpe', title: 'Required Program Electives – CSC', badge: `${meter('rpe')} cr`,
+        key: 'rpe', category: 'rpe', title: 'Required Program Electives – CSC', badge: `${meter('rpe')} cr`,
         subgroups: [
           { title: rpeLeft ? `${fmtCredits(rpeLeft)} more credits · any subject, 2000–4000 level` : 'Covered', note: RPE_NOTE, courses: COURSES.filter((c) => c.section === 'rpe') },
         ],
@@ -204,7 +206,8 @@ export function LibraryPanel({
         {visible.map((g) => (
           <section key={g.key} aria-label={g.title}>
             <div className="sticky top-0 z-10 flex items-center gap-2 border-b bg-sidebar/95 px-3 py-1.5 backdrop-blur">
-              <span className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">{g.title}</span>
+              <CategoryDot category={g.category} />
+              <span className={cn('text-[11px] font-semibold tracking-wider uppercase', CATEGORY[g.category].text)}>{g.title}</span>
               {g.note && (
                 <Hint label={g.note}>
                   <LuInfo className="size-3 text-muted-foreground" aria-label={g.note} />
@@ -320,10 +323,10 @@ function LibraryRow({
           }}
           data-course={course.id}
           className={cn(
-            'group flex items-start gap-2 px-3 py-2 transition-colors hover:bg-accent/60 focus-visible:bg-accent focus-visible:outline-none',
+            'group flex items-start gap-2 border-l-[3px] px-3 py-2 transition-colors hover:bg-accent/60 focus-visible:bg-accent focus-visible:outline-none',
+            CATEGORY[categoryOfSection(course)].edge,
             !done && !ui.isMobile && 'cursor-grab',
-            inSem && 'border-l-2 border-l-primary',
-            done && 'opacity-65',
+            done && 'opacity-60',
           )}
         >
           <div className="min-w-0 flex-1 space-y-0.5">
@@ -335,7 +338,7 @@ function LibraryRow({
               <span className="mono">{course.credits} cr</span>
               {!done && <SeasonLetters course={course} />}
               {done && (
-                <span className="inline-flex items-center gap-1 text-foreground/80">
+                <span className="inline-flex items-center gap-1 font-medium text-green-700 dark:text-green-400">
                   <LuCheck className="size-3" aria-hidden />
                   {passed?.rec.grade || 'Done'}
                   {passed && <span className="mono">· {passed.term.shortLabel}</span>}

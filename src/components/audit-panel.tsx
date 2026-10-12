@@ -23,7 +23,8 @@ import {
 import { advisorChecklist } from '@/lib/planner'
 import { auditHeadline, blockMeter, statusSentence, stillNeededText } from '@/lib/plan-ops'
 import type { PlannerSnapshot } from '@/lib/store'
-import { AUDIT_STATUS_LABEL, AuditIcon } from '@/components/bits'
+import { AUDIT_STATUS_LABEL, AuditIcon, CategoryDot, GradePill } from '@/components/bits'
+import { categoryOfBlock } from '@/lib/colors'
 import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -229,6 +230,7 @@ function BlockSection({ block: b, open, onOpenChange, loading }: { block: BlockR
     <Collapsible open={open} onOpenChange={onOpenChange} className="rounded-lg border bg-card">
       <CollapsibleTrigger className="group flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left hover:bg-accent/50" data-block={b.key}>
         {!loading && <AuditIcon status={b.status} />}
+        <CategoryDot category={categoryOfBlock(b.key)} />
         <span className="min-w-0 flex-1 truncate text-[13px] font-medium">{b.name}</span>
         <span className="mono text-[11px] text-muted-foreground">
           {fmtCredits(m.done + m.planned + m.pending)}/{fmtCredits(m.required)}
@@ -281,6 +283,7 @@ function LineRow({ line: l, loading }: { line: LineResult; loading: boolean }) {
         className="flex w-full items-center gap-2 rounded-md px-1.5 py-1.5 text-left hover:bg-accent/60"
       >
         {!loading && <AuditIcon status={l.status} className="size-3" />}
+        {l.id === 'major.elec' && <CategoryDot category="elective" className="size-1.5" />}
         <span className={cn('min-w-0 flex-1 truncate text-xs', l.status === 'missing' && 'font-medium')}>{l.label}</span>
         {l.credits != null && shown != null && (
           <span className="mono shrink-0 text-[11px] text-muted-foreground">
@@ -345,7 +348,7 @@ function UnitRow({ u }: { u: AuditUnit }) {
         {u.pending ? <AuditIcon status="pending" className="size-3 self-center" /> : <LuCheck className="size-3 shrink-0 self-center" aria-hidden />}
         <span className="mono font-semibold">{u.code}</span>
         <span className="min-w-0 flex-1 truncate text-muted-foreground">{u.rec.title}</span>
-        <span className="mono shrink-0">{u.grade || '—'}</span>
+        <GradePill grade={u.grade} />
         <span className="mono shrink-0 text-[11px] text-muted-foreground">{u.term.shortLabel}{u.rec.transfer ? ' · tr' : ''}</span>
       </button>
     )
@@ -382,7 +385,7 @@ function NotApplied({ rec }: { rec: AcademicRecord }) {
                   onClick={() => ui.openRecord({ recordId: c.id })}
                   className={cn('mono inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] hover:bg-accent', st === 'nocredit' && 'border-destructive/30 text-destructive')}
                 >
-                  {c.code} <b>{c.grade || '—'}</b> <span className="text-muted-foreground">{t.shortLabel}</span>
+                  {c.code} <GradePill grade={c.grade} /> <span className="text-muted-foreground">{t.shortLabel}</span>
                 </button>
               ))}
             </div>

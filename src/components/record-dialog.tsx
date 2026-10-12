@@ -22,7 +22,7 @@ import { deleteRecordCourse, findRecordCourse, importRecord, recordWritable, sav
 import { AppDialog } from '@/components/app-dialog'
 import { confirmAction } from '@/components/confirm'
 import type { RecordDialogOptions } from '@/components/ui-context'
-import { Tag } from '@/components/bits'
+import { GradePill, Tag } from '@/components/bits'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
@@ -332,13 +332,18 @@ export function RecordDialog({ opts, onClose, snap }: { opts: RecordDialogOption
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className={cn('mono text-sm font-semibold', c.status === 'nocredit' && 'text-destructive')}>{c.code}</span>
-                          <span className={cn('mono text-sm', c.status === 'nocredit' && 'text-destructive')}>{c.grade || '—'}</span>
+                          <GradePill grade={c.grade} />
                           {c.transfer && <Tag>transfer</Tag>}
                           {c.r2r && <Tag>replaced</Tag>}
                           {!c.gpa && <Tag>not in GPA</Tag>}
                         </div>
                         <div className="truncate text-xs text-foreground/80">{c.title}</div>
-                        <div className="truncate text-[11px] text-muted-foreground">{fmtCredits(c.credits)} cr · {recordWhere(c, snap.audit)}</div>
+                        <div className="truncate text-[11px] text-muted-foreground">
+                          {fmtCredits(c.credits)} cr ·{' '}
+                          <span className={cn(c.status === 'counted' && 'text-green-700 dark:text-green-400', c.status === 'nocredit' && 'text-destructive', c.status === 'notcounted' && 'text-orange-700 dark:text-orange-400')}>
+                            {recordWhere(c, snap.audit)}
+                          </span>
+                        </div>
                       </div>
                       <Button variant="ghost" size="icon" className="size-8 text-muted-foreground" onClick={() => recordWritable() && startEdit(c.id)} aria-label={`Edit ${c.code}`}>
                         <LuPencil className="size-3.5" aria-hidden />

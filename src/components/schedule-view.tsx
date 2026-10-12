@@ -22,7 +22,8 @@ import { pickSection, usePlanner } from '@/lib/store'
 import type { Prefs } from '@/hooks/use-prefs'
 import { DayCalendar, WeekCalendar } from '@/components/calendar'
 import { SectionChooser } from '@/components/section-list'
-import { ProfessorLink, Tag } from '@/components/bits'
+import { CategoryTag, ProfessorLink, Tag } from '@/components/bits'
+import { categoryOf } from '@/lib/colors'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -219,6 +220,7 @@ export function ScheduleView({
 
 function ClassesPanel({ term, entries, untimed, hasSchedule }: { term: Term; entries: PlanEntry[]; untimed: UntimedItem[]; hasSchedule: boolean }) {
   const ui = useUi()
+  const roles = usePlanner().audit.roles
   const [open, setOpen] = useState<string | null>(null)
   const picks = entries.map((e) => {
     const course = findCourse(e.courseId)!
@@ -283,6 +285,7 @@ function ClassesPanel({ term, entries, untimed, hasSchedule }: { term: Term; ent
                   <div className="flex items-baseline gap-2">
                     <span className="mono text-sm font-semibold">{course.code}</span>
                     <span className="mono text-[11px] text-muted-foreground">{course.credits} cr</span>
+                    <CategoryTag category={categoryOf(course, roles[course.id])} className="ml-auto" />
                   </div>
                   <div className="truncate text-xs text-muted-foreground">{course.title}</div>
                   {hasSchedule && (
@@ -297,7 +300,7 @@ function ClassesPanel({ term, entries, untimed, hasSchedule }: { term: Term; ent
                         <div key={p.part.codeId} className="text-xs">
                           {p.picked ? (
                             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                              <LuCheck className="size-3.5 text-foreground" aria-hidden />
+                              <LuCheck className="size-3.5 text-green-600 dark:text-green-400" aria-hidden />
                               {parts.length > 1 && <span className="mono font-medium">{p.part.code}</span>}
                               <span>Sec {p.picked.section}</span>
                               <span className="mono text-muted-foreground">CRN {p.picked.crn}</span>

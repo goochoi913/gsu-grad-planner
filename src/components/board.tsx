@@ -32,7 +32,6 @@ import {
   fmtCredits,
   fmtDelta,
   fmtGpa,
-  isRequiredSection,
   offeringInfo,
 } from '@/lib/planner'
 import {
@@ -61,7 +60,8 @@ import {
   type PlannerSnapshot,
 } from '@/lib/store'
 import { confirmAction } from '@/components/confirm'
-import { AuditIcon, Hint, Tag } from '@/components/bits'
+import { AuditIcon, CategoryLegend, CategoryTag, GradePill, Hint, Tag } from '@/components/bits'
+import { CATEGORY, PROGRESS, categoryOf, categoryOfRole } from '@/lib/colors'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -187,11 +187,12 @@ function PathBar({ snap }: { snap: PlannerSnapshot }) {
 
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-      <div className="min-w-0">
+      <div className="min-w-0 space-y-1">
         <h2 className="text-base font-semibold tracking-tight">Your plan</h2>
         <p className="text-xs text-muted-foreground">
           {first.label} → {last.label} · up to 18 credits a term
         </p>
+        <CategoryLegend />
       </div>
       <div className="flex-1" />
       <DropdownMenu>
@@ -334,13 +335,13 @@ function PastTermCard({ term, snap }: { term: RecordTerm; snap: PlannerSnapshot 
                 onClick={() => ui.openRecord({ recordId: c.id })}
                 title={`${c.code} — ${c.title} · ${RECORD_STATUS[c.status].label}`}
                 className={cn(
-                  'mono inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] hover:bg-accent',
+                  'mono inline-flex items-center gap-1.5 rounded-md border bg-background py-0.5 pr-0.5 pl-1.5 text-[11px] hover:bg-accent',
                   c.status === 'nocredit' && 'border-destructive/30 text-destructive',
                   (c.status === 'notcounted' || c.status === 'unused') && 'border-dashed text-muted-foreground',
                 )}
               >
                 <span className={cn(c.status === 'nocredit' && 'line-through decoration-destructive/60')}>{c.code}</span>
-                <b className="font-semibold">{c.grade || '—'}</b>
+                <GradePill grade={c.grade} />
               </button>
             ))}
           </div>
@@ -353,24 +354,28 @@ function PastTermCard({ term, snap }: { term: RecordTerm; snap: PlannerSnapshot 
 function PastRow({ c, snap }: { c: RecordCourse; snap: PlannerSnapshot }) {
   const ui = useUi()
   const credits = earnsCredit(c) || !c.credits ? `${fmtCredits(earnsCredit(c) ? c.credits : 0)} cr` : `0 cr (${fmtCredits(c.credits)} attempted)`
+  const cat = c.status === 'counted' ? categoryOfRole(snap.audit.roles[c.id]) : null
   return (
     <li>
       <button
         type="button"
         onClick={() => ui.openRecord({ recordId: c.id })}
         className={cn(
-          'w-full rounded-lg border border-transparent bg-secondary/60 px-2.5 py-1.5 text-left hover:border-border hover:bg-accent',
-          c.status === 'nocredit' && 'bg-destructive/5',
+          'w-full rounded-lg border border-transparent border-l-[3px] bg-secondary/60 px-2.5 py-1.5 text-left hover:border-border hover:bg-accent',
+          cat ? CATEGORY[cat].edge : 'border-l-neutral-300 dark:border-l-neutral-600',
+          c.status === 'nocredit' && 'border-l-red-400 bg-destructive/5',
         )}
       >
         <span className="flex items-center gap-2">
           <span className={cn('mono text-[13px] font-semibold', c.status === 'nocredit' && 'text-destructive line-through decoration-destructive/50')}>{c.code}</span>
           {c.transfer && <Tag>transfer</Tag>}
           {c.r2r && <Tag>replaced</Tag>}
-          <span className={cn('mono ml-auto text-[13px] font-semibold', c.status === 'nocredit' && 'text-destructive')}>{c.grade || '—'}</span>
+          <GradePill grade={c.grade} className="ml-auto h-5 min-w-[26px] text-xs" />
         </span>
         <span className="block truncate text-xs text-foreground/80">{c.title}</span>
-        <span className="block truncate text-[11px] text-muted-foreground">{credits} · {recordWhere(c, snap.audit)}</span>
+        <span className={cn('block truncate text-[11px]', cat && cat !== 'extra' ? CATEGORY[cat].text : 'text-muted-foreground')}>
+          <span className="text-muted-foreground">{credits} · </span>{recordWhere(c, snap.audit)}
+        </span>
       </button>
     </li>
   )
@@ -477,7 +482,7 @@ function TermCard({ term, snap, isFirst, isLast }: { term: Term; snap: PlannerSn
       <div className="px-3.5 pb-2">
         <span className="block h-1 w-full overflow-hidden rounded-full bg-muted" aria-hidden>
           <span
-            className={cn('block h-full rounded-full transition-[width]', over ? 'bg-destructive' : 'bg-foreground/70')}
+            className={cn('block h-full rounded-full transition-[width]', over ? 'bg-destructive' : PROGRESS.done)}
             style={{ width: `${Math.min(100, (credits / term.maxCredits) * 100)}%` }}
           />
         </span>
@@ -544,7 +549,7 @@ function TermCard({ term, snap, isFirst, isLast }: { term: Term; snap: PlannerSn
 
 function Delta({ v }: { v: number | null }) {
   if (v == null) return null
-  return <span className={cn('mono', v < 0 && 'text-destructive')}>{fmtDelta(v)}</span>
+  return <span className={cn('mono', v < 0 ? 'text-destructive' : v > 0 ? 'text-green-700 dark:text-green-400' : '')}>{fmtDelta(v)}</span>
 }
 
 function TermInfo({ term, snap }: { term: Term; snap: PlannerSnapshot }) {
@@ -591,6 +596,7 @@ function CourseRow({ courseId, term, snap, conflict }: { courseId: string; term:
   const picks = sched ? partPicks(course, entry, term.id) : []
   const offeredNow = picks.some((p) => p.sections.length)
   const timed = entry?.blocks.filter((b) => b.days.length && b.startTime) ?? []
+  const cat = categoryOf(course, role)
 
   return (
     <li
@@ -616,8 +622,8 @@ function CourseRow({ courseId, term, snap, conflict }: { courseId: string; term:
       className={cn(
         'group relative cursor-pointer rounded-lg border border-transparent border-l-[3px] bg-secondary/60 px-2.5 py-2 transition-colors',
         'hover:border-border hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none',
-        isRequiredSection(course) ? 'border-l-foreground/80' : 'border-l-muted-foreground/35',
-        conflict && 'border-l-destructive bg-destructive/5',
+        CATEGORY[cat].edge,
+        conflict && 'bg-destructive/5',
       )}
     >
       <div className="flex items-center gap-2">
@@ -667,12 +673,10 @@ function CourseRow({ courseId, term, snap, conflict }: { courseId: string; term:
       </div>
       <div className="mt-0.5 flex min-w-0 items-center gap-2 text-[11px] text-muted-foreground">
         <span className="mono shrink-0 whitespace-nowrap">{course.credits} cr</span>
-        {role && (
-          <span className="flex shrink-0 items-center gap-1 whitespace-nowrap">
-            · {roleShort(role)}
-            {role.pending && <AuditIcon status="pending" className="size-3" />}
-          </span>
-        )}
+        <span className="flex shrink-0 items-center gap-1 whitespace-nowrap">
+          <CategoryTag category={cat} label={role ? roleShort(role) : CATEGORY[cat].short} />
+          {role?.pending && <AuditIcon status="pending" className="size-3" />}
+        </span>
         {sched && offeredNow && (
           <span className="ml-auto min-w-0 truncate text-right">
             {picks.filter((p) => p.sections.length).every((p) => p.picked) ? (

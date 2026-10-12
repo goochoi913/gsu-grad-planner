@@ -22,7 +22,8 @@ import { addCourse, pickSection, removeCourse, setRepeatToReplace, updateBlocks,
 import { genId, fmtTimeRange } from '@/lib/format'
 import { AppDialog, DialogSection } from '@/components/app-dialog'
 import { SectionChooser } from '@/components/section-list'
-import { Tag } from '@/components/bits'
+import { CategoryTag, GradePill, Tag } from '@/components/bits'
+import { categoryOf } from '@/lib/colors'
 import { confirmAction } from '@/components/confirm'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -66,17 +67,18 @@ export function CourseDialog({ courseId, onClose, snap }: { courseId: string | n
       )}
       title={course?.title ?? ''}
       description={course ? roleText(course, snap.audit) : undefined}
-      headerExtra={course && <HeaderTags course={course} />}
+      headerExtra={course && <HeaderTags course={course} snap={snap} />}
     >
       {course && <CourseBody course={course} snap={snap} dirtyRef={dirtyRef} />}
     </AppDialog>
   )
 }
 
-function HeaderTags({ course }: { course: CatalogCourse }) {
+function HeaderTags({ course, snap }: { course: CatalogCourse; snap: PlannerSnapshot }) {
   const sched = scheduleFor(SCHEDULE_TERM_ID)
   return (
     <div className="flex flex-wrap gap-1 pt-1">
+      <CategoryTag category={categoryOf(course, snap.audit.roles[course.id])} />
       {SEASONS.map((s) => {
         const info = offeringInfo(course, s)
         return (
@@ -262,7 +264,7 @@ function Attempts({ course, snap }: { course: CatalogCourse; snap: PlannerSnapsh
               <span className="mono font-semibold">{rec.code}</span>
               <span className="text-muted-foreground">{term.label}</span>
               <span className="text-xs text-muted-foreground">{RECORD_STATUS[rec.status].short}{rec.transfer ? ' · transfer' : ''}{rec.r2r ? ' · replaced' : ''}</span>
-              <span className={cn('mono ml-auto font-semibold', rec.status === 'nocredit' && 'text-destructive')}>{rec.grade || '—'}</span>
+              <GradePill grade={rec.grade} className="ml-auto" />
             </button>
           </li>
         ))}

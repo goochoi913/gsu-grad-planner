@@ -2,7 +2,8 @@ import { LuChartLine, LuGraduationCap } from 'react-icons/lu'
 import { fmtCredits, fmtGpa, round2 } from '@/lib/planner'
 import { STATUS_TEXT, allMeters, type Meter } from '@/lib/plan-ops'
 import type { PlannerSnapshot } from '@/lib/store'
-import { AuditIcon } from '@/components/bits'
+import { AuditIcon, CategoryDot } from '@/components/bits'
+import { PROGRESS, categoryOfBlock } from '@/lib/colors'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
@@ -77,15 +78,16 @@ function MeterChip({ meter: m, loading, onClick }: { meter: Meter; loading: bool
           )}
           aria-label={`${m.name}: ${fmtCredits(shown)} of ${fmtCredits(m.required)} credits, ${STATUS_TEXT[m.status]}`}
         >
-          <span className="flex w-full items-center gap-1">
+          <span className="flex w-full items-center gap-1.5">
+            <CategoryDot category={categoryOfBlock(m.key)} className="size-1.5" />
             <span className="min-w-0 flex-1 truncate text-[11px] font-medium">{m.short}</span>
             {!loading && <AuditIcon status={m.status} className="size-3" />}
           </span>
           <span className="block h-1 w-full overflow-hidden rounded-full bg-muted">
             <span className="relative block h-full">
-              <span className="absolute inset-y-0 left-0 rounded-full bg-pending/70" style={{ width: `${pct(shown)}%` }} />
-              <span className="absolute inset-y-0 left-0 rounded-full bg-foreground/30" style={{ width: `${pct(m.done + m.planned)}%` }} />
-              <span className="absolute inset-y-0 left-0 rounded-full bg-foreground" style={{ width: `${pct(m.done)}%` }} />
+              <span className={cn('absolute inset-y-0 left-0 rounded-full', PROGRESS.pending)} style={{ width: `${pct(shown)}%` }} />
+              <span className={cn('absolute inset-y-0 left-0 rounded-full', PROGRESS.planned)} style={{ width: `${pct(m.done + m.planned)}%` }} />
+              <span className={cn('absolute inset-y-0 left-0 rounded-full', PROGRESS.done)} style={{ width: `${pct(m.done)}%` }} />
             </span>
           </span>
           <span className="mono text-[10.5px] leading-none text-muted-foreground">
@@ -99,9 +101,9 @@ function MeterChip({ meter: m, loading, onClick }: { meter: Meter; loading: bool
           {m.name}
         </div>
         <div className="space-y-1 text-muted-foreground">
-          <Row swatch="bg-foreground" label={m.key === 'total' ? 'Earned' : 'Done (incl. waived)'} value={m.done} />
-          <Row swatch="bg-foreground/30" label="Planned" value={m.planned} />
-          {m.pending > 0 && <Row swatch="bg-pending/70" label="Needs an advisor exception" value={m.pending} />}
+          <Row swatch={PROGRESS.done} label={m.key === 'total' ? 'Earned' : 'Done (incl. waived)'} value={m.done} />
+          <Row swatch={PROGRESS.planned} label="Planned" value={m.planned} />
+          {m.pending > 0 && <Row swatch={PROGRESS.pending} label="Needs an advisor exception" value={m.pending} />}
           <div className="flex justify-between border-t pt-1 text-foreground">
             <span>Required</span>
             <span className="mono">{fmtCredits(m.required)} cr</span>

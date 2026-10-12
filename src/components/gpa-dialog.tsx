@@ -22,10 +22,11 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { cn } from '@/lib/utils'
+import { gradeText } from '@/lib/colors'
 
 function Delta({ v }: { v: number | null }) {
   if (v == null) return null
-  return <span className={cn('mono ml-1 text-[11px]', v < 0 ? 'text-destructive' : 'text-muted-foreground')}>{fmtDelta(v)}</span>
+  return <span className={cn('mono ml-1 text-[11px]', v < 0 ? 'text-destructive' : v > 0 ? 'text-green-700 dark:text-green-400' : 'text-muted-foreground')}>{fmtDelta(v)}</span>
 }
 function Cell({ g, d }: { g: GpaResult; d: number | null }) {
   return <><b className="mono font-semibold">{fmtGpa(g)}</b><Delta v={d} /></>
@@ -118,7 +119,7 @@ export function GpaDialog({ open, focusTerm, onClose, snap }: { open: boolean; f
                 <Label htmlFor={`gpa-r2r-${c.codeId}`} className="block flex-1 space-y-0.5 text-xs leading-relaxed font-normal">
                   <span className="flex items-center gap-1.5 text-sm font-medium"><LuRepeat className="size-3.5" aria-hidden /><span className="mono">{c.code}</span></span>
                   <span className="block text-muted-foreground">
-                    Retake in {c.term.label} · first grade <b className="mono text-foreground">{c.first.rec.grade || '—'}</b> ({c.first.term.label}){c.grade ? <> · expected <b className="mono text-foreground">{c.grade}</b></> : null}
+                    Retake in {c.term.label} · first grade <b className={cn('mono', gradeText(c.first.rec.grade))}>{c.first.rec.grade || '—'}</b> ({c.first.term.label}){c.grade ? <> · expected <b className={cn('mono', gradeText(c.grade))}>{c.grade}</b></> : null}
                   </span>
                   <span className={cn('block', (c.status === 'blocked' || c.status === 'limit' || c.status === 'lower') && 'text-destructive')}>
                     {R2R_STATUS_TEXT[c.status]}{c.note ? ` — ${c.note}` : ''}
@@ -184,7 +185,7 @@ export function GpaDialog({ open, focusTerm, onClose, snap }: { open: boolean; f
                       </div>
                       <span className="mono text-xs">{fmtCredits(r.credits)} cr</span>
                       <Select value={r.grade || 'none'} onValueChange={(v) => setProjectedGrade(r.codeId, v === 'none' ? '' : v)}>
-                        <SelectTrigger size="sm" className="w-20" aria-label={`Expected grade for ${r.code}`}><SelectValue /></SelectTrigger>
+                        <SelectTrigger size="sm" className={cn('w-20 font-semibold', gradeText(r.grade))} aria-label={`Expected grade for ${r.code}`}><SelectValue /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="none">—</SelectItem>
                           {PROJECTION_GRADES.map((l) => <SelectItem key={l} value={l}>{l}</SelectItem>)}

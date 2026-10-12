@@ -9,6 +9,7 @@ import { WeekCalendar } from '@/components/calendar'
 import { Logo } from '@/components/logo'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+import { CATEGORY, categoryOf, gradeText } from '@/lib/colors'
 
 /**
  * The read, as opposed to the work: one scrolling column of numbered sections. This
@@ -128,7 +129,7 @@ export function SummaryView({ snap }: { snap: PlannerSnapshot }) {
                     <li key={e.courseId} className="flex items-baseline gap-2 px-3 py-1.5 text-sm">
                       <span className="mono w-32 shrink-0 font-medium">{c.code}</span>
                       <span className="min-w-0 flex-1 truncate">{c.title}</span>
-                      <span className="shrink-0 text-xs text-muted-foreground">{roleShort(a.roles[c.id])}</span>
+                      <span className={cn('shrink-0 text-xs', CATEGORY[categoryOf(c, a.roles[c.id])].text)}>{roleShort(a.roles[c.id])}</span>
                     </li>
                   )
                 })}
@@ -156,7 +157,14 @@ export function SummaryView({ snap }: { snap: PlannerSnapshot }) {
                   return (
                     <tr key={t.id} className="align-top">
                       <td className="px-3 py-1.5 whitespace-nowrap">{t.label}</td>
-                      <td className="mono px-3 py-1.5 text-xs">{t.courses.map((c) => `${c.code} ${c.grade || '—'}`).join(' · ')}</td>
+                      <td className="mono px-3 py-1.5 text-xs">
+                        {t.courses.map((c, i) => (
+                          <span key={c.id}>
+                            {i > 0 && ' · '}
+                            {c.code} <b className={gradeText(c.grade)}>{c.grade || '—'}</b>
+                          </span>
+                        ))}
+                      </td>
                       <td className="mono px-3 py-1.5 text-right">{fmtCredits(info.earned)}</td>
                       <td className="mono px-3 py-1.5 text-right">{info.transferOnly ? '≈' : ''}{fmtGpa(info.termGpa)}</td>
                     </tr>

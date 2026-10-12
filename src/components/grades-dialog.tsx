@@ -148,7 +148,7 @@ export function GradesDialog({ termId, onClose, snap }: { termId: TermId | null;
                   <div
                     className={cn(
                       'mt-1 text-xs',
-                      v.cls === 'counted' && 'text-foreground',
+                      v.cls === 'counted' && 'font-medium text-green-700 dark:text-green-400',
                       (v.cls === 'nocredit' || v.cls === 'notcounted') && 'text-destructive',
                       (v.cls === 'todo' || v.cls === 'drop') && 'text-muted-foreground',
                     )}
