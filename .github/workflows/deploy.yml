@@ -7,7 +7,7 @@ on:
   # Registration season (October–January): fresh seat counts from GSU's class search every
   # 30 minutes. :07 and :37 stay clear of the top of the hour, when GitHub delays scheduled runs.
   schedule:
-    - cron: '7,37 * * 10,11,12,1 *'
+    - cron: '7,37 * * 1,10-12 *'
 
 permissions:
   contents: read
