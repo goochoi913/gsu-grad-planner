@@ -85,7 +85,7 @@ For a new term's schedule, drop its CSVs in `data/sources/`, update `TERM` and `
 
 GSU's class search is public (no login, no key, nothing to pay), but a browser can't read it from
 another site — it sends no CORS headers — so a server has to. That server is the deploy job: from
-October through January it runs every 30 minutes (`7,37 * * 10,11,12,1 *`, clear of the top of the
+October through January it runs every 30 minutes (`7,37 * * 1,10-12 *`, clear of the top of the
 hour when GitHub delays scheduled runs), reads the class search with
 `node scripts/build-schedule.mjs --live`, and publishes the schedule as `live/spring2027.json` next to
 the app. The app loads that file when it opens, when it comes back to the foreground, every five
@@ -96,6 +96,11 @@ The app's own files don't change between refreshes, so the installed PWA never h
 new seat counts, and the service worker never caches the file. If GSU's site is down, the app keeps
 the committed schedule. GitHub pauses scheduled jobs in a public repository after 60 days without a
 commit; re-enable it from the Actions tab if that happens (GitHub sends an email first).
+
+GitHub runs scheduled jobs on a best-effort basis: they can start late, be skipped, or not start at
+all for a newly added schedule. To refresh the seats by hand, open **Actions → Deploy to GitHub
+Pages → Run workflow** (or `gh workflow run deploy.yml`); the new numbers are live about two minutes
+later.
 
 ## Firebase
 
