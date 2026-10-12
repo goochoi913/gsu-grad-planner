@@ -1,0 +1,25 @@
+{
+  "_comment": "Manual RateMyProfessors corrections for scripts/fetch-rmp.mjs. Key = professor key from src/data/professors.json (e.g. \"gao|chunlan\"); value = the RMP legacyId from the profile URL ratemyprofessors.com/professor/<legacyId>, or null to show no rating. Each override needs a reason in _why. Keys starting with _ are ignored.",
+  "_why": {
+    "gao|chunlan": "Two Georgia State Computer Science profiles for her: 'Lan Gao' (30 ratings) and 'Chunlan Gao' (#3006916, 7) — using the larger.",
+    "van-der-holst|hendricus": "Two Mathematics profiles: 'Hendricus Van Der Holst' (34 ratings) and 'Hein van der Holst' (#2912619, 6) — using the larger.",
+    "spiro|samuel": "Two Mathematics profiles: 'Samuel Spiro' (1 rating) and 'Sam Spiro' (#3152069, 0) — using the one with a rating.",
+    "chapura|mitchell": "Three profiles for him: Geography (29 ratings), Geology (#2731237, 2), Geosciences (#3003853, 1) — using the largest.",
+    "wiley|katherine": "'Kate Wiley', Cultural Studies (no ratings yet) fits PERS 2001 and her preferred name; the 'Katherine Wiley' Nutrition profile (#1601954) is not her.",
+    "li|yang": "RMP lists the name reversed as 'Li Yang' (Mathematics); 12 of its 51 reviews are for MATH 3020, which Yang Li teaches this term (with MATH 2641), and GSU lists no 'Yang, Li'.",
+    "ballard|ellen": "Both Georgia State 'Ellen Ballard' profiles review the same classes — PERS 2001 (46 and 13 reviews) and CRJU 3020 — so it is one person listed twice; using the larger (Criminal Justice, 86 ratings; the other is #2297691).",
+    "martin|james": "Name match in Creative Media Industries; CSC 4841 (Computer Animation) meets in the CMII Annex and his reviews describe industry-standard artwork — kept, though reviewers name no course code (only '91263').",
+    "jacobs|carol": "The only 'Carol Jacobs' profile is Gerontology with all 9 reviews for PSYC 4610; nothing confirms the CSC 4990 instructor — no rating shown.",
+    "ulrich|paul": "The only 'Paul Ulrich' profile is Biology (BIO 1104 reviews); nothing confirms the CSC 4982 research section — no rating shown."
+  },
+  "gao|chunlan": 3075860,
+  "van-der-holst|hendricus": 1824482,
+  "spiro|samuel": 3109051,
+  "chapura|mitchell": 2437891,
+  "wiley|katherine": 3131782,
+  "li|yang": 2756806,
+  "ballard|ellen": 2299540,
+  "martin|james": 2960650,
+  "jacobs|carol": null,
+  "ulrich|paul": null
+}

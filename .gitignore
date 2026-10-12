@@ -5,3 +5,21 @@
 # Academic record files stay local — the app keeps the record only in Firebase
 *academic-record*.json
 private/
+
+# Build output and dependencies
+node_modules
+dist
+dist-ssr
+dev-dist
+*.local
+*.log
+.vite
+
+# Editor / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# Raw API caches from scripts/build-schedule.mjs and scripts/fetch-rmp.mjs
+.cache/

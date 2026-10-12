@@ -1,0 +1,59 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  # Registration season: refresh seat counts from GSU's class search every six hours.
+  schedule:
+    - cron: '23 */6 * 10,11,12,1 *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Node 24 runs src/data/degree.ts directly for the schedule script.
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # The planning logic must still match the original planner's results.
+      - name: Check the planning logic
+        run: npm test
+
+      # The CSVs stay the source for every section; this only refreshes seat counts,
+      # waitlists and the extra course-list sections. Falls back to the committed snapshot.
+      - name: Refresh seat counts from GSU's class search
+        run: node scripts/build-schedule.mjs || echo "::warning::Class search unavailable — using the committed schedule"
+
+      - name: Build
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,79 @@
+{
+  "_comment": "SYNTHETIC demo data for browser tests and screenshots: a made-up student, unrelated to Bee's record. Loaded through localStorage['bee-planner:fixture']; Firebase is never touched.",
+  "record": {
+    "source": "Demo record — synthetic test data",
+    "reported": null,
+    "terms": [
+      { "id": "fall2022", "courses": [
+        { "code": "ENGL 1101", "title": "English Composition I", "credits": 3.33, "grade": "B", "transfer": true, "school": "Sample Community College", "line": "core.engl1" },
+        { "code": "MATH 1113", "title": "Precalculus", "credits": 3.33, "grade": "A", "transfer": true, "school": "Sample Community College", "line": "core.math" },
+        { "code": "PSYC 1101", "title": "Introduction to Psychology", "credits": 3.33, "grade": "B", "transfer": true, "school": "Sample Community College", "line": "core.socfound" }
+      ] },
+      { "id": "spring2023", "courses": [
+        { "code": "ENGL 1102", "title": "English Composition II", "credits": 3.33, "grade": "A", "transfer": true, "school": "Sample Community College", "line": "core.engl2" },
+        { "code": "MATH 2211", "title": "Calculus of One Variable I", "credits": 3.33, "grade": "B", "transfer": true, "school": "Sample Community College", "line": "core.stem" },
+        { "code": "MUSC 1010", "title": "Music Appreciation", "credits": 3.33, "grade": "B", "transfer": true, "school": "Sample Community College", "line": "core.hum" }
+      ] },
+      { "id": "fall2023", "courses": [
+        { "code": "CSC 1301", "title": "Principles of Computer Science I", "credits": 4, "grade": "A" },
+        { "code": "POLS 1101", "title": "American Government", "credits": 3, "grade": "B" },
+        { "code": "HIST 2110", "title": "Survey of United States History", "credits": 3, "grade": "A" },
+        { "code": "SPAN 1001", "title": "Elementary Spanish I", "credits": 3, "grade": "B", "line": "core.lang" }
+      ] },
+      { "id": "spring2024", "courses": [
+        { "code": "CSC 1302", "title": "Principles of Computer Science II", "credits": 4, "grade": "B" },
+        { "code": "MATH 2212", "title": "Calculus of One Variable II", "credits": 4, "grade": "B" },
+        { "code": "PHYS 2211K", "title": "Principles of Physics I", "credits": 4, "grade": "C" },
+        { "code": "PERS 2003", "title": "Perspectives on Human Diversity", "credits": 2, "grade": "A", "line": "core.inst" }
+      ] },
+      { "id": "fall2024", "courses": [
+        { "code": "CSC 2510", "title": "Theoretical Foundations of Computer Science", "credits": 3, "grade": "A" },
+        { "code": "HIST 1112", "title": "Survey of World History since 1500", "credits": 3, "grade": "B", "line": "core.global" },
+        { "code": "PERS 2001", "title": "Perspectives on Comparative Culture", "credits": 2, "grade": "B", "line": "core.inst" },
+        { "code": "SCOM 1500", "title": "Public Speaking", "credits": 3, "grade": "B" }
+      ] },
+      { "id": "spring2025", "courses": [
+        { "code": "CSC 2720", "title": "Data Structures", "credits": 3, "grade": "B" },
+        { "code": "MATH 2641", "title": "Linear Algebra I", "credits": 3, "grade": "D" },
+        { "code": "ACCT 2101", "title": "Principles of Accounting I", "credits": 3, "grade": "B" }
+      ] },
+      { "id": "fall2025", "courses": [
+        { "code": "CSC 3320", "title": "System-Level Programming", "credits": 3, "grade": "F" },
+        { "code": "MATH 3020", "title": "Applied Probability & Statistics for CS", "credits": 3, "grade": "C" },
+        { "code": "CSC 2920", "title": "Ethical & Social Issues in Computing", "credits": 3, "grade": "B" }
+      ] }
+    ],
+    "exceptions": []
+  },
+  "plan": {
+    "version": 6,
+    "lastTermId": "fall2027",
+    "schedule": {
+      "spring2027": [
+        { "courseId": "CSC3210", "blocks": [], "sections": { "CSC3210": "14634", "CSC3210L": "20706" } },
+        { "courseId": "CSC3320", "blocks": [], "sections": { "CSC3320": "10643" } },
+        { "courseId": "CSC3350", "blocks": [] },
+        { "courseId": "MATH2641", "blocks": [] },
+        { "courseId": "ECON2105", "blocks": [] }
+      ],
+      "summer2027": [
+        { "courseId": "CSC4520", "blocks": [] },
+        { "courseId": "CSC4350", "blocks": [] },
+        { "courseId": "CSC4320", "blocks": [] }
+      ],
+      "fall2027": [
+        { "courseId": "PHYS2212", "blocks": [] },
+        { "courseId": "CSC4710", "blocks": [{ "id": "b1", "type": "Lecture", "days": ["M", "W"], "startTime": "10:00", "endTime": "11:45", "location": "Aderhold 224", "instructor": "", "crn": "" }] },
+        { "courseId": "CSC4810", "blocks": [] },
+        { "courseId": "CSC4222", "blocks": [] },
+        { "courseId": "CSC4370", "blocks": [] }
+      ]
+    },
+    "sidebarCollapsed": false,
+    "sectionsCollapsed": {},
+    "view": "planner",
+    "calSemester": "spring2027",
+    "expandedTerms": null
+  },
+  "projection": { "version": 1, "grades": { "CSC3210": "A", "CSC3210L": "A", "ECON2105": "B" }, "r2r": {}, "target": { "gpa": 3, "termId": "fall2027" } }
+}

@@ -1,0 +1,3664 @@
+{
+ "schoolId": 360,
+ "schoolName": "Georgia State University",
+ "fetchedAt": "2026-10-12T10:09:58-04:00",
+ "professors": {
+  "ahuja|tarushee": {
+   "key": "ahuja|tarushee",
+   "name": "Ahuja, Tarushee",
+   "display": "Tarushee Ahuja",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Tarushee%20Ahuja",
+   "rmp": {
+    "legacyId": 2291788,
+    "url": "https://www.ratemyprofessors.com/professor/2291788",
+    "firstName": "Tarushee",
+    "lastName": "Ahuja",
+    "department": "Chemistry",
+    "avgRating": 3.7,
+    "avgDifficulty": 3.2,
+    "numRatings": 90,
+    "wouldTakeAgainPercent": 65,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 33
+     },
+     {
+      "name": "Extra credit",
+      "count": 31
+     },
+     {
+      "name": "Test heavy",
+      "count": 26
+     },
+     {
+      "name": "Caring",
+      "count": 20
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 19
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "akbas|esra": {
+   "key": "akbas|esra",
+   "name": "Akbas, Esra",
+   "display": "Esra Akbas",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Esra%20Akbas",
+   "rmp": {
+    "legacyId": 3006294,
+    "url": "https://www.ratemyprofessors.com/professor/3006294",
+    "firstName": "Esra",
+    "lastName": "Akbas",
+    "department": "Computer Science",
+    "avgRating": 1,
+    "avgDifficulty": 4.3,
+    "numRatings": 6,
+    "wouldTakeAgainPercent": 0,
+    "tags": [
+     {
+      "name": "Beware of pop quizzes",
+      "count": 4
+     },
+     {
+      "name": "Tough grader",
+      "count": 3
+     },
+     {
+      "name": "Graded by few things",
+      "count": 2
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 2
+     },
+     {
+      "name": "So many papers",
+      "count": 2
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "allen|sally": {
+   "key": "allen|sally",
+   "name": "Allen, Sally H.",
+   "display": "Sally Allen",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Sally%20Allen",
+   "rmp": {
+    "legacyId": 1864982,
+    "url": "https://www.ratemyprofessors.com/professor/1864982",
+    "firstName": "Sally",
+    "lastName": "Allen",
+    "department": "Journalism",
+    "avgRating": 4.8,
+    "avgDifficulty": 1.3,
+    "numRatings": 52,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Caring",
+      "count": 27
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 12
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 11
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 9
+     },
+     {
+      "name": "Hilarious",
+      "count": 8
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "almada|lorenzo": {
+   "key": "almada|lorenzo",
+   "name": "Almada, Lorenzo N.",
+   "display": "Lorenzo Almada",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Lorenzo%20Almada",
+   "rmp": {
+    "legacyId": 2303071,
+    "url": "https://www.ratemyprofessors.com/professor/2303071",
+    "firstName": "Lorenzo",
+    "lastName": "Almada",
+    "department": "Economics",
+    "avgRating": 4.9,
+    "avgDifficulty": 2.4,
+    "numRatings": 74,
+    "wouldTakeAgainPercent": 97,
+    "tags": [
+     {
+      "name": "Clear grading criteria",
+      "count": 31
+     },
+     {
+      "name": "Caring",
+      "count": 21
+     },
+     {
+      "name": "Lots of homework",
+      "count": 21
+     },
+     {
+      "name": "Respected",
+      "count": 19
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 18
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "alser|mohammed": {
+   "key": "alser|mohammed",
+   "name": "Alser, Mohammed",
+   "display": "Mohammed Alser",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Mohammed%20Alser",
+   "rmp": {
+    "legacyId": 3126576,
+    "url": "https://www.ratemyprofessors.com/professor/3126576",
+    "firstName": "Mohammed",
+    "lastName": "Alser",
+    "department": "Computer Science",
+    "avgRating": 5,
+    "avgDifficulty": 1.6,
+    "numRatings": 10,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Participation matters",
+      "count": 7
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 5
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 5
+     },
+     {
+      "name": "Caring",
+      "count": 4
+     },
+     {
+      "name": "Group projects",
+      "count": 2
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "angryk|rafal": {
+   "key": "angryk|rafal",
+   "name": "Angryk, Rafal A.",
+   "display": "Rafal Angryk",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Rafal%20Angryk",
+   "rmp": null,
+   "match": "none"
+  },
+  "arnold|douglas": {
+   "key": "arnold|douglas",
+   "name": "Arnold, Douglas L.",
+   "display": "Douglas Arnold",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Douglas%20Arnold",
+   "rmp": null,
+   "match": "none"
+  },
+  "asare|samuel": {
+   "key": "asare|samuel",
+   "name": "Asare, Samuel",
+   "display": "Samuel Asare",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Samuel%20Asare",
+   "rmp": {
+    "legacyId": 2450530,
+    "url": "https://www.ratemyprofessors.com/professor/2450530",
+    "firstName": "Samuel",
+    "lastName": "Asare",
+    "department": "Economics",
+    "avgRating": 3.9,
+    "avgDifficulty": 2.6,
+    "numRatings": 14,
+    "wouldTakeAgainPercent": 86,
+    "tags": [
+     {
+      "name": "Clear grading criteria",
+      "count": 9
+     },
+     {
+      "name": "Extra credit",
+      "count": 8
+     },
+     {
+      "name": "Lots of homework",
+      "count": 7
+     },
+     {
+      "name": "Caring",
+      "count": 2
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "ashok|ashwin": {
+   "key": "ashok|ashwin",
+   "name": "Ashok, Ashwin",
+   "display": "Ashwin Ashok",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Ashwin%20Ashok",
+   "rmp": {
+    "legacyId": 2688463,
+    "url": "https://www.ratemyprofessors.com/professor/2688463",
+    "firstName": "Ashwin",
+    "lastName": "Ashok",
+    "department": "Computer Science",
+    "avgRating": 2.6,
+    "avgDifficulty": 3.8,
+    "numRatings": 11,
+    "wouldTakeAgainPercent": 42,
+    "tags": [
+     {
+      "name": "Graded by few things",
+      "count": 3
+     },
+     {
+      "name": "Group projects",
+      "count": 3
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 2
+     },
+     {
+      "name": "Inspirational",
+      "count": 2
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "babaie|hassan": {
+   "key": "babaie|hassan",
+   "name": "Babaie, Hassan A.",
+   "display": "Hassan Babaie",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Hassan%20Babaie",
+   "rmp": {
+    "legacyId": 607839,
+    "url": "https://www.ratemyprofessors.com/professor/607839",
+    "firstName": "Hassan",
+    "lastName": "Babaie",
+    "department": "Geology",
+    "avgRating": 3.4,
+    "avgDifficulty": 2.9,
+    "numRatings": 51,
+    "wouldTakeAgainPercent": 53,
+    "tags": [
+     {
+      "name": "Test heavy",
+      "count": 14
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 12
+     },
+     {
+      "name": "Graded by few things",
+      "count": 7
+     },
+     {
+      "name": "Extra credit",
+      "count": 6
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 5
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "bal|abdullah": {
+   "key": "bal|abdullah",
+   "name": "Bal, Abdullah",
+   "display": "Abdullah Bal",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Abdullah%20Bal",
+   "rmp": {
+    "legacyId": 2942443,
+    "url": "https://www.ratemyprofessors.com/professor/2942443",
+    "firstName": "Abdullah",
+    "lastName": "Bal",
+    "department": "Computer Science",
+    "avgRating": 3.9,
+    "avgDifficulty": 2.8,
+    "numRatings": 20,
+    "wouldTakeAgainPercent": 75,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 10
+     },
+     {
+      "name": "Graded by few things",
+      "count": 7
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 6
+     },
+     {
+      "name": "Respected",
+      "count": 5
+     },
+     {
+      "name": "Test heavy",
+      "count": 5
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "ballard|ellen": {
+   "key": "ballard|ellen",
+   "name": "Ballard, Ellen P.",
+   "display": "Ellen Ballard",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Ellen%20Ballard",
+   "rmp": {
+    "legacyId": 2299540,
+    "url": "https://www.ratemyprofessors.com/professor/2299540",
+    "firstName": "Ellen",
+    "lastName": "Ballard",
+    "department": "Criminal Justice",
+    "avgRating": 4.8,
+    "avgDifficulty": 1.7,
+    "numRatings": 86,
+    "wouldTakeAgainPercent": 95,
+    "tags": [
+     {
+      "name": "Caring",
+      "count": 33
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 30
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 27
+     },
+     {
+      "name": "Graded by few things",
+      "count": 23
+     },
+     {
+      "name": "Hilarious",
+      "count": 21
+     }
+    ]
+   },
+   "match": "override"
+  },
+  "baron|fabien": {
+   "key": "baron|fabien",
+   "name": "Baron, Fabien R.",
+   "display": "Fabien Baron",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Fabien%20Baron",
+   "rmp": {
+    "legacyId": 1851894,
+    "url": "https://www.ratemyprofessors.com/professor/1851894",
+    "firstName": "Fabien",
+    "lastName": "Baron",
+    "department": "Astronomy",
+    "avgRating": 4.6,
+    "avgDifficulty": 2.2,
+    "numRatings": 26,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Extra credit",
+      "count": 8
+     },
+     {
+      "name": "Caring",
+      "count": 6
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 5
+     },
+     {
+      "name": "Graded by few things",
+      "count": 4
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 3
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "barouch|timothy": {
+   "key": "barouch|timothy",
+   "name": "Barouch, Timothy M.",
+   "display": "Timothy Barouch",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Timothy%20Barouch",
+   "rmp": {
+    "legacyId": 2921273,
+    "url": "https://www.ratemyprofessors.com/professor/2921273",
+    "firstName": "Timothy",
+    "lastName": "Barouch",
+    "department": "Communication",
+    "avgRating": 5,
+    "avgDifficulty": 2,
+    "numRatings": 1,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Caring",
+      "count": 1
+     },
+     {
+      "name": "Extra credit",
+      "count": 1
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "bayat-barooni|amin": {
+   "key": "bayat-barooni|amin",
+   "name": "Bayat Barooni, Amin (Amin)",
+   "display": "Amin Bayat Barooni",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Amin%20Bayat%20Barooni",
+   "rmp": {
+    "legacyId": 2595786,
+    "url": "https://www.ratemyprofessors.com/professor/2595786",
+    "firstName": "Amin",
+    "lastName": "Barooni",
+    "department": "Physics",
+    "avgRating": 4.5,
+    "avgDifficulty": 2.2,
+    "numRatings": 47,
+    "wouldTakeAgainPercent": 88,
+    "tags": [
+     {
+      "name": "Caring",
+      "count": 22
+     },
+     {
+      "name": "Extra credit",
+      "count": 17
+     },
+     {
+      "name": "Participation matters",
+      "count": 17
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 13
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 10
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "bhatnagar|ruchi": {
+   "key": "bhatnagar|ruchi",
+   "name": "Bhatnagar, Ruchi",
+   "display": "Ruchi Bhatnagar",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Ruchi%20Bhatnagar",
+   "rmp": {
+    "legacyId": 2194732,
+    "url": "https://www.ratemyprofessors.com/professor/2194732",
+    "firstName": "Ruchi",
+    "lastName": "Bhatnagar",
+    "department": "Education",
+    "avgRating": 4.3,
+    "avgDifficulty": 2.2,
+    "numRatings": 36,
+    "wouldTakeAgainPercent": 81,
+    "tags": [
+     {
+      "name": "Participation matters",
+      "count": 17
+     },
+     {
+      "name": "Group projects",
+      "count": 13
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 12
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 11
+     },
+     {
+      "name": "Get ready to read",
+      "count": 10
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "bondarenko|vladimir": {
+   "key": "bondarenko|vladimir",
+   "name": "Bondarenko, Vladimir Y.",
+   "display": "Vladimir Bondarenko",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Vladimir%20Bondarenko",
+   "rmp": {
+    "legacyId": 1166937,
+    "url": "https://www.ratemyprofessors.com/professor/1166937",
+    "firstName": "Vladimir",
+    "lastName": "Bondarenko",
+    "department": "Mathematics",
+    "avgRating": 3.1,
+    "avgDifficulty": 2.4,
+    "numRatings": 27,
+    "wouldTakeAgainPercent": 77,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 7
+     },
+     {
+      "name": "Caring",
+      "count": 4
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 4
+     },
+     {
+      "name": "Lots of homework",
+      "count": 3
+     },
+     {
+      "name": "Respected",
+      "count": 2
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "bourgeois|anu": {
+   "key": "bourgeois|anu",
+   "name": "Bourgeois, Anu G.",
+   "display": "Anu Bourgeois",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Anu%20Bourgeois",
+   "rmp": {
+    "legacyId": 901019,
+    "url": "https://www.ratemyprofessors.com/professor/901019",
+    "firstName": "Anu",
+    "lastName": "Bourgeois",
+    "department": "Computer Science",
+    "avgRating": 2.7,
+    "avgDifficulty": 3.7,
+    "numRatings": 30,
+    "wouldTakeAgainPercent": 18,
+    "tags": [
+     {
+      "name": "Test heavy",
+      "count": 12
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 11
+     },
+     {
+      "name": "Tough grader",
+      "count": 9
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 3
+     },
+     {
+      "name": "Caring",
+      "count": 3
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "boyles|deron": {
+   "key": "boyles|deron",
+   "name": "Boyles, Deron R.",
+   "display": "Deron Boyles",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Deron%20Boyles",
+   "rmp": {
+    "legacyId": 927888,
+    "url": "https://www.ratemyprofessors.com/professor/927888",
+    "firstName": "Deron",
+    "lastName": "Boyles",
+    "department": "Education",
+    "avgRating": 4.2,
+    "avgDifficulty": 4.1,
+    "numRatings": 52,
+    "wouldTakeAgainPercent": 69,
+    "tags": [
+     {
+      "name": "Get ready to read",
+      "count": 11
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 6
+     },
+     {
+      "name": "Skip class? You won't pass.",
+      "count": 6
+     },
+     {
+      "name": "Participation matters",
+      "count": 4
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 3
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "buabeng|emmanuel": {
+   "key": "buabeng|emmanuel",
+   "name": "Buabeng, Emmanuel (Emmanuel) R.",
+   "display": "Emmanuel Buabeng",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Emmanuel%20Buabeng",
+   "rmp": {
+    "legacyId": 2840013,
+    "url": "https://www.ratemyprofessors.com/professor/2840013",
+    "firstName": "Emmanuel",
+    "lastName": "Buabeng",
+    "department": "Chemistry",
+    "avgRating": 4.7,
+    "avgDifficulty": 2.2,
+    "numRatings": 28,
+    "wouldTakeAgainPercent": 93,
+    "tags": [
+     {
+      "name": "Amazing lectures",
+      "count": 15
+     },
+     {
+      "name": "Caring",
+      "count": 12
+     },
+     {
+      "name": "Respected",
+      "count": 8
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 6
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 6
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "cai|zhipeng": {
+   "key": "cai|zhipeng",
+   "name": "Cai, Zhipeng",
+   "display": "Zhipeng Cai",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Zhipeng%20Cai",
+   "rmp": {
+    "legacyId": 1640151,
+    "url": "https://www.ratemyprofessors.com/professor/1640151",
+    "firstName": "Zhipeng",
+    "lastName": "Cai",
+    "department": "Computer Science",
+    "avgRating": 4.1,
+    "avgDifficulty": 2.3,
+    "numRatings": 16,
+    "wouldTakeAgainPercent": 78,
+    "tags": [
+     {
+      "name": "Graded by few things",
+      "count": 4
+     },
+     {
+      "name": "Caring",
+      "count": 3
+     },
+     {
+      "name": "Respected",
+      "count": 3
+     },
+     {
+      "name": "Skip class? You won't pass.",
+      "count": 3
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 2
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "carter|marva": {
+   "key": "carter|marva",
+   "name": "Carter, Marva G.",
+   "display": "Marva Carter",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Marva%20Carter",
+   "rmp": {
+    "legacyId": 616314,
+    "url": "https://www.ratemyprofessors.com/professor/616314",
+    "firstName": "Marva",
+    "lastName": "Carter",
+    "department": "Music",
+    "avgRating": 3.2,
+    "avgDifficulty": 1.6,
+    "numRatings": 56,
+    "wouldTakeAgainPercent": 48,
+    "tags": [
+     {
+      "name": "Graded by few things",
+      "count": 8
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 3
+     },
+     {
+      "name": "Group projects",
+      "count": 3
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 3
+     },
+     {
+      "name": "Beware of pop quizzes",
+      "count": 2
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "castelli|frank": {
+   "key": "castelli|frank",
+   "name": "Castelli, Frank R.",
+   "display": "Frank Castelli",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Frank%20Castelli",
+   "rmp": {
+    "legacyId": 2845644,
+    "url": "https://www.ratemyprofessors.com/professor/2845644",
+    "firstName": "Frank",
+    "lastName": "Castelli",
+    "department": "Biology",
+    "avgRating": 3.2,
+    "avgDifficulty": 3.6,
+    "numRatings": 108,
+    "wouldTakeAgainPercent": 56,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 40
+     },
+     {
+      "name": "Participation matters",
+      "count": 38
+     },
+     {
+      "name": "Get ready to read",
+      "count": 35
+     },
+     {
+      "name": "Test heavy",
+      "count": 25
+     },
+     {
+      "name": "Tough grader",
+      "count": 25
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "chapman|rebekah": {
+   "key": "chapman|rebekah",
+   "name": "Chapman, Rebekah E.",
+   "display": "Rebekah Chapman",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Rebekah%20Chapman",
+   "rmp": {
+    "legacyId": 1340569,
+    "url": "https://www.ratemyprofessors.com/professor/1340569",
+    "firstName": "Rebekah",
+    "lastName": "Chapman",
+    "department": "Biology",
+    "avgRating": 4.1,
+    "avgDifficulty": 3.1,
+    "numRatings": 94,
+    "wouldTakeAgainPercent": 64,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 13
+     },
+     {
+      "name": "Test heavy",
+      "count": 12
+     },
+     {
+      "name": "Extra credit",
+      "count": 8
+     },
+     {
+      "name": "Lots of homework",
+      "count": 8
+     },
+     {
+      "name": "Caring",
+      "count": 6
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "chapura|mitchell": {
+   "key": "chapura|mitchell",
+   "name": "Chapura, Mitchell E.",
+   "display": "Mitchell Chapura",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Mitchell%20Chapura",
+   "rmp": {
+    "legacyId": 2437891,
+    "url": "https://www.ratemyprofessors.com/professor/2437891",
+    "firstName": "Mitchell",
+    "lastName": "Chapura",
+    "department": "Geography",
+    "avgRating": 2.9,
+    "avgDifficulty": 2.4,
+    "numRatings": 29,
+    "wouldTakeAgainPercent": 34,
+    "tags": [
+     {
+      "name": "Graded by few things",
+      "count": 12
+     },
+     {
+      "name": "Beware of pop quizzes",
+      "count": 8
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 8
+     },
+     {
+      "name": "Extra credit",
+      "count": 6
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 5
+     }
+    ]
+   },
+   "match": "override"
+  },
+  "chikwanda|patreck": {
+   "key": "chikwanda|patreck",
+   "name": "Chikwanda, Patreck",
+   "display": "Patreck Chikwanda",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Patreck%20Chikwanda",
+   "rmp": {
+    "legacyId": 2272485,
+    "url": "https://www.ratemyprofessors.com/professor/2272485",
+    "firstName": "Patreck",
+    "lastName": "Chikwanda",
+    "department": "Mathematics",
+    "avgRating": 3,
+    "avgDifficulty": 3.3,
+    "numRatings": 64,
+    "wouldTakeAgainPercent": 45,
+    "tags": [
+     {
+      "name": "Lots of homework",
+      "count": 20
+     },
+     {
+      "name": "Caring",
+      "count": 17
+     },
+     {
+      "name": "Test heavy",
+      "count": 13
+     },
+     {
+      "name": "Tough grader",
+      "count": 13
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 10
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "chong|alberto": {
+   "key": "chong|alberto",
+   "name": "Chong, Alberto E.",
+   "display": "Alberto Chong",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Alberto%20Chong",
+   "rmp": {
+    "legacyId": 2108387,
+    "url": "https://www.ratemyprofessors.com/professor/2108387",
+    "firstName": "Alberto",
+    "lastName": "Chong",
+    "department": "Economics",
+    "avgRating": 3.8,
+    "avgDifficulty": 3.3,
+    "numRatings": 40,
+    "wouldTakeAgainPercent": 68,
+    "tags": [
+     {
+      "name": "Respected",
+      "count": 15
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 11
+     },
+     {
+      "name": "Group projects",
+      "count": 11
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 7
+     },
+     {
+      "name": "Inspirational",
+      "count": 7
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "connors|megan": {
+   "key": "connors|megan",
+   "name": "Connors, Megan E.",
+   "display": "Megan Connors",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Megan%20Connors",
+   "rmp": {
+    "legacyId": 2144558,
+    "url": "https://www.ratemyprofessors.com/professor/2144558",
+    "firstName": "Megan",
+    "lastName": "Connors",
+    "department": "Physics",
+    "avgRating": 4.3,
+    "avgDifficulty": 3.3,
+    "numRatings": 8,
+    "wouldTakeAgainPercent": 75,
+    "tags": [
+     {
+      "name": "Amazing lectures",
+      "count": 3
+     },
+     {
+      "name": "Skip class? You won't pass.",
+      "count": 2
+     },
+     {
+      "name": "Test heavy",
+      "count": 2
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 1
+     },
+     {
+      "name": "Beware of pop quizzes",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "cotton|priscilla": {
+   "key": "cotton|priscilla",
+   "name": "Cotton, Priscilla (Priscilla)",
+   "display": "Priscilla Cotton",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Priscilla%20Cotton",
+   "rmp": {
+    "legacyId": 3009670,
+    "url": "https://www.ratemyprofessors.com/professor/3009670",
+    "firstName": "Priscilla",
+    "lastName": "Cotton",
+    "department": "Communication",
+    "avgRating": 4.8,
+    "avgDifficulty": 1.3,
+    "numRatings": 4,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Accessible outside class",
+      "count": 3
+     },
+     {
+      "name": "Caring",
+      "count": 2
+     },
+     {
+      "name": "Extra credit",
+      "count": 2
+     },
+     {
+      "name": "Get ready to read",
+      "count": 2
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "de-la-cruz|francisco": {
+   "key": "de-la-cruz|francisco",
+   "name": "De La Cruz, Francisco",
+   "display": "Francisco De La Cruz",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Francisco%20De%20La%20Cruz",
+   "rmp": {
+    "legacyId": 1043945,
+    "url": "https://www.ratemyprofessors.com/professor/1043945",
+    "firstName": "Francisco",
+    "lastName": "Cruz",
+    "department": "Biology",
+    "avgRating": 2.4,
+    "avgDifficulty": 3.9,
+    "numRatings": 103,
+    "wouldTakeAgainPercent": 21,
+    "tags": [
+     {
+      "name": "Test heavy",
+      "count": 26
+     },
+     {
+      "name": "Tough grader",
+      "count": 23
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 22
+     },
+     {
+      "name": "Lots of homework",
+      "count": 15
+     },
+     {
+      "name": "Get ready to read",
+      "count": 9
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "demakethepalli-venkateswara|hemanth-kumar": {
+   "key": "demakethepalli-venkateswara|hemanth-kumar",
+   "name": "Demakethepalli Venkateswara, Hemanth Kumar (Hemanth Venkateswara)",
+   "display": "Hemanth Venkateswara",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Hemanth%20Venkateswara",
+   "rmp": {
+    "legacyId": 2904986,
+    "url": "https://www.ratemyprofessors.com/professor/2904986",
+    "firstName": "Hemanth",
+    "lastName": "Venkateswara",
+    "department": "Computer Science",
+    "avgRating": 5,
+    "avgDifficulty": 3.5,
+    "numRatings": 2,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Amazing lectures",
+      "count": 2
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 1
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 1
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 1
+     },
+     {
+      "name": "Respected",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "dorabadizare|farzaneh": {
+   "key": "dorabadizare|farzaneh",
+   "name": "Dorabadizare, Farzaneh (Anita)",
+   "display": "Anita Dorabadizare",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Anita%20Dorabadizare",
+   "rmp": {
+    "legacyId": 3142157,
+    "url": "https://www.ratemyprofessors.com/professor/3142157",
+    "firstName": "Anita",
+    "lastName": "Dorabadizare",
+    "department": "Chemistry",
+    "avgRating": 4,
+    "avgDifficulty": 2,
+    "numRatings": 2,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Caring",
+      "count": 1
+     },
+     {
+      "name": "Extra credit",
+      "count": 1
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 1
+     },
+     {
+      "name": "Participation matters",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "ezeoke|michelle": {
+   "key": "ezeoke|michelle",
+   "name": "Ezeoke, Michelle V.",
+   "display": "Michelle Ezeoke",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Michelle%20Ezeoke",
+   "rmp": {
+    "legacyId": 2846290,
+    "url": "https://www.ratemyprofessors.com/professor/2846290",
+    "firstName": "Michelle",
+    "lastName": "Ezeoke",
+    "department": "Biology",
+    "avgRating": 2.4,
+    "avgDifficulty": 3.5,
+    "numRatings": 34,
+    "wouldTakeAgainPercent": 32,
+    "tags": [
+     {
+      "name": "Get ready to read",
+      "count": 13
+     },
+     {
+      "name": "Test heavy",
+      "count": 12
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 10
+     },
+     {
+      "name": "Graded by few things",
+      "count": 8
+     },
+     {
+      "name": "Participation matters",
+      "count": 7
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "fanoe|andrew": {
+   "key": "fanoe|andrew",
+   "name": "Fanoe, Andrew L.",
+   "display": "Andrew Fanoe",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Andrew%20Fanoe",
+   "rmp": {
+    "legacyId": 1941832,
+    "url": "https://www.ratemyprofessors.com/professor/1941832",
+    "firstName": "Andrew",
+    "lastName": "Fanoe",
+    "department": "Mathematics",
+    "avgRating": 4.5,
+    "avgDifficulty": 2.6,
+    "numRatings": 133,
+    "wouldTakeAgainPercent": 89,
+    "tags": [
+     {
+      "name": "Extra credit",
+      "count": 50
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 38
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 32
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 30
+     },
+     {
+      "name": "Caring",
+      "count": 28
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "gao|chunlan": {
+   "key": "gao|chunlan",
+   "name": "Gao, Chunlan (Lan)",
+   "display": "Lan Gao",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Lan%20Gao",
+   "rmp": {
+    "legacyId": 3075860,
+    "url": "https://www.ratemyprofessors.com/professor/3075860",
+    "firstName": "Lan",
+    "lastName": "Gao",
+    "department": "Computer Science",
+    "avgRating": 2.4,
+    "avgDifficulty": 3.6,
+    "numRatings": 30,
+    "wouldTakeAgainPercent": 37,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 14
+     },
+     {
+      "name": "Test heavy",
+      "count": 9
+     },
+     {
+      "name": "Get ready to read",
+      "count": 7
+     },
+     {
+      "name": "Graded by few things",
+      "count": 6
+     },
+     {
+      "name": "Tough grader",
+      "count": 5
+     }
+    ]
+   },
+   "match": "override"
+  },
+  "hastings|gary": {
+   "key": "hastings|gary",
+   "name": "Hastings, Gary",
+   "display": "Gary Hastings",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Gary%20Hastings",
+   "rmp": {
+    "legacyId": 868565,
+    "url": "https://www.ratemyprofessors.com/professor/868565",
+    "firstName": "Gary",
+    "lastName": "Hastings",
+    "department": "Physics",
+    "avgRating": 1.9,
+    "avgDifficulty": 3.6,
+    "numRatings": 19,
+    "wouldTakeAgainPercent": 33,
+    "tags": [
+     {
+      "name": "Accessible outside class",
+      "count": 1
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 1
+     },
+     {
+      "name": "Extra credit",
+      "count": 1
+     },
+     {
+      "name": "Get ready to read",
+      "count": 1
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "hawamdeh|faris": {
+   "key": "hawamdeh|faris",
+   "name": "Hawamdeh, Faris (Faris) S.",
+   "display": "Faris Hawamdeh",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Faris%20Hawamdeh",
+   "rmp": {
+    "legacyId": 2927602,
+    "url": "https://www.ratemyprofessors.com/professor/2927602",
+    "firstName": "Faris",
+    "lastName": "Hawamdeh",
+    "department": "Computer Science",
+    "avgRating": 3.8,
+    "avgDifficulty": 2.4,
+    "numRatings": 19,
+    "wouldTakeAgainPercent": 74,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 7
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 5
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 5
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 4
+     },
+     {
+      "name": "Test heavy",
+      "count": 3
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "henley|jodi": {
+   "key": "henley|jodi",
+   "name": "Henley, Jodi M.",
+   "display": "Jodi Henley",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Jodi%20Henley",
+   "rmp": {
+    "legacyId": 2967542,
+    "url": "https://www.ratemyprofessors.com/professor/2967542",
+    "firstName": "Jodi",
+    "lastName": "Henley",
+    "department": "Accounting",
+    "avgRating": 4.5,
+    "avgDifficulty": 3.1,
+    "numRatings": 26,
+    "wouldTakeAgainPercent": 89,
+    "tags": [
+     {
+      "name": "Amazing lectures",
+      "count": 12
+     },
+     {
+      "name": "Caring",
+      "count": 9
+     },
+     {
+      "name": "Extra credit",
+      "count": 9
+     },
+     {
+      "name": "Group projects",
+      "count": 9
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 5
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "henry|louis": {
+   "key": "henry|louis",
+   "name": "Henry, Louis R.",
+   "display": "Louis Henry",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Louis%20Henry",
+   "rmp": {
+    "legacyId": 458011,
+    "url": "https://www.ratemyprofessors.com/professor/458011",
+    "firstName": "Louis",
+    "lastName": "Henry",
+    "department": "Computer Science",
+    "avgRating": 3.1,
+    "avgDifficulty": 2.4,
+    "numRatings": 168,
+    "wouldTakeAgainPercent": 58,
+    "tags": [
+     {
+      "name": "Lots of homework",
+      "count": 32
+     },
+     {
+      "name": "Group projects",
+      "count": 19
+     },
+     {
+      "name": "Hilarious",
+      "count": 17
+     },
+     {
+      "name": "Extra credit",
+      "count": 14
+     },
+     {
+      "name": "Participation matters",
+      "count": 12
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "hollingsworth|alison": {
+   "key": "hollingsworth|alison",
+   "name": "Hollingsworth, Alison (Alison) J.",
+   "display": "Alison Hollingsworth",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Alison%20Hollingsworth",
+   "rmp": {
+    "legacyId": 3031572,
+    "url": "https://www.ratemyprofessors.com/professor/3031572",
+    "firstName": "Allison",
+    "lastName": "Hollingsworth",
+    "department": "Accounting",
+    "avgRating": 4.7,
+    "avgDifficulty": 2,
+    "numRatings": 24,
+    "wouldTakeAgainPercent": 96,
+    "tags": [
+     {
+      "name": "Extra credit",
+      "count": 10
+     },
+     {
+      "name": "Caring",
+      "count": 9
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 7
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 7
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 6
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "hosseini|akram-sadat": {
+   "key": "hosseini|akram-sadat",
+   "name": "Hosseini, Akram Sadat",
+   "display": "Akram Sadat Hosseini",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Akram%20Sadat%20Hosseini",
+   "rmp": {
+    "legacyId": 2415899,
+    "url": "https://www.ratemyprofessors.com/professor/2415899",
+    "firstName": "Akram",
+    "lastName": "Hosseini",
+    "department": "Computer Science",
+    "avgRating": 5,
+    "avgDifficulty": 3,
+    "numRatings": 1,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Accessible outside class",
+      "count": 1
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 1
+     },
+     {
+      "name": "Get ready to read",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "hu|xiaolin": {
+   "key": "hu|xiaolin",
+   "name": "Hu, Xiaolin",
+   "display": "Xiaolin Hu",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Xiaolin%20Hu",
+   "rmp": {
+    "legacyId": 1683704,
+    "url": "https://www.ratemyprofessors.com/professor/1683704",
+    "firstName": "Xiaolin",
+    "lastName": "HU",
+    "department": "Computer Science",
+    "avgRating": 2.6,
+    "avgDifficulty": 3.8,
+    "numRatings": 15,
+    "wouldTakeAgainPercent": 14,
+    "tags": [
+     {
+      "name": "Tough grader",
+      "count": 3
+     },
+     {
+      "name": "Get ready to read",
+      "count": 2
+     },
+     {
+      "name": "Lots of homework",
+      "count": 2
+     },
+     {
+      "name": "Graded by few things",
+      "count": 1
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "hu|zhaoqi": {
+   "key": "hu|zhaoqi",
+   "name": "Hu, Zhaoqi",
+   "display": "Zhaoqi Hu",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Zhaoqi%20Hu",
+   "rmp": {
+    "legacyId": 3126721,
+    "url": "https://www.ratemyprofessors.com/professor/3126721",
+    "firstName": "Zhaoqi",
+    "lastName": "Hu",
+    "department": "Philosophy",
+    "avgRating": 4.9,
+    "avgDifficulty": 1.6,
+    "numRatings": 7,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Amazing lectures",
+      "count": 3
+     },
+     {
+      "name": "Caring",
+      "count": 3
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 2
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 2
+     },
+     {
+      "name": "Graded by few things",
+      "count": 2
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "huang|jiaqi": {
+   "key": "huang|jiaqi",
+   "name": "Huang, Jiaqi",
+   "display": "Jiaqi Huang",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Jiaqi%20Huang",
+   "rmp": null,
+   "match": "none"
+  },
+  "islam|s-m-towhidul": {
+   "key": "islam|s-m-towhidul",
+   "name": "Islam, S M Towhidul (Towhid)",
+   "display": "Towhid Islam",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Towhid%20Islam",
+   "rmp": {
+    "legacyId": 2921056,
+    "url": "https://www.ratemyprofessors.com/professor/2921056",
+    "firstName": "S M Towhidul",
+    "lastName": "Islam",
+    "department": "Computer Science",
+    "avgRating": 3.7,
+    "avgDifficulty": 2.8,
+    "numRatings": 13,
+    "wouldTakeAgainPercent": 77,
+    "tags": [
+     {
+      "name": "Beware of pop quizzes",
+      "count": 6
+     },
+     {
+      "name": "Extra credit",
+      "count": 4
+     },
+     {
+      "name": "Test heavy",
+      "count": 3
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 2
+     },
+     {
+      "name": "Caring",
+      "count": 2
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "jacobs|carol": {
+   "key": "jacobs|carol",
+   "name": "Jacobs, Carol A.",
+   "display": "Carol Jacobs",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Carol%20Jacobs",
+   "rmp": null,
+   "match": "override"
+  },
+  "james|david": {
+   "key": "james|david",
+   "name": "James, David",
+   "display": "David James",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=David%20James",
+   "rmp": {
+    "legacyId": 3007536,
+    "url": "https://www.ratemyprofessors.com/professor/3007536",
+    "firstName": "David",
+    "lastName": "James",
+    "department": "Computer Science",
+    "avgRating": 5,
+    "avgDifficulty": 2,
+    "numRatings": 2,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Caring",
+      "count": 2
+     },
+     {
+      "name": "Group projects",
+      "count": 2
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 1
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 1
+     },
+     {
+      "name": "Graded by few things",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "james|kesha": {
+   "key": "james|kesha",
+   "name": "James, Kesha S.",
+   "display": "Kesha James",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Kesha%20James",
+   "rmp": {
+    "legacyId": 3054232,
+    "url": "https://www.ratemyprofessors.com/professor/3054232",
+    "firstName": "Kesha",
+    "lastName": "James",
+    "department": "Communication",
+    "avgRating": 3,
+    "avgDifficulty": 4,
+    "numRatings": 4,
+    "wouldTakeAgainPercent": 50,
+    "tags": [
+     {
+      "name": "Participation matters",
+      "count": 3
+     },
+     {
+      "name": "So many papers",
+      "count": 2
+     },
+     {
+      "name": "Tough grader",
+      "count": 2
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 1
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "jiang|yili": {
+   "key": "jiang|yili",
+   "name": "Jiang, Yili",
+   "display": "Yili Jiang",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Yili%20Jiang",
+   "rmp": {
+    "legacyId": 3102563,
+    "url": "https://www.ratemyprofessors.com/professor/3102563",
+    "firstName": "Yili",
+    "lastName": "Jiang",
+    "department": "Computer Science",
+    "avgRating": null,
+    "avgDifficulty": null,
+    "numRatings": 0,
+    "wouldTakeAgainPercent": null,
+    "tags": []
+   },
+   "match": "exact"
+  },
+  "johnson|william": {
+   "key": "johnson|william",
+   "name": "Johnson, William (William) G.",
+   "display": "William Johnson",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=William%20Johnson",
+   "rmp": {
+    "legacyId": 2329806,
+    "url": "https://www.ratemyprofessors.com/professor/2329806",
+    "firstName": "William",
+    "lastName": "Johnson",
+    "department": "Computer Science",
+    "avgRating": 3.8,
+    "avgDifficulty": 2.4,
+    "numRatings": 27,
+    "wouldTakeAgainPercent": 70,
+    "tags": [
+     {
+      "name": "Group projects",
+      "count": 7
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 6
+     },
+     {
+      "name": "Get ready to read",
+      "count": 5
+     },
+     {
+      "name": "Respected",
+      "count": 5
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 4
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "kim|hongkil": {
+   "key": "kim|hongkil",
+   "name": "Kim, Hongkil",
+   "display": "Hongkil Kim",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Hongkil%20Kim",
+   "rmp": {
+    "legacyId": 2857310,
+    "url": "https://www.ratemyprofessors.com/professor/2857310",
+    "firstName": "Hongkil",
+    "lastName": "Kim",
+    "department": "Economics",
+    "avgRating": 4.8,
+    "avgDifficulty": 2.5,
+    "numRatings": 32,
+    "wouldTakeAgainPercent": 97,
+    "tags": [
+     {
+      "name": "Extra credit",
+      "count": 14
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 14
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 13
+     },
+     {
+      "name": "Caring",
+      "count": 9
+     },
+     {
+      "name": "Graded by few things",
+      "count": 9
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "kim|soo-jin": {
+   "key": "kim|soo-jin",
+   "name": "Kim, Soo Jin",
+   "display": "Soo Jin Kim",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Soo%20Jin%20Kim",
+   "rmp": {
+    "legacyId": 3006881,
+    "url": "https://www.ratemyprofessors.com/professor/3006881",
+    "firstName": "Soojin",
+    "lastName": "Kim",
+    "department": "Economics",
+    "avgRating": 4.3,
+    "avgDifficulty": 3,
+    "numRatings": 4,
+    "wouldTakeAgainPercent": 75,
+    "tags": [
+     {
+      "name": "Accessible outside class",
+      "count": 1
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 1
+     },
+     {
+      "name": "Extra credit",
+      "count": 1
+     },
+     {
+      "name": "Get ready to read",
+      "count": 1
+     },
+     {
+      "name": "Lots of homework",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "kubek|mario": {
+   "key": "kubek|mario",
+   "name": "Kubek, Mario M.",
+   "display": "Mario Kubek",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Mario%20Kubek",
+   "rmp": {
+    "legacyId": 2865296,
+    "url": "https://www.ratemyprofessors.com/professor/2865296",
+    "firstName": "Mario",
+    "lastName": "Kubek",
+    "department": "Computer Science",
+    "avgRating": 4.5,
+    "avgDifficulty": 2.5,
+    "numRatings": 2,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Amazing lectures",
+      "count": 1
+     },
+     {
+      "name": "Caring",
+      "count": 1
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 1
+     },
+     {
+      "name": "Graded by few things",
+      "count": 1
+     },
+     {
+      "name": "Inspirational",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "kugblenu|jessica": {
+   "key": "kugblenu|jessica",
+   "name": "Kugblenu, Jessica (Jessica) E.",
+   "display": "Jessica Kugblenu",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Jessica%20Kugblenu",
+   "rmp": null,
+   "match": "none"
+  },
+  "kuzmin|kiril": {
+   "key": "kuzmin|kiril",
+   "name": "Kuzmin, Kiril (Kiril)",
+   "display": "Kiril Kuzmin",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Kiril%20Kuzmin",
+   "rmp": {
+    "legacyId": 2782285,
+    "url": "https://www.ratemyprofessors.com/professor/2782285",
+    "firstName": "Kiril",
+    "lastName": "Kuzmin",
+    "department": "Computer Science",
+    "avgRating": 4.7,
+    "avgDifficulty": 2.8,
+    "numRatings": 10,
+    "wouldTakeAgainPercent": 90,
+    "tags": [
+     {
+      "name": "Caring",
+      "count": 4
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 3
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 3
+     },
+     {
+      "name": "Inspirational",
+      "count": 3
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 2
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "lee|yoon-jae": {
+   "key": "lee|yoon-jae",
+   "name": "Lee, Yoon Jae",
+   "display": "Yoon Jae Lee",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Yoon%20Jae%20Lee",
+   "rmp": null,
+   "match": "none"
+  },
+  "li|yang": {
+   "key": "li|yang",
+   "name": "Li, Yang",
+   "display": "Yang Li",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Yang%20Li",
+   "rmp": {
+    "legacyId": 2756806,
+    "url": "https://www.ratemyprofessors.com/professor/2756806",
+    "firstName": "Li",
+    "lastName": "Yang",
+    "department": "Mathematics",
+    "avgRating": 3,
+    "avgDifficulty": 3.6,
+    "numRatings": 51,
+    "wouldTakeAgainPercent": 46,
+    "tags": [
+     {
+      "name": "Lots of homework",
+      "count": 24
+     },
+     {
+      "name": "Extra credit",
+      "count": 17
+     },
+     {
+      "name": "Tough grader",
+      "count": 16
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 14
+     },
+     {
+      "name": "Test heavy",
+      "count": 12
+     }
+    ]
+   },
+   "match": "override"
+  },
+  "liu|shijie": {
+   "key": "liu|shijie",
+   "name": "Liu, Shijie",
+   "display": "Shijie Liu",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Shijie%20Liu",
+   "rmp": {
+    "legacyId": 5070098,
+    "url": "https://www.ratemyprofessors.com/professor/5070098",
+    "firstName": "Shijie",
+    "lastName": "Liu",
+    "department": "Biology",
+    "avgRating": null,
+    "avgDifficulty": null,
+    "numRatings": 0,
+    "wouldTakeAgainPercent": null,
+    "tags": [
+     {
+      "name": "Amazing lectures",
+      "count": 1
+     },
+     {
+      "name": "Respected",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "manning|carrie": {
+   "key": "manning|carrie",
+   "name": "Manning, Carrie L.",
+   "display": "Carrie Manning",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Carrie%20Manning",
+   "rmp": {
+    "legacyId": 616567,
+    "url": "https://www.ratemyprofessors.com/professor/616567",
+    "firstName": "Carrie",
+    "lastName": "Manning",
+    "department": "Political Science",
+    "avgRating": 3.8,
+    "avgDifficulty": 2.7,
+    "numRatings": 9,
+    "wouldTakeAgainPercent": 50,
+    "tags": [
+     {
+      "name": "Graded by few things",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "martens|petrus": {
+   "key": "martens|petrus",
+   "name": "Martens, Petrus C.",
+   "display": "Petrus Martens",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Petrus%20Martens",
+   "rmp": {
+    "legacyId": 2015897,
+    "url": "https://www.ratemyprofessors.com/professor/2015897",
+    "firstName": "Petrus",
+    "lastName": "Martens",
+    "department": "Astronomy",
+    "avgRating": 2.8,
+    "avgDifficulty": 3,
+    "numRatings": 24,
+    "wouldTakeAgainPercent": 69,
+    "tags": [
+     {
+      "name": "Accessible outside class",
+      "count": 4
+     },
+     {
+      "name": "Inspirational",
+      "count": 4
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 3
+     },
+     {
+      "name": "Caring",
+      "count": 3
+     },
+     {
+      "name": "Get ready to read",
+      "count": 3
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "martin|james": {
+   "key": "martin|james",
+   "name": "Martin, James C.",
+   "display": "James Martin",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=James%20Martin",
+   "rmp": {
+    "legacyId": 2960650,
+    "url": "https://www.ratemyprofessors.com/professor/2960650",
+    "firstName": "James",
+    "lastName": "Martin",
+    "department": "Creative Media Industries",
+    "avgRating": 5,
+    "avgDifficulty": 3.8,
+    "numRatings": 4,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Gives good feedback",
+      "count": 4
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 2
+     },
+     {
+      "name": "Inspirational",
+      "count": 2
+     },
+     {
+      "name": "Participation matters",
+      "count": 2
+     },
+     {
+      "name": "Hilarious",
+      "count": 1
+     }
+    ]
+   },
+   "match": "override"
+  },
+  "mason|myles": {
+   "key": "mason|myles",
+   "name": "Mason, Myles W.",
+   "display": "Myles Mason",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Myles%20Mason",
+   "rmp": {
+    "legacyId": 3019623,
+    "url": "https://www.ratemyprofessors.com/professor/3019623",
+    "firstName": "Myles",
+    "lastName": "Mason",
+    "department": "Speech",
+    "avgRating": 5,
+    "avgDifficulty": 2,
+    "numRatings": 1,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Clear grading criteria",
+      "count": 1
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 1
+     },
+     {
+      "name": "Hilarious",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "mcvay|andrew": {
+   "key": "mcvay|andrew",
+   "name": "Mcvay, Andrew (Andrew)",
+   "display": "Andrew Mcvay",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Andrew%20Mcvay",
+   "rmp": {
+    "legacyId": 3064110,
+    "url": "https://www.ratemyprofessors.com/professor/3064110",
+    "firstName": "Andrew",
+    "lastName": "McVay",
+    "department": "Chemistry",
+    "avgRating": 5,
+    "avgDifficulty": 1.3,
+    "numRatings": 10,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Caring",
+      "count": 7
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 5
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 3
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 3
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 3
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "mishra|shashank": {
+   "key": "mishra|shashank",
+   "name": "Mishra, Shashank (Shashank)",
+   "display": "Shashank Mishra",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Shashank%20Mishra",
+   "rmp": null,
+   "match": "none"
+  },
+  "monteiro|goncalo": {
+   "key": "monteiro|goncalo",
+   "name": "Monteiro, Goncalo (Goncalo)",
+   "display": "Goncalo Monteiro",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Goncalo%20Monteiro",
+   "rmp": {
+    "legacyId": 2621059,
+    "url": "https://www.ratemyprofessors.com/professor/2621059",
+    "firstName": "Goncalo",
+    "lastName": "Monteiro",
+    "department": "Economics",
+    "avgRating": 5,
+    "avgDifficulty": 2.2,
+    "numRatings": 79,
+    "wouldTakeAgainPercent": 98,
+    "tags": [
+     {
+      "name": "Caring",
+      "count": 45
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 31
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 24
+     },
+     {
+      "name": "Extra credit",
+      "count": 24
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 24
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "nemira|alina": {
+   "key": "nemira|alina",
+   "name": "Nemira, Alina (Alina)",
+   "display": "Alina Nemira",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Alina%20Nemira",
+   "rmp": {
+    "legacyId": 3119831,
+    "url": "https://www.ratemyprofessors.com/professor/3119831",
+    "firstName": "Alina",
+    "lastName": "Nemira",
+    "department": "Computer Science",
+    "avgRating": 1.7,
+    "avgDifficulty": 4.7,
+    "numRatings": 3,
+    "wouldTakeAgainPercent": 33,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 3
+     },
+     {
+      "name": "Graded by few things",
+      "count": 2
+     },
+     {
+      "name": "Beware of pop quizzes",
+      "count": 1
+     },
+     {
+      "name": "Lots of homework",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "pratap-singh|tejendra": {
+   "key": "pratap-singh|tejendra",
+   "name": "Pratap Singh, Tejendra (Tejendra)",
+   "display": "Tejendra Pratap Singh",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Tejendra%20Pratap%20Singh",
+   "rmp": null,
+   "match": "none"
+  },
+  "rahman|md-mahfuzur": {
+   "key": "rahman|md-mahfuzur",
+   "name": "Rahman, Md Mahfuzur",
+   "display": "Md Mahfuzur Rahman",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Md%20Mahfuzur%20Rahman",
+   "rmp": {
+    "legacyId": 2519939,
+    "url": "https://www.ratemyprofessors.com/professor/2519939",
+    "firstName": "Md Mahfuzur",
+    "lastName": "Rahman",
+    "department": "Computer Science",
+    "avgRating": 2.6,
+    "avgDifficulty": 3.6,
+    "numRatings": 27,
+    "wouldTakeAgainPercent": 36,
+    "tags": [
+     {
+      "name": "Tough grader",
+      "count": 13
+     },
+     {
+      "name": "Beware of pop quizzes",
+      "count": 11
+     },
+     {
+      "name": "Test heavy",
+      "count": 7
+     },
+     {
+      "name": "Extra credit",
+      "count": 6
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 5
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "sadasivuni|sudha-tushara": {
+   "key": "sadasivuni|sudha-tushara",
+   "name": "Sadasivuni, Sudha Tushara (Tushara)",
+   "display": "Tushara Sadasivuni",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Tushara%20Sadasivuni",
+   "rmp": {
+    "legacyId": 2317655,
+    "url": "https://www.ratemyprofessors.com/professor/2317655",
+    "firstName": "Tushara",
+    "lastName": "Sadasivuni",
+    "department": "Computer Science",
+    "avgRating": 2.1,
+    "avgDifficulty": 3.1,
+    "numRatings": 85,
+    "wouldTakeAgainPercent": 28,
+    "tags": [
+     {
+      "name": "Beware of pop quizzes",
+      "count": 22
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 15
+     },
+     {
+      "name": "Lots of homework",
+      "count": 12
+     },
+     {
+      "name": "Participation matters",
+      "count": 11
+     },
+     {
+      "name": "Tough grader",
+      "count": 11
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "saghaeiannejad-esfahani|sayed-hossein": {
+   "key": "saghaeiannejad-esfahani|sayed-hossein",
+   "name": "Saghaeiannejad Esfahani, Sayed Hossein (Hossein)",
+   "display": "Hossein Saghaeiannejad Esfahani",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Hossein%20Saghaeiannejad%20Esfahani",
+   "rmp": {
+    "legacyId": 2358126,
+    "url": "https://www.ratemyprofessors.com/professor/2358126",
+    "firstName": "Sayed Hossein",
+    "lastName": "Esfahani",
+    "department": "Computer Science",
+    "avgRating": 2.6,
+    "avgDifficulty": 3.5,
+    "numRatings": 45,
+    "wouldTakeAgainPercent": 29,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 15
+     },
+     {
+      "name": "Tough grader",
+      "count": 11
+     },
+     {
+      "name": "Caring",
+      "count": 10
+     },
+     {
+      "name": "Graded by few things",
+      "count": 10
+     },
+     {
+      "name": "Participation matters",
+      "count": 8
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "santymire|rachel": {
+   "key": "santymire|rachel",
+   "name": "Santymire, Rachel M.",
+   "display": "Rachel Santymire",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Rachel%20Santymire",
+   "rmp": {
+    "legacyId": 2720364,
+    "url": "https://www.ratemyprofessors.com/professor/2720364",
+    "firstName": "Rachel",
+    "lastName": "Santymire",
+    "department": "Biology",
+    "avgRating": 2.7,
+    "avgDifficulty": 3.7,
+    "numRatings": 50,
+    "wouldTakeAgainPercent": 38,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 19
+     },
+     {
+      "name": "Participation matters",
+      "count": 18
+     },
+     {
+      "name": "Get ready to read",
+      "count": 17
+     },
+     {
+      "name": "Lots of homework",
+      "count": 12
+     },
+     {
+      "name": "Test heavy",
+      "count": 9
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "seal|poulami": {
+   "key": "seal|poulami",
+   "name": "Seal, Poulami (Poulami)",
+   "display": "Poulami Seal",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Poulami%20Seal",
+   "rmp": {
+    "legacyId": 3015786,
+    "url": "https://www.ratemyprofessors.com/professor/3015786",
+    "firstName": "Poulami",
+    "lastName": "Seal",
+    "department": "Communication",
+    "avgRating": 2.5,
+    "avgDifficulty": 2.6,
+    "numRatings": 11,
+    "wouldTakeAgainPercent": 27,
+    "tags": [
+     {
+      "name": "Participation matters",
+      "count": 7
+     },
+     {
+      "name": "Group projects",
+      "count": 6
+     },
+     {
+      "name": "Lots of homework",
+      "count": 3
+     },
+     {
+      "name": "Extra credit",
+      "count": 2
+     },
+     {
+      "name": "Caring",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "sevcik|galen": {
+   "key": "sevcik|galen",
+   "name": "Sevcik, Galen R.",
+   "display": "Galen Sevcik",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Galen%20Sevcik",
+   "rmp": {
+    "legacyId": 341271,
+    "url": "https://www.ratemyprofessors.com/professor/341271",
+    "firstName": "Galen",
+    "lastName": "Sevcik",
+    "department": "Accounting",
+    "avgRating": 3.3,
+    "avgDifficulty": 3.7,
+    "numRatings": 20,
+    "wouldTakeAgainPercent": 55,
+    "tags": [
+     {
+      "name": "Get ready to read",
+      "count": 8
+     },
+     {
+      "name": "Test heavy",
+      "count": 6
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 4
+     },
+     {
+      "name": "Graded by few things",
+      "count": 4
+     },
+     {
+      "name": "Group projects",
+      "count": 4
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "shabahang|mohammadhossein": {
+   "key": "shabahang|mohammadhossein",
+   "name": "Shabahang, MohammadHossein (MohammadHossein)",
+   "display": "MohammadHossein Shabahang",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=MohammadHossein%20Shabahang",
+   "rmp": null,
+   "match": "none"
+  },
+  "shahbazi|farideh": {
+   "key": "shahbazi|farideh",
+   "name": "Shahbazi, Farideh (Shahbazi)",
+   "display": "Farideh Shahbazi",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Farideh%20Shahbazi",
+   "rmp": {
+    "legacyId": 2728957,
+    "url": "https://www.ratemyprofessors.com/professor/2728957",
+    "firstName": "Farideh",
+    "lastName": "Shahbazi",
+    "department": "Biology",
+    "avgRating": 3.5,
+    "avgDifficulty": 3,
+    "numRatings": 86,
+    "wouldTakeAgainPercent": 62,
+    "tags": [
+     {
+      "name": "Amazing lectures",
+      "count": 19
+     },
+     {
+      "name": "Caring",
+      "count": 18
+     },
+     {
+      "name": "Participation matters",
+      "count": 17
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 16
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 14
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "simmons|marcus": {
+   "key": "simmons|marcus",
+   "name": "Simmons, Marcus (Marcus) A.",
+   "display": "Marcus Simmons",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Marcus%20Simmons",
+   "rmp": {
+    "legacyId": 2854937,
+    "url": "https://www.ratemyprofessors.com/professor/2854937",
+    "firstName": "Marcus",
+    "lastName": "Simmons",
+    "department": "Speech",
+    "avgRating": 5,
+    "avgDifficulty": 1.3,
+    "numRatings": 3,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Hilarious",
+      "count": 3
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 2
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 2
+     },
+     {
+      "name": "Caring",
+      "count": 1
+     },
+     {
+      "name": "Extra credit",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "sleiman|marc": {
+   "key": "sleiman|marc",
+   "name": "Sleiman, Marc M.",
+   "display": "Marc Sleiman",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Marc%20Sleiman",
+   "rmp": {
+    "legacyId": 3087527,
+    "url": "https://www.ratemyprofessors.com/professor/3087527",
+    "firstName": "Marc",
+    "lastName": "Sleiman",
+    "department": "Economics",
+    "avgRating": 5,
+    "avgDifficulty": 1.7,
+    "numRatings": 3,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Extra credit",
+      "count": 2
+     },
+     {
+      "name": "Test heavy",
+      "count": 2
+     },
+     {
+      "name": "Caring",
+      "count": 1
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 1
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "song|jaewook": {
+   "key": "song|jaewook",
+   "name": "Song, Jaewook (Jaewook)",
+   "display": "Jaewook Song",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Jaewook%20Song",
+   "rmp": null,
+   "match": "none"
+  },
+  "spiro|samuel": {
+   "key": "spiro|samuel",
+   "name": "Spiro, Samuel",
+   "display": "Samuel Spiro",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Samuel%20Spiro",
+   "rmp": {
+    "legacyId": 3109051,
+    "url": "https://www.ratemyprofessors.com/professor/3109051",
+    "firstName": "Samuel",
+    "lastName": "Spiro",
+    "department": "Mathematics",
+    "avgRating": 5,
+    "avgDifficulty": 3,
+    "numRatings": 1,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Accessible outside class",
+      "count": 1
+     },
+     {
+      "name": "Caring",
+      "count": 1
+     },
+     {
+      "name": "Hilarious",
+      "count": 1
+     }
+    ]
+   },
+   "match": "override"
+  },
+  "stamenov|ventsislav": {
+   "key": "stamenov|ventsislav",
+   "name": "Stamenov, Ventsislav",
+   "display": "Ventsislav Stamenov",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Ventsislav%20Stamenov",
+   "rmp": {
+    "legacyId": 2827171,
+    "url": "https://www.ratemyprofessors.com/professor/2827171",
+    "firstName": "Ventsislav",
+    "lastName": "Stamenov",
+    "department": "Accounting",
+    "avgRating": 3.2,
+    "avgDifficulty": 3.4,
+    "numRatings": 12,
+    "wouldTakeAgainPercent": 67,
+    "tags": [
+     {
+      "name": "Graded by few things",
+      "count": 6
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 3
+     },
+     {
+      "name": "Lots of homework",
+      "count": 3
+     },
+     {
+      "name": "Test heavy",
+      "count": 3
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 2
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "stroeva|elina": {
+   "key": "stroeva|elina",
+   "name": "Stroeva, Elina",
+   "display": "Elina Stroeva",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Elina%20Stroeva",
+   "rmp": {
+    "legacyId": 1840897,
+    "url": "https://www.ratemyprofessors.com/professor/1840897",
+    "firstName": "Elina",
+    "lastName": "Stroeva",
+    "department": "Chemistry",
+    "avgRating": 2.7,
+    "avgDifficulty": 3.8,
+    "numRatings": 218,
+    "wouldTakeAgainPercent": 39,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 59
+     },
+     {
+      "name": "Tough grader",
+      "count": 53
+     },
+     {
+      "name": "Extra credit",
+      "count": 47
+     },
+     {
+      "name": "Test heavy",
+      "count": 45
+     },
+     {
+      "name": "Lots of homework",
+      "count": 36
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "tamhankar|parag": {
+   "key": "tamhankar|parag",
+   "name": "Tamhankar, Parag A.",
+   "display": "Parag Tamhankar",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Parag%20Tamhankar",
+   "rmp": {
+    "legacyId": 2937573,
+    "url": "https://www.ratemyprofessors.com/professor/2937573",
+    "firstName": "Parag",
+    "lastName": "Tamhankar",
+    "department": "Computer Science",
+    "avgRating": 3.7,
+    "avgDifficulty": 3.4,
+    "numRatings": 21,
+    "wouldTakeAgainPercent": 76,
+    "tags": [
+     {
+      "name": "Graded by few things",
+      "count": 11
+     },
+     {
+      "name": "Caring",
+      "count": 7
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 6
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 6
+     },
+     {
+      "name": "Test heavy",
+      "count": 6
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "tanvir|farhan": {
+   "key": "tanvir|farhan",
+   "name": "Tanvir, Farhan (Farhan)",
+   "display": "Farhan Tanvir",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Farhan%20Tanvir",
+   "rmp": {
+    "legacyId": 2962612,
+    "url": "https://www.ratemyprofessors.com/professor/2962612",
+    "firstName": "Farhan",
+    "lastName": "Tanvir",
+    "department": "Computer Science",
+    "avgRating": 3,
+    "avgDifficulty": 3.5,
+    "numRatings": 11,
+    "wouldTakeAgainPercent": 55,
+    "tags": [
+     {
+      "name": "Accessible outside class",
+      "count": 3
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 3
+     },
+     {
+      "name": "Group projects",
+      "count": 2
+     },
+     {
+      "name": "Test heavy",
+      "count": 2
+     },
+     {
+      "name": "Beware of pop quizzes",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "thota|jyotsna": {
+   "key": "thota|jyotsna",
+   "name": "Thota, Jyotsna",
+   "display": "Jyotsna Thota",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Jyotsna%20Thota",
+   "rmp": {
+    "legacyId": 758508,
+    "url": "https://www.ratemyprofessors.com/professor/758508",
+    "firstName": "Jyotsna",
+    "lastName": "Thota",
+    "department": "Chemistry",
+    "avgRating": 2.6,
+    "avgDifficulty": 3.7,
+    "numRatings": 300,
+    "wouldTakeAgainPercent": 26,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 52
+     },
+     {
+      "name": "Test heavy",
+      "count": 41
+     },
+     {
+      "name": "Get ready to read",
+      "count": 35
+     },
+     {
+      "name": "Skip class? You won't pass.",
+      "count": 35
+     },
+     {
+      "name": "Tough grader",
+      "count": 33
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "tiwari|chetan": {
+   "key": "tiwari|chetan",
+   "name": "Tiwari, Chetan",
+   "display": "Chetan Tiwari",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Chetan%20Tiwari",
+   "rmp": null,
+   "match": "none"
+  },
+  "todaro|justin": {
+   "key": "todaro|justin",
+   "name": "Todaro, Justin (Justin) D.",
+   "display": "Justin Todaro",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Justin%20Todaro",
+   "rmp": {
+    "legacyId": 2743928,
+    "url": "https://www.ratemyprofessors.com/professor/2743928",
+    "firstName": "Justin",
+    "lastName": "Todaro",
+    "department": "Biology",
+    "avgRating": 2.8,
+    "avgDifficulty": 3.6,
+    "numRatings": 28,
+    "wouldTakeAgainPercent": 34,
+    "tags": [
+     {
+      "name": "Extra credit",
+      "count": 10
+     },
+     {
+      "name": "Test heavy",
+      "count": 10
+     },
+     {
+      "name": "Lots of homework",
+      "count": 9
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 8
+     },
+     {
+      "name": "Tough grader",
+      "count": 6
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "toppar|miracle-rose": {
+   "key": "toppar|miracle-rose",
+   "name": "Toppar, Miracle-Rose (Dr. Toppar)",
+   "display": "Miracle-Rose Toppar",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Miracle-Rose%20Toppar",
+   "rmp": {
+    "legacyId": 3041684,
+    "url": "https://www.ratemyprofessors.com/professor/3041684",
+    "firstName": "Miracle rose",
+    "lastName": "Toppar",
+    "department": "Economics",
+    "avgRating": 4.5,
+    "avgDifficulty": 1.7,
+    "numRatings": 12,
+    "wouldTakeAgainPercent": 85,
+    "tags": [
+     {
+      "name": "Gives good feedback",
+      "count": 6
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 4
+     },
+     {
+      "name": "Amazing lectures",
+      "count": 4
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 4
+     },
+     {
+      "name": "Caring",
+      "count": 3
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "ulrich|paul": {
+   "key": "ulrich|paul",
+   "name": "Ulrich, Paul N.",
+   "display": "Paul Ulrich",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Paul%20Ulrich",
+   "rmp": null,
+   "match": "override"
+  },
+  "van-der-holst|hendricus": {
+   "key": "van-der-holst|hendricus",
+   "name": "Van Der Holst, Hendricus (Hein)",
+   "display": "Hein Van Der Holst",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Hein%20Van%20Der%20Holst",
+   "rmp": {
+    "legacyId": 1824482,
+    "url": "https://www.ratemyprofessors.com/professor/1824482",
+    "firstName": "Hendricus",
+    "lastName": "Van Der Holst",
+    "department": "Mathematics",
+    "avgRating": 3.7,
+    "avgDifficulty": 2.6,
+    "numRatings": 34,
+    "wouldTakeAgainPercent": 75,
+    "tags": [
+     {
+      "name": "Lots of homework",
+      "count": 9
+     },
+     {
+      "name": "Caring",
+      "count": 7
+     },
+     {
+      "name": "Graded by few things",
+      "count": 6
+     },
+     {
+      "name": "Test heavy",
+      "count": 6
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 5
+     }
+    ]
+   },
+   "match": "override"
+  },
+  "walker-cornetta|andrew": {
+   "key": "walker-cornetta|andrew",
+   "name": "Walker-Cornetta, Andrew P.",
+   "display": "Andrew Walker-Cornetta",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Andrew%20Walker-Cornetta",
+   "rmp": {
+    "legacyId": 2734912,
+    "url": "https://www.ratemyprofessors.com/professor/2734912",
+    "firstName": "Andrew",
+    "lastName": "Walker-Cornetta",
+    "department": "Religious Studies",
+    "avgRating": 4.5,
+    "avgDifficulty": 2,
+    "numRatings": 2,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Amazing lectures",
+      "count": 1
+     },
+     {
+      "name": "Caring",
+      "count": 1
+     },
+     {
+      "name": "Get ready to read",
+      "count": 1
+     },
+     {
+      "name": "Inspirational",
+      "count": 1
+     },
+     {
+      "name": "Participation matters",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "wan|lipeng": {
+   "key": "wan|lipeng",
+   "name": "Wan, Lipeng",
+   "display": "Lipeng Wan",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Lipeng%20Wan",
+   "rmp": {
+    "legacyId": 2846784,
+    "url": "https://www.ratemyprofessors.com/professor/2846784",
+    "firstName": "Lipeng",
+    "lastName": "Wan",
+    "department": "Computer Science",
+    "avgRating": 4,
+    "avgDifficulty": 2.3,
+    "numRatings": 3,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Caring",
+      "count": 2
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 2
+     },
+     {
+      "name": "Respected",
+      "count": 2
+     },
+     {
+      "name": "Group projects",
+      "count": 1
+     },
+     {
+      "name": "Hilarious",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "wang|danzhu": {
+   "key": "wang|danzhu",
+   "name": "Wang, Danzhu",
+   "display": "Danzhu Wang",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Danzhu%20Wang",
+   "rmp": {
+    "legacyId": 2008665,
+    "url": "https://www.ratemyprofessors.com/professor/2008665",
+    "firstName": "Danzhu",
+    "lastName": "Wang",
+    "department": "Chemistry",
+    "avgRating": 4.1,
+    "avgDifficulty": 3.2,
+    "numRatings": 99,
+    "wouldTakeAgainPercent": 80,
+    "tags": [
+     {
+      "name": "Extra credit",
+      "count": 32
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 30
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 22
+     },
+     {
+      "name": "Caring",
+      "count": 20
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 17
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "wang|hongbin": {
+   "key": "wang|hongbin",
+   "name": "Wang, Hongbin (Hongbin)",
+   "display": "Hongbin Wang",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Hongbin%20Wang",
+   "rmp": null,
+   "match": "none"
+  },
+  "wang|peng": {
+   "key": "wang|peng",
+   "name": "Wang, Peng (Peng)",
+   "display": "Peng Wang",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Peng%20Wang",
+   "rmp": {
+    "legacyId": 2853169,
+    "url": "https://www.ratemyprofessors.com/professor/2853169",
+    "firstName": "Peng",
+    "lastName": "Wang",
+    "department": "Computer Science",
+    "avgRating": 3.3,
+    "avgDifficulty": 2.9,
+    "numRatings": 10,
+    "wouldTakeAgainPercent": 60,
+    "tags": [
+     {
+      "name": "Lecture heavy",
+      "count": 8
+     },
+     {
+      "name": "Graded by few things",
+      "count": 3
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 2
+     },
+     {
+      "name": "Beware of pop quizzes",
+      "count": 1
+     },
+     {
+      "name": "Caring",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "wang|yue": {
+   "key": "wang|yue",
+   "name": "Wang, Yue",
+   "display": "Yue Wang",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Yue%20Wang",
+   "rmp": null,
+   "match": "none"
+  },
+  "wiley|katherine": {
+   "key": "wiley|katherine",
+   "name": "Wiley, Katherine (Kate) K.",
+   "display": "Kate Wiley",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Kate%20Wiley",
+   "rmp": {
+    "legacyId": 3131782,
+    "url": "https://www.ratemyprofessors.com/professor/3131782",
+    "firstName": "Kate",
+    "lastName": "Wiley",
+    "department": "Cultural Studies",
+    "avgRating": null,
+    "avgDifficulty": null,
+    "numRatings": 0,
+    "wouldTakeAgainPercent": null,
+    "tags": []
+   },
+   "match": "override"
+  },
+  "wu|yubao": {
+   "key": "wu|yubao",
+   "name": "Wu, Yubao",
+   "display": "Yubao Wu",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Yubao%20Wu",
+   "rmp": {
+    "legacyId": 2287117,
+    "url": "https://www.ratemyprofessors.com/professor/2287117",
+    "firstName": "Yubao",
+    "lastName": "Wu",
+    "department": "Computer Science",
+    "avgRating": 1.4,
+    "avgDifficulty": 4.7,
+    "numRatings": 20,
+    "wouldTakeAgainPercent": 10,
+    "tags": [
+     {
+      "name": "Test heavy",
+      "count": 11
+     },
+     {
+      "name": "Tough grader",
+      "count": 10
+     },
+     {
+      "name": "Lots of homework",
+      "count": 8
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 7
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 2
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "xie|bingyi": {
+   "key": "xie|bingyi",
+   "name": "Xie, Bingyi (Bingyi)",
+   "display": "Bingyi Xie",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Bingyi%20Xie",
+   "rmp": {
+    "legacyId": 2906245,
+    "url": "https://www.ratemyprofessors.com/professor/2906245",
+    "firstName": "Bingyi",
+    "lastName": "Xie",
+    "department": "Computer Science",
+    "avgRating": 3.3,
+    "avgDifficulty": 2.8,
+    "numRatings": 21,
+    "wouldTakeAgainPercent": 59,
+    "tags": [
+     {
+      "name": "Extra credit",
+      "count": 8
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 7
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 6
+     },
+     {
+      "name": "Test heavy",
+      "count": 6
+     },
+     {
+      "name": "Beware of pop quizzes",
+      "count": 3
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "xu|bin": {
+   "key": "xu|bin",
+   "name": "Xu, Bin",
+   "display": "Bin Xu",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Bin%20Xu",
+   "rmp": {
+    "legacyId": 1420265,
+    "url": "https://www.ratemyprofessors.com/professor/1420265",
+    "firstName": "Bin",
+    "lastName": "Xu",
+    "department": "Chemistry",
+    "avgRating": 2.4,
+    "avgDifficulty": 3.5,
+    "numRatings": 36,
+    "wouldTakeAgainPercent": 33,
+    "tags": [
+     {
+      "name": "Tough grader",
+      "count": 11
+     },
+     {
+      "name": "Test heavy",
+      "count": 7
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 6
+     },
+     {
+      "name": "Participation matters",
+      "count": 5
+     },
+     {
+      "name": "Caring",
+      "count": 3
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "xu|ping": {
+   "key": "xu|ping",
+   "name": "Xu, Ping",
+   "display": "Ping Xu",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Ping%20Xu",
+   "rmp": {
+    "legacyId": 3161718,
+    "url": "https://www.ratemyprofessors.com/professor/3161718",
+    "firstName": "Ping",
+    "lastName": "Xu",
+    "department": "Computer Science",
+    "avgRating": 1,
+    "avgDifficulty": 4,
+    "numRatings": 1,
+    "wouldTakeAgainPercent": 0,
+    "tags": [
+     {
+      "name": "Tough grader",
+      "count": 2
+     },
+     {
+      "name": "Graded by few things",
+      "count": 1
+     },
+     {
+      "name": "Lecture heavy",
+      "count": 1
+     },
+     {
+      "name": "Test heavy",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "yao|yongwei": {
+   "key": "yao|yongwei",
+   "name": "Yao, Yongwei",
+   "display": "Yongwei Yao",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Yongwei%20Yao",
+   "rmp": {
+    "legacyId": 1388756,
+    "url": "https://www.ratemyprofessors.com/professor/1388756",
+    "firstName": "Yongwei",
+    "lastName": "Yao",
+    "department": "Mathematics",
+    "avgRating": 4.2,
+    "avgDifficulty": 2.4,
+    "numRatings": 31,
+    "wouldTakeAgainPercent": 81,
+    "tags": [
+     {
+      "name": "Lots of homework",
+      "count": 9
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 7
+     },
+     {
+      "name": "Graded by few things",
+      "count": 5
+     },
+     {
+      "name": "Gives good feedback",
+      "count": 4
+     },
+     {
+      "name": "Test heavy",
+      "count": 4
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "zelikovskiy|aleksandr": {
+   "key": "zelikovskiy|aleksandr",
+   "name": "Zelikovskiy, Aleksandr (Alex)",
+   "display": "Alex Zelikovskiy",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Alex%20Zelikovskiy",
+   "rmp": {
+    "legacyId": 1926340,
+    "url": "https://www.ratemyprofessors.com/professor/1926340",
+    "firstName": "Aleksandr",
+    "lastName": "Zelikovskiy",
+    "department": "Computer Science",
+    "avgRating": 1.7,
+    "avgDifficulty": 3.7,
+    "numRatings": 11,
+    "wouldTakeAgainPercent": 11,
+    "tags": [
+     {
+      "name": "Lots of homework",
+      "count": 4
+     },
+     {
+      "name": "Skip class? You won't pass.",
+      "count": 2
+     },
+     {
+      "name": "So many papers",
+      "count": 2
+     },
+     {
+      "name": "Test heavy",
+      "count": 2
+     },
+     {
+      "name": "Tough grader",
+      "count": 2
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "zhang|hongmei": {
+   "key": "zhang|hongmei",
+   "name": "Zhang, Hongmei",
+   "display": "Hongmei Zhang",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Hongmei%20Zhang",
+   "rmp": {
+    "legacyId": 1889772,
+    "url": "https://www.ratemyprofessors.com/professor/1889772",
+    "firstName": "Hongmei",
+    "lastName": "Zhang",
+    "department": "Biology",
+    "avgRating": 2.5,
+    "avgDifficulty": 3.6,
+    "numRatings": 58,
+    "wouldTakeAgainPercent": 32,
+    "tags": [
+     {
+      "name": "Participation matters",
+      "count": 25
+     },
+     {
+      "name": "Tough grader",
+      "count": 21
+     },
+     {
+      "name": "Lots of homework",
+      "count": 18
+     },
+     {
+      "name": "Test heavy",
+      "count": 11
+     },
+     {
+      "name": "Group projects",
+      "count": 10
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "zhang|yanqing": {
+   "key": "zhang|yanqing",
+   "name": "Zhang, Yanqing",
+   "display": "Yanqing Zhang",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Yanqing%20Zhang",
+   "rmp": {
+    "legacyId": 1806387,
+    "url": "https://www.ratemyprofessors.com/professor/1806387",
+    "firstName": "Yanqing",
+    "lastName": "Zhang",
+    "department": "Computer Science",
+    "avgRating": 2,
+    "avgDifficulty": 3.1,
+    "numRatings": 11,
+    "wouldTakeAgainPercent": 18,
+    "tags": [
+     {
+      "name": "Graded by few things",
+      "count": 6
+     },
+     {
+      "name": "Tough grader",
+      "count": 3
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 2
+     },
+     {
+      "name": "So many papers",
+      "count": 2
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  },
+  "zhong|yihan": {
+   "key": "zhong|yihan",
+   "name": "Zhong, Yihan (Yihan)",
+   "display": "Yihan Zhong",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Yihan%20Zhong",
+   "rmp": {
+    "legacyId": 2999865,
+    "url": "https://www.ratemyprofessors.com/professor/2999865",
+    "firstName": "Yihan",
+    "lastName": "Zhong",
+    "department": "Computer Science",
+    "avgRating": 5,
+    "avgDifficulty": 1,
+    "numRatings": 1,
+    "wouldTakeAgainPercent": 100,
+    "tags": []
+   },
+   "match": "exact"
+  },
+  "zhu|ying": {
+   "key": "zhu|ying",
+   "name": "Zhu, Ying",
+   "display": "Ying Zhu",
+   "searchUrl": "https://www.ratemyprofessors.com/search/professors/360?q=Ying%20Zhu",
+   "rmp": {
+    "legacyId": 1135469,
+    "url": "https://www.ratemyprofessors.com/professor/1135469",
+    "firstName": "Ying",
+    "lastName": "Zhu",
+    "department": "Computer Science",
+    "avgRating": 4.5,
+    "avgDifficulty": 2.6,
+    "numRatings": 12,
+    "wouldTakeAgainPercent": 100,
+    "tags": [
+     {
+      "name": "Gives good feedback",
+      "count": 4
+     },
+     {
+      "name": "Respected",
+      "count": 4
+     },
+     {
+      "name": "Caring",
+      "count": 3
+     },
+     {
+      "name": "Clear grading criteria",
+      "count": 3
+     },
+     {
+      "name": "Accessible outside class",
+      "count": 1
+     }
+    ]
+   },
+   "match": "exact"
+  }
+ }
+}
