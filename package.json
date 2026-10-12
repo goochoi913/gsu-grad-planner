@@ -3,7 +3,7 @@
   "private": true,
   "version": "2.0.0",
   "type": "module",
-  "description": "Eunbee's degree planner for the GSU B.S. in Computer Science: academic timeline, Degree Works audit, GPA projection, and the Spring 2027 class schedule.",
+  "description": "Eunbee's degree planner for the GSU B.S. in Computer Science: plans to build and compare, academic timeline, Degree Works audit, GPA projection, and the Spring 2027 class schedule.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -14,9 +14,14 @@
     "data:schedule": "node scripts/build-schedule.mjs",
     "data:rmp": "node scripts/fetch-rmp.mjs",
     "data": "node scripts/build-schedule.mjs && node scripts/fetch-rmp.mjs",
-    "icons": "pwa-assets-generator"
+    "icons": "pwa-assets-generator",
+    "test:sync": "node scripts/sync-test.mjs"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/modifiers": "^9.0.0",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@tailwindcss/vite": "^4.3.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

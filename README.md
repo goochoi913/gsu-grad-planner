@@ -16,7 +16,8 @@ screen (Safari → Share → Add to Home Screen; Chrome → Install app).
 
 | | |
 |---|---|
-| **Plan** | Upcoming terms as cards: credits against the 18-credit cap, the estimated GPA after each term, and every warning that matters (prerequisite order, a term the course isn't usually offered, an advisor exception, a time conflict). Drag courses between terms on a computer, or tap **Add course** on a phone. Completed terms sit below, locked, with term and cumulative GPAs. Courses are listed by name, with the code beneath. |
+| **Plan** | Upcoming terms as cards: credits against the 18-credit cap, the estimated GPA after each term, and every warning that matters (prerequisite order, a term the course isn't usually offered, an advisor exception, a time conflict). **Drag** a course to reorder it within its term, move it to another term, drop it from the course list at the spot you want, or drop it back on the course list to take it out — on a phone, press and hold, then drag. Completed terms sit below, locked, with term and cumulative GPAs. Courses are listed by name, with the code beneath. She graduates in **three semesters** (Spring, Summer, Fall 2027): only the 3-semester path is offered and the plan can't grow past Fall 2027. |
+| **Plans** | As many named plans as you like — hers, yours, "what if" — as tabs above the terms. Each device opens its own plan (remembered on that device), so two people can work on different plans at once; both see every plan. Make one (a copy of the open plan, an empty one, or the 3-semester path), rename it (double-click the tab), drag tabs to reorder, duplicate, delete (with Undo). **Compare** puts two plans side by side: graduation term, credits, requirements, and term by term which courses differ. The header's switcher changes plans from any view. |
 | **Courses** | Only what she still needs: the courses in the plan, plus the options for any requirement the plan leaves open (worked out from the record and the plan, so removing a course brings its alternatives back). **Show all options** lists every alternative, marked "not needed"; catalog courses GSU hasn't offered since 2024 and hasn't scheduled never show. |
 | **Section picker** | Opening a class with Spring 2027 sections shows every section on one side and her week on the other (stacked on a phone, the week on top). Tapping a section only **previews** it on the calendar — next to the classes already chosen, with short breaks labelled ("15 min") and clashes in red. **Save** writes it into the plan; a section that overlaps another class can be previewed but not saved. Lecture and lab are chosen together. Closing with an unsaved choice asks first. |
 | **Schedule** | The released Spring 2027 schedule: the **week** and **day** calendars of the chosen sections, clashes in red, short breaks labelled, and the **CRNs for registration** list ready to copy into PAWS. Each class opens the section picker. Terms without a released schedule take hand-entered meeting times. |
@@ -102,12 +103,15 @@ Three documents in the `gsu-grad-planner` project, unchanged from the original p
 
 | Document | Contents |
 |---|---|
-| `planner/sharedSchedule` | the plan: upcoming terms, courses, chosen sections (`sections: { CSC3210: "14634" }`), meeting times |
+| `planner/sharedSchedule` | the first plan ("main"): upcoming terms, courses, chosen sections (`sections: { CSC3210: "14634" }`), meeting times — the same document and shape as always |
+| `planner/plan-<id>` | every other plan, in the same shape |
+| `planner/planIndex` | the plans' names and order: `{ order: [ids], names: { id: name } }` — created with the second plan; every change is a merge, so two devices editing different plans never undo each other |
 | `planner/academicRecord` | past terms with grades, and advisor exceptions — stored only here |
 | `planner/gpaProjection` | expected grades, Repeat to Replace switches, the GPA target |
 
-Both devices see changes live. The plan is cached in the browser so the app opens instantly; the
-record is never cached outside Firebase. There is no sign-in, by choice — anyone with the link can
+Both devices see changes live. Each device remembers which plan it has open, and a pending save
+always goes to the plan it was made in. Plans are cached in the browser so the app opens
+instantly; the record is never cached outside Firebase. There is no sign-in, by choice — anyone with the link can
 read and edit, so keep the link private.
 
 ## Development
@@ -123,7 +127,8 @@ npm run build          # type-check and build to dist/
 | Command | What it checks |
 |---|---|
 | `npm test` | The planning logic (`src/lib/planner.ts`) against 212 golden results recorded from the original planner, plus the additions: chosen sections, clashes (a lecture and its own lab too), breaks between classes, the section picker's preview, live seat updates, and which courses she still needs. Runs before every deploy. |
-| `npm run test:flows` | Browser checks on a computer and a phone: placing, moving and removing courses, the 18-credit cap, the course list's "what you still need", the section picker (preview, Save, clashes that can't be saved, Cancel, the unsaved-choice prompt, lecture + lab), the week and day calendars with breaks, the CRN list, professors, the class browser, live seat counts, the record, final grades, the GPA projection, exceptions, paths, reset + undo, ⌘K, themes, no horizontal scrolling. Needs `npm run dev -- --port 5199` running and Google Chrome. Uses the synthetic student in `scripts/fixtures/demo.json` and blocks Firebase, so Eunbee's data is never touched. |
+| `npm run test:flows` | Browser checks on a computer and a phone: placing, moving and removing courses, the 18-credit cap, the course list's "what you still need", the section picker (preview, Save, clashes that can't be saved, Cancel, the unsaved-choice prompt, lecture + lab), the week and day calendars with breaks, the CRN list, professors, the class browser, live seat counts, drag and drop (reorder, between terms, from and back to the course list, refusals; press-and-hold on a phone), plans (make, switch, rename, reorder, compare, duplicate, delete + undo), the 3-semester limit, the record, final grades, the GPA projection, exceptions, reset + undo, ⌘K, themes, no horizontal scrolling. Needs `npm run dev -- --port 5199` running and Google Chrome. Uses the synthetic student in `scripts/fixtures/demo.json` and blocks Firebase, so Eunbee's data is never touched. |
+| `npm run test:sync` | Two devices against a **local Firestore emulator** (never the real data): plans made, renamed, reordered and deleted on one device show up on the other, each device keeps its own plan open, an edit made just before switching lands in the right plan, `planner/sharedSchedule` keeps its shape. Needs `firebase emulators:start --only firestore --project gsu-grad-planner` (port 8085) and `VITE_FIRESTORE_EMULATOR=127.0.0.1:8085 npm run dev -- --port 5299`. |
 | `npm run lint` | oxlint |
 
 `node scripts/make-golden.mjs` re-records the golden results from the original JavaScript
@@ -147,10 +152,12 @@ src/
     schedule.ts    sections, chosen sections, calendar events, clashes and breaks, professors
     live-schedule.ts  loads the 30-minute seat-count refresh
     relevance.ts   which courses she still needs
+    plans.ts       the plan list: ids, names, order
     store.ts       app state and Firebase sync
     firebase.ts    the three Firestore documents
   hooks/           use-section-picker (preview vs. saved), prefs, media queries
-  components/      the views: board, schedule-view + calendar, section-picker, library-panel, audit-panel, dialogs
+  components/      the views: board, plans (tabs, switcher, compare), course-dnd (drag and drop), schedule-view +
+                   calendar, section-picker, library-panel, audit-panel, dialogs
     ui/            shadcn/ui primitives
 scripts/
   build-schedule.mjs, fetch-rmp.mjs   the schedule and ratings data

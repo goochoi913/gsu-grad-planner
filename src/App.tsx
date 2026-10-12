@@ -15,11 +15,13 @@ import { ClassBrowser } from '@/components/class-browser'
 import { CommandPalette } from '@/components/command-palette'
 import { ConfirmHost, confirmAction } from '@/components/confirm'
 import { CourseDialog } from '@/components/course-dialog'
+import { CourseDndProvider } from '@/components/course-dnd'
 import { ExceptionsDialog } from '@/components/exceptions-dialog'
 import { GpaDialog } from '@/components/gpa-dialog'
 import { GradesDialog } from '@/components/grades-dialog'
 import { EMPTY_FILTER, LibraryPanel, type LibraryFilter } from '@/components/library-panel'
 import { PanelHandle } from '@/components/panel-handle'
+import { PlanDialogs } from '@/components/plans'
 import { ProfessorDialog } from '@/components/professor-dialog'
 import { ProgressRail } from '@/components/progress-rail'
 import { RecordDialog, downloadRecordBackup } from '@/components/record-dialog'
@@ -56,7 +58,6 @@ export default function App() {
   const [sheet, setSheet] = useState<MobileSheet>(null)
   const [filter, setFilter] = useState<LibraryFilter>(EMPTY_FILTER)
   const [focusedRaw, setFocusedTerm] = useState<TermId | null>(null)
-  const [dragging, setDragging] = useState<string | null>(null)
   const [auditFocus, setAuditFocus] = useState<string | null>(null)
 
   const libraryRef = usePanelRef()
@@ -127,10 +128,8 @@ export default function App() {
     },
     focusedTerm,
     setFocusedTerm: (t: TermId) => { setFocusedTerm(t); setCalSemester(t) },
-    dragging,
-    setDragging,
     isMobile,
-  }), [openAudit, openLibrary, setView, focusedTerm, focusedRaw, dragging, isMobile])
+  }), [openAudit, openLibrary, setView, focusedTerm, focusedRaw, isMobile])
 
   const toggleLibrary = () => {
     const next = !prefs.libraryOpen
@@ -176,6 +175,7 @@ export default function App() {
   return (
     <UiContext.Provider value={ui}>
       <TooltipProvider delayDuration={250}>
+        <CourseDndProvider>
         <div className="flex h-dvh flex-col overflow-hidden">
           <AppHeader
             view={view}
@@ -298,6 +298,7 @@ export default function App() {
         <GpaDialog open={!!gpa} focusTerm={gpa?.termId} onClose={() => setGpa(null)} snap={snap} />
         <ExceptionsDialog opts={exceptionOpts} onClose={() => setExceptionOpts(null)} snap={snap} />
         <ClassBrowser query={browser} onClose={() => setBrowser(null)} snap={snap} />
+        <PlanDialogs />
         <SettingsSheet open={settingsOpen} onOpenChange={setSettingsOpen} prefs={prefs} onPref={setPref} />
         <CommandPalette
           open={commandOpen}
@@ -313,6 +314,7 @@ export default function App() {
           onOpenSettings={() => setSettingsOpen(true)}
           onToggleTheme={() => setPref('theme', document.documentElement.classList.contains('dark') ? 'light' : 'dark')}
         />
+        </CourseDndProvider>
         <ConfirmHost />
         <Toaster
           position={isMobile ? 'top-center' : 'bottom-center'}

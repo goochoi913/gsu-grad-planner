@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
+import { useDraggable, useDroppable } from '@dnd-kit/core'
 import { LuCheck, LuInfo, LuLock, LuPlus, LuRepeat, LuSearch } from 'react-icons/lu'
 import { COURSES, FOS_NOTE, RPE_NOTE } from '@/data/degree'
 import type { CatalogCourse, TermId } from '@/lib/types'
@@ -6,8 +7,8 @@ import { RECORD_STATUS, SEASONS, SEASON_META, conditionLabel, fmtCredits, isCour
 import { blockMeter, cleanDescription, coveredBy, failedAttempts, lastPassingAttempt, scheduledIn, semesterCredits, unmetPrereqsGlobal } from '@/lib/plan-ops'
 import { SCHEDULE_TERM_ID, scheduleFor, sectionCount, useScheduleVersion } from '@/lib/schedule'
 import { NEED_TEXT, courseNeed, type CourseNeed } from '@/lib/relevance'
-import { addCourse, removeCourse, type PlannerSnapshot } from '@/lib/store'
-import { readDrag } from '@/components/board'
+import { addCourse, type PlannerSnapshot } from '@/lib/store'
+import { justDragged, useCourseDnd } from '@/components/course-dnd'
 import { CategoryDot, Hint } from '@/components/bits'
 import { CATEGORY, categoryOfSection, type Category } from '@/lib/colors'
 import { Button } from '@/components/ui/button'
@@ -54,8 +55,10 @@ export function LibraryPanel({
   setTargetTerm: (t: TermId) => void
   onAfterAdd?: () => void
 }) {
-  const ui = useUi()
-  const [dropOver, setDropOver] = useState(false)
+  const dnd = useCourseDnd()
+  // Drop a planned course here to take it out of the plan.
+  const { setNodeRef } = useDroppable({ id: 'library', data: { kind: 'library' } })
+  const dropOver = dnd.over === 'library'
   const scheduleTerm = scheduleFor(SCHEDULE_TERM_ID)
   const springLabel = scheduleTerm ? `${scheduleTerm.label.split(' ')[0].slice(0, 3)} ’${scheduleTerm.label.slice(-2)}` : ''
   const audit = snap.audit
@@ -135,24 +138,12 @@ export function LibraryPanel({
   const more = filter.scope === 'needed' ? allCount - count : 0
 
   return (
-    <div
-      className={cn('flex h-full min-h-0 flex-col bg-sidebar', dropOver && 'ring-2 ring-primary/40 ring-inset')}
-      onDragOver={(e) => {
-        if (!ui.dragging) return
-        e.preventDefault()
-        setDropOver(true)
-      }}
-      onDragLeave={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node)) setDropOver(false)
-      }}
-      onDrop={(e) => {
-        e.preventDefault()
-        setDropOver(false)
-        const d = readDrag(e)
-        ui.setDragging(null)
-        if (d?.from) removeCourse(d.courseId, d.from)
-      }}
-    >
+    <div ref={setNodeRef} className={cn('relative flex h-full min-h-0 flex-col bg-sidebar', dropOver && 'ring-2 ring-primary/40 ring-inset')}>
+      {dropOver && (
+        <div className="pointer-events-none absolute inset-x-3 top-3 z-20 rounded-lg border border-dashed border-primary bg-background/95 px-3 py-2 text-center text-xs font-medium shadow-sm">
+          Drop to take it out of the plan
+        </div>
+      )}
       <div className="space-y-2 border-b p-3">
         <div className="relative">
           <LuSearch className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" aria-hidden />
@@ -324,6 +315,9 @@ function LibraryRow({
   const done = isCourseDone(course.id)
   const inSem = done ? null : scheduledIn(snap.semesters, snap.plan.schedule, course.id)
   const sem = inSem ? snap.semesters.find((s) => s.id === inSem) : null
+  // Drag into a term (on a computer); on a phone the list is a sheet over the plan, so the + button adds.
+  const canDrag = !done && !ui.isMobile
+  const { setNodeRef, attributes, listeners, isDragging } = useDraggable({ id: `lib:${course.id}`, data: { kind: 'lib', courseId: course.id }, disabled: !canDrag })
   const unmet = done ? [] : unmetPrereqsGlobal(snap.semesters, snap.plan.schedule, course.id)
   const covered = need.why === 'covered' ? coveredBy(course, snap.audit) || NEED_TEXT.covered : ''
   const retake = done ? [] : failedAttempts(course.id)
@@ -335,16 +329,13 @@ function LibraryRow({
     <HoverCard openDelay={450} closeDelay={60}>
       <HoverCardTrigger asChild>
         <div
+          ref={setNodeRef}
+          // (When it can't be dragged the row is still a button: no aria-disabled from the drag library.)
+          {...(canDrag ? attributes : {})}
+          {...(canDrag ? listeners : {})}
           role="button"
           tabIndex={0}
-          draggable={!done && !ui.isMobile}
-          onDragStart={(e) => {
-            e.dataTransfer.setData('text/plain', `${course.id}|${inSem ?? ''}`)
-            e.dataTransfer.effectAllowed = 'move'
-            ui.setDragging(course.id)
-          }}
-          onDragEnd={() => ui.setDragging(null)}
-          onClick={() => ui.openCourse(course.id, inSem)}
+          onClick={() => { if (!justDragged()) ui.openCourse(course.id, inSem) }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault()
@@ -358,6 +349,7 @@ function LibraryRow({
             CATEGORY[categoryOfSection(course)].edge,
             !done && !ui.isMobile && 'cursor-grab',
             (done || need.why === 'covered') && 'opacity-60',
+            isDragging && 'opacity-40',
           )}
         >
           <div className="min-w-0 flex-1 space-y-0.5">

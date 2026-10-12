@@ -18,6 +18,7 @@ import {
 import type { SyncStatus } from '@/lib/store'
 import type { View } from '@/hooks/use-prefs'
 import { Logo } from '@/components/logo'
+import { PlanSwitcher } from '@/components/plans'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -71,7 +72,7 @@ export function AppHeader({
         <Logo className="size-6" />
         <div className="min-w-0 leading-tight">
           <div className="truncate text-sm font-semibold tracking-tight">Eunbee’s Planner</div>
-          <div className="hidden truncate text-[11px] text-muted-foreground sm:block">GSU · B.S. Computer Science</div>
+          <PlanSwitcher compact={isMobile} />
         </div>
 
         <div className="flex-1" />

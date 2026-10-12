@@ -32,9 +32,6 @@ export interface UiApi {
   /** The term the course list's [+] adds into. */
   focusedTerm: TermId | null
   setFocusedTerm: (termId: TermId) => void
-  /** The course a drag started from, so terms can show where it may land. */
-  dragging: string | null
-  setDragging: (courseId: string | null) => void
   isMobile: boolean
 }
 

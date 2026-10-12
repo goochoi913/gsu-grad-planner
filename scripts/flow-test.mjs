@@ -27,10 +27,11 @@ const ok = (label, cond, extra) => {
   console.log(`${cond ? '  ok  ' : ' FAIL '} ${label}${!cond && extra ? `  ${JSON.stringify(extra)}` : ''}`)
 }
 
-async function open({ mobile = false, fixture = FIXTURE, live = null } = {}) {
+async function open({ mobile = false, fixture = FIXTURE, live = null, tall = false } = {}) {
   const ctx = await browser.newContext(mobile
     ? { viewport: { width: 393, height: 852 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }
-    : { viewport: { width: 1440, height: 900 } })
+    // tall: every term on screen at once, for drag and drop with the mouse
+    : { viewport: { width: 1440, height: tall ? 2100 : 900 } })
   let firebaseCalls = 0
   let liveCalls = 0
   await ctx.route(/googleapis\.com|firebaseinstallations/, (r) => { firebaseCalls++; return r.abort() })
@@ -66,7 +67,7 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
 
 /* ── the board ───────────────────────────────────────────────────────────── */
 {
-  const t = await open()
+  const t = await open({ tall: true })
   const { page } = t
   ok('the plan opens in fixture mode (no Firebase)', (await page.locator('[data-sync="fixture"]').count()) === 1)
   ok('upcoming terms come first, completed terms after', await page.evaluate(() => {
@@ -117,25 +118,19 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
   ok('  … and Undo takes it back out', !courseIds(await t.plan(), 'summer2027').includes('CSC4740'))
   await t.clearToasts()
 
-  // drag and drop: from the course list into a term, and between terms (a move, not a copy)
-  const drag = (fromSel, toTerm) => page.evaluate(([fromSel, toTerm]) => {
-    const dt = new DataTransfer()
-    document.querySelector(fromSel).dispatchEvent(new DragEvent('dragstart', { dataTransfer: dt, bubbles: true }))
-    const target = document.querySelector(`section[data-term="${toTerm}"]`)
-    target.dispatchEvent(new DragEvent('dragover', { dataTransfer: dt, bubbles: true, cancelable: true }))
-    target.dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }))
-  }, [fromSel, toTerm])
-  // Summer 2027 holds 12 cr and Fall 2027 18: move a Fall course into Summer, then fill the gap from the list
-  await drag('section[data-term="fall2027"] li[role=button]', 'summer2027')
-  await wait(page, 500)
+  // drag and drop with the mouse: between terms (a move, not a copy), and from the course list
+  // Summer 2027 holds 12 cr and Fall 2027 is over the cap: move a Fall course into Summer, then fill the gap from the list
+  let drop = await drag(page, 'section[data-term="fall2027"] li[data-course] >> nth=0', 'section[data-term="summer2027"] li[data-course] >> nth=0')
+  await drop()
   let p = await t.plan()
   const moved = courseIds(p, 'summer2027').filter((id) => !['CSC4520', 'CSC4350', 'CSC4320'].includes(id))
   ok('dragging a course to another term moves it', moved.length === 1 && !courseIds(p, 'fall2027').includes(moved[0]), { moved, fall: courseIds(p, 'fall2027') })
+  await t.clearToasts()
   // Fall 2027 started over the cap (20 cr) and now holds 16: a 2-credit course fits
   await page.locator('input[aria-label="Search courses"]').fill('4351')
   await wait(page)
-  await drag('[data-course="CSC4351"]', 'fall2027')
-  await wait(page, 500)
+  drop = await drag(page, '[data-course="CSC4351"]', 'section[data-term="fall2027"] li[data-course] >> nth=0')
+  await drop()
   ok('drag and drop from the course list places the course', courseIds(await t.plan(), 'fall2027').includes('CSC4351'))
 
   // remove from a term (hover trash) and undo
@@ -314,6 +309,140 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
   await t.ctx.close()
 }
 
+/* ── drag and drop ──────────────────────────────────────────────────────── */
+async function drag(page, fromSel, toSel, { dy = 0, hold = 150 } = {}) {
+  const a = await page.locator(fromSel).first().boundingBox()
+  const b = await page.locator(toSel).first().boundingBox()
+  await page.mouse.move(a.x + a.width / 2, a.y + a.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(a.x + a.width / 2 + 2, a.y + a.height / 2 + 8, { steps: 3 })
+  await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2 + dy, { steps: 14 })
+  await page.waitForTimeout(hold)
+  return async () => { await page.mouse.up(); await page.waitForTimeout(400) }
+}
+{
+  const t = await open({ tall: true })
+  const { page } = t
+  const row = (termId, i) => `section[data-term="${termId}"] li[data-course] >> nth=${i}`
+  const spring0 = courseIds(await t.plan(), 'spring2027')
+  let drop = await drag(page, row('spring2027', 0), row('spring2027', 2))
+  await drop()
+  ok('dragging a course down its term reorders it', JSON.stringify(courseIds(await t.plan(), 'spring2027')) === JSON.stringify([spring0[1], spring0[2], spring0[0], ...spring0.slice(3)]), courseIds(await t.plan(), 'spring2027'))
+  ok('  … and doesn’t open the course', (await page.locator('[role=dialog]').count()) === 0)
+  ok('  … keeping its chosen sections', !!(await t.plan()).schedule.spring2027.find((e) => e.courseId === spring0[0]).sections)
+
+  // into another term at a chosen spot: Summer (12 cr) takes a 3-credit course
+  const mover = courseIds(await t.plan(), 'spring2027')[0]
+  drop = await drag(page, row('spring2027', 0), row('summer2027', 0), { dy: 10 })
+  ok('dragging toward another term shows where it will land', (await page.locator('section[data-term="summer2027"] [data-drop-line=ok]').count()) === 1)
+  await drop()
+  ok('  … and drops it right there (after the course it was over)', courseIds(await t.plan(), 'summer2027')[1] === mover && !courseIds(await t.plan(), 'spring2027').includes(mover), courseIds(await t.plan(), 'summer2027'))
+
+  // a full term refuses: Fall 2027 is over the cap already
+  const fallBefore = courseIds(await t.plan(), 'fall2027')
+  drop = await drag(page, row('spring2027', 0), row('fall2027', 0))
+  ok('a term that can’t take it shows a red line and the reason', (await page.locator('section[data-term="fall2027"] [data-drop-line=refused]').count()) === 1 && /18-credit limit/.test(await page.locator('section[data-term="fall2027"]').innerText()))
+  await drop()
+  ok('  … and refuses the drop', JSON.stringify(courseIds(await t.plan(), 'fall2027')) === JSON.stringify(fallBefore) && /18-credit limit/.test(await t.toastText()))
+  await t.clearToasts()
+
+  // from the course list straight into a spot; back onto the list to take it out
+  await page.getByRole('button', { name: 'Show all options' }).click()
+  await page.locator('input[aria-label="Search courses"]').fill('4351')
+  await wait(page)
+  drop = await drag(page, '[data-course="CSC4351"]', row('summer2027', 0), { dy: -10 })
+  await drop()
+  ok('a course dragged from the course list lands where it was dropped', courseIds(await t.plan(), 'summer2027')[0] === 'CSC4351', courseIds(await t.plan(), 'summer2027'))
+  drop = await drag(page, row('summer2027', 0), 'input[aria-label="Search courses"]')
+  ok('dragging a planned course over the course list offers to take it out', /Drop to take it out of the plan/.test(await page.locator('body').innerText()))
+  await drop()
+  ok('  … and dropping it there does', !courseIds(await t.plan(), 'summer2027').includes('CSC4351'))
+  await t.clearToasts()
+
+  // completed terms are locked
+  drop = await drag(page, row('fall2027', 0), 'section[aria-label$="(completed)"] >> nth=0')
+  await drop()
+  ok('a completed term refuses a drop', /finished/.test(await t.toastText()))
+  ok('no page errors while dragging', t.errs.length === 0, t.errs)
+  await t.ctx.close()
+}
+
+/* ── plans: make, switch, rename, reorder, compare, delete ─────────────── */
+{
+  const t = await open()
+  const { page } = t
+  const tabs = () => page.locator('[data-plan-tabs] [role=tab]').allInnerTexts()
+  const active = () => page.locator('[data-plan-tabs] [role=tab][aria-selected=true]').innerText()
+  const docs = () => page.evaluate(() => window.__beePlanner.planDocs())
+  ok('the first plan is hers', JSON.stringify(await tabs()) === JSON.stringify(['Eunbee’s plan']) && /Eunbee’s plan/.test(await page.locator('[data-plan-switcher]').innerText()))
+
+  await page.getByRole('button', { name: 'New plan' }).click()
+  await wait(page, 400)
+  const starts = await page.locator('[role=dialog] label:has(input[name=plan-start])').allInnerTexts()
+  ok('a new plan starts from a copy, an empty plan or the 3-semester path — no 4-semester option', starts.length === 3 && /A copy of “Eunbee’s plan”/.test(starts[0]) && /3-semester path/.test(starts[2]) && !starts.some((x) => /4-semester/.test(x)), starts)
+  await page.locator('#plan-name').fill('My version')
+  await page.locator('[data-create-plan]').click()
+  await wait(page, 600)
+  ok('making a plan opens it in a new tab', JSON.stringify(await tabs()) === JSON.stringify(['Eunbee’s plan', 'My version']) && (await active()) === 'My version')
+  const d1 = await docs()
+  const mine = Object.keys(d1).find((id) => id !== 'main')
+  ok('  … as a copy of the plan that was open', JSON.stringify(d1[mine].schedule) === JSON.stringify(d1.main.schedule))
+
+  // edits stay in their own plan
+  const victim = courseIds(await t.plan(), 'fall2027')[0]
+  const r = term(page, 'fall2027').locator(`li[data-course="${victim}"]`)
+  await r.hover()
+  await r.locator('button[aria-label^="Remove"]').click()
+  await wait(page, 300)
+  await page.locator('[data-plan-tabs] [role=tab]', { hasText: 'Eunbee’s plan' }).click()
+  await wait(page, 500)
+  const d2 = await docs()
+  ok('editing one plan leaves the other alone', !courseIds(d2[mine], 'fall2027').includes(victim) && courseIds(d2.main, 'fall2027').includes(victim))
+  ok('switching tabs shows the other plan', (await active()) === 'Eunbee’s plan' && (await page.locator(`section[data-term=fall2027] li[data-course="${victim}"]`).count()) === 1)
+
+  // rename by double-clicking the tab
+  await page.locator('[data-plan-tabs] [role=tab]', { hasText: 'Eunbee’s plan' }).dblclick()
+  await page.locator('#plan-rename').fill('Eunbee A')
+  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await wait(page, 400)
+  ok('double-clicking a tab renames the plan', (await tabs())[0] === 'Eunbee A')
+
+  // drag a tab to reorder
+  const drop = await drag(page, '[data-plan-tabs] [role=tab] >> text=My version', '[data-plan-tabs] [role=tab] >> text=Eunbee A')
+  await drop()
+  ok('dragging a tab reorders the plans', JSON.stringify(await tabs()) === JSON.stringify(['My version', 'Eunbee A']), await tabs())
+
+  // compare
+  await page.getByRole('button', { name: 'Compare plans' }).click()
+  await wait(page, 600)
+  const cmp = page.locator('[data-compare]')
+  ok('Compare shows both plans term by term', (await cmp.locator('[data-compare-term]').count()) === 3 && /Graduates/.test(await cmp.innerText()))
+  ok('  … with the course only one of them has highlighted', (await cmp.locator('[data-diff=only]').count()) === 1 && (await cmp.locator('[data-diff=only]').innerText()).length > 0)
+  await page.keyboard.press('Escape')
+  await wait(page)
+
+  // manage: duplicate, then delete with Undo
+  await page.locator('[data-plan-tabs] button[aria-label^="More for"]').click()
+  await page.getByRole('menuitem', { name: /Manage plans/ }).click()
+  await wait(page, 500)
+  ok('Manage lists every plan with a drag handle', (await page.locator('[data-manage-plans] [data-plan-row]').count()) === 2 && (await page.locator('[data-manage-plans] button[aria-label^="Drag to reorder"]').count()) === 2)
+  await page.locator('[data-manage-plans] button[aria-label="Duplicate “Eunbee A”"]').click()
+  await wait(page, 600)
+  ok('  … Duplicate makes and opens a copy', (await tabs()).includes('Eunbee A (copy)') && (await active()) === 'Eunbee A (copy)')
+  await page.keyboard.press('Escape')
+  await wait(page, 300)
+  await page.locator('[data-plan-tabs] button[aria-label^="More for"]').click()
+  await page.getByRole('menuitem', { name: /Delete/ }).click()
+  await page.getByRole('alertdialog').getByRole('button', { name: 'Delete plan' }).click()
+  await wait(page, 500)
+  ok('deleting a plan (after confirming) takes it out and opens a neighbor', !(await tabs()).includes('Eunbee A (copy)') && (await tabs()).length === 2)
+  await page.locator('[data-sonner-toast] button', { hasText: 'Undo' }).first().click()
+  await wait(page, 500)
+  ok('  … and Undo brings it back', (await tabs()).includes('Eunbee A (copy)'))
+  ok('no page errors with plans', t.errs.length === 0, t.errs)
+  await t.ctx.close()
+}
+
 /* ── the record, final grades, GPA, exceptions ─────────────────────────── */
 {
   const t = await open()
@@ -384,11 +513,14 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
 {
   const t = await open()
   const { page } = t
-  await page.getByRole('button', { name: /Custom plan/ }).click()
-  await page.getByRole('menuitem', { name: /4 semesters/ }).click()
+  await page.getByRole('button', { name: 'The 3-semester path' }).click()
+  await wait(page, 300)
+  const items = await page.getByRole('menuitem').allInnerTexts()
+  ok('only the 3-semester path is offered (graduating December 2027)', items.length === 1 && /3 semesters/.test(items[0]) && /December 2027/.test(items[0]) && !/4 semesters/.test(items.join(' ')), items)
+  await page.getByRole('menuitem', { name: /3 semesters/ }).click()
   await page.getByRole('alertdialog').getByRole('button', { name: 'Switch' }).click()
   await wait(page, 500)
-  ok('a suggested path replaces the planned terms (after confirming)', (await t.plan()).lastTermId === 'spring2028')
+  ok('  … and loads into the open plan (after confirming)', (await t.plan()).lastTermId === 'fall2027' && (await page.getByRole('button', { name: 'This plan is the 3-semester path' }).count()) === 1)
 
   await page.getByRole('button', { name: 'More', exact: true }).click()
   await page.getByRole('menuitem', { name: /Clear planned terms/ }).click()
@@ -425,13 +557,7 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
 {
   const t = await open()
   const { page } = t
-  await page.getByRole('button', { name: /Add Spring 2028/ }).click()
-  await wait(page, 400)
-  ok('a term can be added at the end', (await t.plan()).lastTermId === 'spring2028' && (await term(page, 'spring2028').count()) === 1)
-  await page.locator('[aria-label="More for Spring 2028"]').click()
-  await page.getByRole('menuitem', { name: /Remove Spring 2028/ }).click()
-  await wait(page, 400)
-  ok('  … and removed again while it is empty', (await t.plan()).lastTermId === 'fall2027')
+  ok('three semesters only: no term can be added after Fall 2027', (await page.getByRole('button', { name: /^Add (Spring|Summer|Fall) 20/ }).count()) === 0 && /Graduate by Fall 2027 — 3 semesters/.test(await page.locator('main').innerText()))
 
   // Summer 2027 has no released schedule: meeting times are typed in by hand
   await term(page, 'summer2027').locator('li[role=button]', { hasText: 'CSC 4520' }).click()
@@ -504,6 +630,24 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
   await sheet.locator('[data-picker-save]').click()
   await wait(page, 500)
   ok('  … and Save keeps it', (await t.plan()).schedule.spring2027.find((e) => e.courseId === 'MATH2641').sections?.MATH2641 === '16637')
+
+  // press and hold, then drag, to reorder on a phone
+  const before = courseIds(await t.plan(), 'spring2027')
+  const cdp = await t.ctx.newCDPSession(page)
+  const box = async (sel) => page.locator(sel).first().boundingBox()
+  const from = await box('section[data-term=spring2027] li[data-course] >> nth=0')
+  const to = await box('section[data-term=spring2027] li[data-course] >> nth=2')
+  const touch = (type, x, y) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }] })
+  const fx = from.x + from.width / 2, fy = from.y + from.height / 2
+  await touch('touchStart', fx, fy)
+  await wait(page, 450)
+  for (let i = 1; i <= 12; i++) await touch('touchMove', fx, fy + ((to.y + to.height / 2 - fy) * i) / 12)
+  await wait(page, 200)
+  await touch('touchEnd', 0, 0)
+  await wait(page, 500)
+  ok('on a phone, press-and-hold then drag reorders a term', JSON.stringify(courseIds(await t.plan(), 'spring2027')) === JSON.stringify([before[1], before[2], before[0], ...before.slice(3)]), courseIds(await t.plan(), 'spring2027'))
+  ok('  … and a quick swipe still scrolls (no drag)', (await page.locator('[role=dialog]').count()) === 0)
+  ok('the plan tabs fit the phone', (await page.locator('[data-plan-tabs]').isVisible()) && (await t.overflow()) <= 1)
 
   await page.locator('nav button', { hasText: 'Schedule' }).click()
   await wait(page, 500)

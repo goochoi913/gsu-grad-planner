@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useDroppable } from '@dnd-kit/core'
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { toast } from 'sonner'
 import {
   LuArrowLeftRight,
   LuCalendarClock,
+  LuCheck,
   LuCalendarX,
   LuChevronDown,
   LuChevronRight,
@@ -21,7 +24,7 @@ import {
   LuX,
 } from 'react-icons/lu'
 import { SUBSTITUTIONS } from '@/data/degree'
-import type { RecordCourse, RecordTerm, Term, TermId } from '@/lib/types'
+import type { RecordCourse, RecordTerm, Term } from '@/lib/types'
 import {
   RECORD_STATUS,
   SEASON_META,
@@ -35,7 +38,8 @@ import {
   offeringInfo,
 } from '@/lib/planner'
 import {
-  SUGGESTED_PATHS,
+  GRADUATION_TERM,
+  OFFERED_PATHS,
   failedAttempts,
   isTermExpanded,
   nextTermToAdd,
@@ -49,7 +53,6 @@ import {
 import { meetingSummary, partPicks, scheduleFor, termEvents } from '@/lib/schedule'
 import { fmtDays, fmtTimeRange } from '@/lib/format'
 import {
-  addCourse,
   addSemester,
   applyPath,
   matchedPathId,
@@ -60,6 +63,8 @@ import {
   type PlannerSnapshot,
 } from '@/lib/store'
 import { confirmAction } from '@/components/confirm'
+import { justDragged, rowId, useCourseDnd } from '@/components/course-dnd'
+import { PlanTabs } from '@/components/plans'
 import { AuditIcon, CategoryLegend, CategoryTag, GradePill, Hint, Tag } from '@/components/bits'
 import { CATEGORY, PROGRESS, categoryOf, categoryOfRole } from '@/lib/colors'
 import { Button } from '@/components/ui/button'
@@ -75,18 +80,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator'
 import { useUi } from '@/components/ui-context'
 import { cn } from '@/lib/utils'
-
-/** Drag payload: "courseId|fromTermId" (from term is empty when dragged from the course list). */
-export const DRAG_MIME = 'text/plain'
-export function dragData(courseId: string, from: TermId | null) {
-  return `${courseId}|${from ?? ''}`
-}
-export function readDrag(e: React.DragEvent): { courseId: string; from: TermId | null } | null {
-  const raw = e.dataTransfer.getData(DRAG_MIME)
-  if (!raw) return null
-  const [courseId, from] = raw.split('|')
-  return findCourse(courseId) ? { courseId, from: from || null } : null
-}
 
 export function Board({ snap, showPast, onShowPast }: { snap: PlannerSnapshot; showPast: boolean; onShowPast: (v: boolean) => void }) {
   const { record, recordStatus, semesters } = snap
@@ -163,21 +156,23 @@ export function Board({ snap, showPast, onShowPast }: { snap: PlannerSnapshot; s
 /* ─── Suggested paths ────────────────────────────────────────────────────── */
 
 function PathBar({ snap }: { snap: PlannerSnapshot }) {
-  const current = matchedPathId()
-  const first = snap.semesters[0]
-  const last = [...snap.semesters].reverse().find((s) => (snap.plan.schedule[s.id] || []).length) ?? snap.semesters[snap.semesters.length - 1]
+  const ui = useUi()
+  // Only the 3-semester path is offered — she has to graduate by Fall 2027.
+  const current = OFFERED_PATHS.find((p) => p.id === matchedPathId()) ?? null
+  const last = [...snap.semesters].reverse().find((s) => (snap.plan.schedule[s.id] || []).length) ?? null
+  const late = !!last && last.key > GRADUATION_TERM.key
 
   const choose = async (id: string) => {
-    const path = SUGGESTED_PATHS.find((p) => p.id === id)!
-    if (current === id) {
-      toast.info(`You're already on the ${pathTitle(path)}.`)
+    const path = OFFERED_PATHS.find((p) => p.id === id)!
+    if (current?.id === id) {
+      toast.info(`This plan already is the ${pathTitle(path)}.`)
       return
     }
     const hasCourses = snap.semesters.some((s) => (snap.plan.schedule[s.id] || []).length)
     if (hasCourses && !current) {
       const ok = await confirmAction({
-        title: `Switch to the ${pathTitle(path)}?`,
-        description: `This replaces the courses in your planned terms (graduating ${path.graduation}). Past terms, grades and advisor exceptions are kept. Chosen sections and meeting times stay for courses that keep their term.`,
+        title: `Load the ${pathTitle(path)} into this plan?`,
+        description: `This replaces the courses in the open plan’s terms (graduating ${path.graduation}). Your other plans, past terms, grades and advisor exceptions are kept. Chosen sections and meeting times stay for courses that keep their term. To keep this plan as it is, make a new plan from the path instead.`,
         confirmLabel: 'Switch',
       })
       if (!ok) return
@@ -186,33 +181,37 @@ function PathBar({ snap }: { snap: PlannerSnapshot }) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+    <div className="space-y-2.5">
+      <PlanTabs snap={snap} />
+      <div className="flex flex-wrap items-end gap-x-3 gap-y-2">
       <div className="min-w-0 space-y-1">
-        <h2 className="text-base font-semibold tracking-tight">Your plan</h2>
         <p className="text-xs text-muted-foreground">
-          {first.label} → {last.label} · up to 18 credits a term
+          Graduate by <span className="font-medium text-foreground">{GRADUATION_TERM.label}</span> — 3 semesters · up to 18 credits a term · {ui.isMobile ? 'press and hold a course to move it' : 'drag courses to reorder or move them'}
         </p>
+        {late && (
+          <p className="text-xs font-medium text-destructive">This plan has courses after {GRADUATION_TERM.label} — move them into the three semesters.</p>
+        )}
         <CategoryLegend />
       </div>
       <div className="flex-1" />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" aria-label={current ? 'This plan is the 3-semester path' : 'The 3-semester path'}>
             <LuRoute className="size-3.5" aria-hidden />
-            {current ? SUGGESTED_PATHS.find((p) => p.id === current)!.name : 'Custom plan'}
-            <LuChevronDown className="size-3.5 opacity-60" aria-hidden />
+            3-semester path
+            {current ? <LuCheck className="size-3.5 text-green-600 dark:text-green-400" aria-hidden /> : <LuChevronDown className="size-3.5 opacity-60" aria-hidden />}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-80">
-          <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">Suggested paths</DropdownMenuLabel>
-          {SUGGESTED_PATHS.map((p) => {
+          <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">{current ? 'This plan is the suggested path' : 'Load the suggested path into this plan'}</DropdownMenuLabel>
+          {OFFERED_PATHS.map((p) => {
             const prev = pathPreview(snap.record, p.id, snap.startKey)
             return (
               <DropdownMenuItem key={p.id} onClick={() => choose(p.id)} className="flex-col items-start gap-0.5 py-2">
                 <span className="flex w-full items-center gap-2 text-sm font-medium">
                   {p.name}
                   <span className="text-xs font-normal text-muted-foreground">graduate {p.graduation}</span>
-                  {current === p.id && <span className="ml-auto text-xs">current</span>}
+                  {current?.id === p.id && <span className="ml-auto text-xs">current</span>}
                 </span>
                 <span className="mono text-[11px] text-muted-foreground">{prev.sems.map((s, i) => `${s.shortLabel} ${prev.credits[i]}`).join(' · ')}</span>
                 <span className="text-xs text-muted-foreground">{p.note}</span>
@@ -224,6 +223,7 @@ function PathBar({ snap }: { snap: PlannerSnapshot }) {
           })}
         </DropdownMenuContent>
       </DropdownMenu>
+      </div>
     </div>
   )
 }
@@ -265,24 +265,16 @@ function PastTermCard({ term, snap }: { term: RecordTerm; snap: PlannerSnapshot 
   const ui = useUi()
   const info = snap.summary.byTerm[term.id]
   const open = isTermExpanded(snap.plan.expandedTerms, snap.record, term.id)
-  const [dropWarn, setDropWarn] = useState(false)
+  const dnd = useCourseDnd()
+  // A course dragged here is refused (past terms are locked).
+  const { setNodeRef } = useDroppable({ id: `past:${term.id}`, data: { kind: 'past', termId: term.id } })
+  const dropWarn = dnd.over === 'past' && dnd.overPast === term.id
   if (!info) return null
 
   return (
     <section
+      ref={setNodeRef}
       aria-label={`${term.label} (completed)`}
-      onDragOver={(e) => {
-        if (!ui.dragging) return
-        e.preventDefault()
-        e.dataTransfer.dropEffect = 'none'
-        setDropWarn(true)
-      }}
-      onDragLeave={() => setDropWarn(false)}
-      onDrop={(e) => {
-        e.preventDefault()
-        setDropWarn(false)
-        toast.warning(`${term.label} is a past term. Use the Record to fix a grade or add a course.`)
-      }}
       className={cn('rounded-xl border bg-card/70 shadow-xs', dropWarn && 'border-destructive ring-2 ring-destructive/30')}
     >
       <header className="flex items-start gap-2 px-3 pt-2.5 pb-2">
@@ -387,7 +379,9 @@ function TermCard({ term, snap, isFirst, isLast }: { term: Term; snap: PlannerSn
   const entries = snap.plan.schedule[term.id] || []
   const credits = semesterCredits(snap.plan.schedule, term.id)
   const over = credits > term.maxCredits
-  const [dropTarget, setDropTarget] = useState(false)
+  const dnd = useCourseDnd()
+  const { setNodeRef } = useDroppable({ id: `term:${term.id}`, data: { kind: 'term', termId: term.id } })
+  const target = dnd.target?.termId === term.id ? dnd.target : null
   const sched = scheduleFor(term.id)
   const events = sched || entries.some((e) => e.blocks.length) ? termEvents(term.id, entries) : null
   const conflictCourses = new Set(events?.events.filter((e) => e.conflict).map((e) => e.courseId))
@@ -402,28 +396,14 @@ function TermCard({ term, snap, isFirst, isLast }: { term: Term; snap: PlannerSn
 
   return (
     <section
+      ref={setNodeRef}
       aria-label={term.label}
       data-term={term.id}
-      onDragOver={(e) => {
-        e.preventDefault()
-        e.dataTransfer.dropEffect = 'move'
-        setDropTarget(true)
-      }}
-      onDragLeave={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node)) setDropTarget(false)
-      }}
-      onDrop={(e) => {
-        e.preventDefault()
-        setDropTarget(false)
-        const d = readDrag(e)
-        ui.setDragging(null)
-        if (d && d.from !== term.id) addCourse(d.courseId, term.id)
-      }}
       onClick={() => ui.setFocusedTerm(term.id)}
       className={cn(
         '@container/term flex flex-col rounded-xl border bg-card shadow-sm transition-shadow hover:shadow-md',
         focused && !ui.isMobile && 'border-foreground/30 ring-2 ring-foreground/10',
-        dropTarget && 'border-primary ring-2 ring-primary/30',
+        target && (target.ok ? 'border-primary ring-2 ring-primary/30' : 'border-destructive ring-2 ring-destructive/30'),
         over && 'border-destructive ring-1 ring-destructive/30',
       )}
     >
@@ -508,17 +488,17 @@ function TermCard({ term, snap, isFirst, isLast }: { term: Term; snap: PlannerSn
 
       <Separator />
 
-      <ul className="flex-1 space-y-1.5 p-2.5">
-        {entries.map((e) => (
-          <CourseRow key={e.courseId} courseId={e.courseId} term={term} snap={snap} conflict={conflictCourses.has(e.courseId)} />
-        ))}
-        {!entries.length && !ui.dragging && (
-          <li className="rounded-lg border border-dashed px-2 py-4 text-center text-xs text-muted-foreground">No courses yet</li>
-        )}
-        {ui.dragging && (
-          <li className="rounded-md border border-dashed border-primary px-2 py-2 text-center text-[11px] text-primary">Drop here</li>
-        )}
-      </ul>
+      <SortableContext id={`term:${term.id}`} items={entries.map((e) => rowId(term.id, e.courseId))} strategy={verticalListSortingStrategy}>
+        <ul className="flex-1 space-y-1.5 p-2.5">
+          {entries.map((e, i) => (
+            <CourseRow key={e.courseId} courseId={e.courseId} term={term} snap={snap} conflict={conflictCourses.has(e.courseId)} dropBefore={target?.index === i ? target : null} />
+          ))}
+          {target && target.index >= entries.length && <DropLine ok={target.ok} reason={target.reason} />}
+          {!entries.length && !target && (
+            <li className="rounded-lg border border-dashed px-2 py-4 text-center text-xs text-muted-foreground">{dnd.active ? 'Drop a course here' : 'No courses yet'}</li>
+          )}
+        </ul>
+      </SortableContext>
 
       <div className="flex items-center gap-1 px-2.5 pb-2.5">
         <Button
@@ -582,8 +562,19 @@ function TermInfo({ term, snap }: { term: Term; snap: PlannerSnapshot }) {
   )
 }
 
-function CourseRow({ courseId, term, snap, conflict }: { courseId: string; term: Term; snap: PlannerSnapshot; conflict: boolean }) {
+/** Where a dragged course will land: a line between two courses (red when the term can't take it). */
+function DropLine({ ok, reason }: { ok: boolean; reason: string }) {
+  return (
+    <li className="pointer-events-none list-none" aria-hidden data-drop-line={ok ? 'ok' : 'refused'}>
+      <div className={cn('h-0.5 rounded-full', ok ? 'bg-primary' : 'bg-destructive')} />
+      {!ok && <div className="pt-1 text-[11px] font-medium text-destructive">{reason}</div>}
+    </li>
+  )
+}
+
+function CourseRow({ courseId, term, snap, conflict, dropBefore }: { courseId: string; term: Term; snap: PlannerSnapshot; conflict: boolean; dropBefore: { ok: boolean; reason: string } | null }) {
   const ui = useUi()
+  const sortable = useSortable({ id: rowId(term.id, courseId), data: { kind: 'row', courseId, termId: term.id } })
   const course = findCourse(courseId)!
   const role = snap.audit.roles[course.id]
   const unmet = unmetPrereqs(snap.semesters, snap.plan.schedule, course.id, term.id)
@@ -597,32 +588,38 @@ function CourseRow({ courseId, term, snap, conflict }: { courseId: string; term:
   const timed = entry?.blocks.filter((b) => b.days.length && b.startTime) ?? []
   const cat = categoryOf(course, role)
 
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = sortable
   return (
+    <>
+    {dropBefore && <DropLine ok={dropBefore.ok} reason={dropBefore.reason} />}
     <li
+      ref={setNodeRef}
+      style={{ transform: CSS.Translate.toString(transform), transition }}
+      {...attributes}
+      {...listeners}
       role="button"
       tabIndex={0}
-      draggable={!ui.isMobile}
-      onDragStart={(e) => {
-        e.dataTransfer.setData('text/plain', `${courseId}|${term.id}`)
-        e.dataTransfer.effectAllowed = 'move'
-        ui.setDragging(courseId)
-      }}
-      onDragEnd={() => ui.setDragging(null)}
+      aria-roledescription="Course — Enter opens it; Space picks it up to move"
+      data-course={course.id}
       onClick={(e) => {
         e.stopPropagation()
+        if (justDragged()) return
         ui.openCourse(course.id, term.id)
       }}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+        listeners?.onKeyDown?.(e)
+        if (e.key === 'Enter') {
           e.preventDefault()
           ui.openCourse(course.id, term.id)
         }
       }}
       className={cn(
-        'group relative cursor-pointer rounded-lg border border-transparent border-l-[3px] bg-secondary/60 px-2.5 py-2 transition-colors',
+        'group relative cursor-pointer touch-manipulation rounded-lg border border-transparent border-l-[3px] bg-secondary/60 px-2.5 py-2 transition-colors select-none [-webkit-touch-callout:none]',
         'hover:border-border hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none',
+        !ui.isMobile && 'active:cursor-grabbing',
         CATEGORY[cat].edge,
         conflict && 'bg-destructive/5',
+        isDragging && 'z-10 opacity-40',
       )}
     >
       <div className="flex items-center gap-2">
@@ -694,5 +691,6 @@ function CourseRow({ courseId, term, snap, conflict }: { courseId: string; term:
         )}
       </div>
     </li>
+    </>
   )
 }

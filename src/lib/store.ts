@@ -1,7 +1,11 @@
 /**
  * The planner's state and its Firebase sync — a port of the original js/app.js.
  *
- *   plan        planner/sharedSchedule  debounced whole-document writes (500 ms), cached in localStorage
+ *   plans       several named plans to build and compare. The first ("main") is planner/sharedSchedule,
+ *               the others planner/plan-<id>; their names and order are planner/planIndex. Each device
+ *               opens one plan (remembered on the device), so two people can each work on their own.
+ *   plan        the open plan             debounced whole-document writes (500 ms), cached in localStorage;
+ *                                       a pending write always goes to the plan it was made in
  *   record      planner/academicRecord  written right away; never cached in the browser; never written
  *                                       before the stored copy has loaded (that would overwrite it)
  *   projection  planner/gpaProjection   debounced writes (400 ms)
@@ -49,18 +53,24 @@ import {
   type StoredRecord,
 } from '@/lib/planner'
 import {
+  GRADUATION_TERM,
   checkAdd,
   currentPathId,
   defaultExpandedTerms,
+  nextTermToAdd,
   pathTitle,
   recordWithFinishedTerm,
   unmetPrereqs,
   withCourseAdded,
   withCourseRemoved,
+  withCourseReordered,
 } from '@/lib/plan-ops'
 import { blocksFromSections, sectionByCrn } from '@/lib/schedule'
 import * as fb from '@/lib/firebase'
+import { DEFAULT_PLANS, MAIN_PLAN_ID, cleanPlanName, copyName, newPlanId, planListFrom, type PlanMeta } from '@/lib/plans'
 import { clone, genId } from '@/lib/format'
+
+export type { PlanMeta }
 
 export type RecordLoad = 'loading' | 'ready' | 'missing' | 'offline'
 export type SyncStatus = 'connecting' | 'online' | 'saving' | 'error' | 'fixture'
@@ -71,7 +81,13 @@ export interface PlannerSnapshot {
   summary: RecordSummary
   /** Upcoming terms, first open term → plan.lastTermId. */
   semesters: Term[]
+  /** The open plan. */
   plan: PlanDoc
+  /** Every plan, in order. */
+  plans: PlanMeta[]
+  activePlanId: string
+  /** loading: just switched, showing the cached copy until Firebase answers. */
+  planStatus: 'loading' | 'ready'
   projection: Projection
   audit: Audit
   gpa: GpaProjection
@@ -84,6 +100,11 @@ export interface PlannerSnapshot {
 const LOCAL_KEY = 'bee-grad-planner-v6'
 const OLD_LOCAL_KEYS = ['bee-grad-planner-v4', 'bee-grad-planner-v3', 'bee-grad-planner-v2', 'gsu-grad-planner']
 const FIXTURE_KEY = 'bee-planner:fixture'
+/** The plan this device has open. */
+const ACTIVE_PLAN_KEY = 'bee-planner:active-plan'
+/** The plan list, for an instant first paint. */
+const PLAN_LIST_KEY = 'bee-planner:plans'
+
 
 /* ─── State ──────────────────────────────────────────────────────────────── */
 let record: AcademicRecord = normalizeRecord(null)
@@ -97,6 +118,14 @@ let firebaseReady = false
 let planLoaded = false
 let projectionLoaded = false
 let fixture = false
+let plans: PlanMeta[] = DEFAULT_PLANS
+let activePlanId: string = MAIN_PLAN_ID
+let planStatus: PlannerSnapshot['planStatus'] = 'ready'
+/** planner/planIndex exists (the list was saved at least once). */
+let indexExists = false
+let indexLoaded = false
+/** Test fixtures keep every plan in memory. */
+let fixturePlans: Record<string, PlanDoc> = {}
 indexRecord(record)
 
 let snapshot: PlannerSnapshot = derive()
@@ -104,7 +133,7 @@ const listeners = new Set<() => void>()
 
 function derive(): PlannerSnapshot {
   return {
-    record, recordStatus, summary, semesters, plan, projection,
+    record, recordStatus, summary, semesters, plan, plans, activePlanId, planStatus, projection,
     audit: computeAudit(record, plan.schedule, semesters),
     gpa: projectGpa(record, plan.schedule, semesters, projection),
     sync, fixture, startKey: firstPlanKey(record),
@@ -183,7 +212,8 @@ function setSchedule(schedule: PlanSchedule) {
 
 /* ─── Saving the plan ────────────────────────────────────────────────────── */
 let planTimer: ReturnType<typeof setTimeout> | null = null
-let pendingPayload: PlanDoc | null = null
+/** The next write, with the plan it belongs to — switching plans never sends it to the wrong one. */
+let pendingPayload: { planId: string; payload: PlanDoc } | null = null
 let lastPlanHash = ''
 
 function buildPlanPayload(): PlanDoc {
@@ -199,9 +229,16 @@ function buildPlanPayload(): PlanDoc {
   }, planStartKey())
 }
 
-function writeLocal(payload: PlanDoc) {
-  if (fixture) return
-  try { localStorage.setItem(LOCAL_KEY, JSON.stringify(payload)) } catch { /* private mode */ }
+const localKey = (planId: string) => (planId === MAIN_PLAN_ID ? LOCAL_KEY : `${LOCAL_KEY}:${planId}`)
+
+function writeLocal(payload: PlanDoc, planId = activePlanId) {
+  if (fixture) { fixturePlans[planId] = clone(payload); return }
+  try { localStorage.setItem(localKey(planId), JSON.stringify(payload)) } catch { /* private mode */ }
+}
+
+function readLocal(planId: string): unknown {
+  if (fixture) return fixturePlans[planId] ? clone(fixturePlans[planId]) : null
+  try { return JSON.parse(localStorage.getItem(localKey(planId)) || 'null') } catch { return null }
 }
 
 function savePlan() {
@@ -219,20 +256,20 @@ function savePlan() {
   }
   setSync('saving')
   if (planTimer) clearTimeout(planTimer)
-  pendingPayload = payload
+  pendingPayload = { planId: activePlanId, payload }
   planTimer = setTimeout(() => void flushPlan(), 500)
 }
 
 async function flushPlan() {
-  const payload = pendingPayload
+  const pending = pendingPayload
   if (planTimer) clearTimeout(planTimer)
   planTimer = null
   pendingPayload = null
-  if (!payload) return
-  const hash = JSON.stringify(payload)
-  const ok = await fb.save('plan', payload)
-  if (ok) { lastPlanHash = hash; setSync('online') }
-  else setSync('error')
+  if (!pending) return
+  const hash = JSON.stringify(pending.payload)
+  const ok = await fb.savePlan(pending.planId, pending.payload)
+  if (ok && pending.planId === activePlanId) lastPlanHash = hash
+  setSync(ok ? 'online' : 'error')
 }
 
 async function saveRecordNow(): Promise<boolean> {
@@ -290,7 +327,7 @@ async function initFirebase() {
     return
   }
   firebaseReady = true
-  let recordSeen = false, planSeen = false
+  let recordSeen = false
 
   void fb.listen('record', (raw, exists) => {
     const first = !recordSeen
@@ -315,43 +352,130 @@ async function initFirebase() {
     emit()
   }, () => { projectionLoaded = true })
 
-  void fb.listen('plan', (raw, exists) => {
-    const first = !planSeen
-    planSeen = true
+  void fb.listenIndex((raw, exists) => {
+    const wasListed = indexLoaded && plans.some((p) => p.id === activePlanId)
+    indexExists = exists
+    indexLoaded = true
+    const next = exists ? planListFrom(raw) : DEFAULT_PLANS
+    if (JSON.stringify(next) !== JSON.stringify(plans)) {
+      plans = next
+      cachePlanList()
+    }
+    if (!plans.some((p) => p.id === activePlanId)) {
+      if (wasListed) toast.info(`The plan you had open was deleted on the other device — showing “${plans[0].name}”.`)
+      void switchPlan(plans[0].id, { force: true })
+    } else emit()
+  }, () => { indexLoaded = true })
+
+  void subscribePlan(activePlanId)
+}
+
+/* ─── The open plan's document ───────────────────────────────────────────── */
+let planUnsub: (() => void) | null = null
+// Bumped on every (re)subscription, so a late snapshot from the plan we left is ignored.
+let planSub = 0
+
+async function subscribePlan(planId: string) {
+  const sub = ++planSub
+  planLoaded = false
+  let seen = false
+  const unsub = await fb.listenPlan(planId, (raw, exists) => {
+    if (sub !== planSub) return
+    const first = !seen
+    seen = true
+    if (!exists && planId !== MAIN_PLAN_ID) {
+      // Deleted on the other device (or this device remembered a plan that's gone): never write it back.
+      planLoaded = false
+      void leaveMissingPlan(planId)
+      return
+    }
     planLoaded = true
     // A change of ours is still waiting to be written; it will replace this snapshot anyway.
     if (!first && planTimer) return
     const { data, migrated, info } = migratePlan(exists ? raw : null, planStartKey())
     const changed = applyRemotePlan(data, first)
-    if (changed || first) emit()
-    if (migrated) { lastPlanHash = ''; announceMigration(info); savePlan() }
+    if (first) planStatus = 'ready'
+    if (changed || first) {
+      writeLocal(buildPlanPayload())
+      emit()
+    }
+    if (migrated) { lastPlanHash = ''; if (planId === MAIN_PLAN_ID) announceMigration(info); savePlan() }
     else {
       const payload = JSON.stringify(buildPlanPayload())
       lastPlanHash = payload === JSON.stringify(data) ? payload : ''
       if (!lastPlanHash) savePlan()
-      else setSync('online')
+      else if (!planTimer) setSync('online')
     }
-  }, () => { planLoaded = true; setSync('error') })
+  }, () => {
+    if (sub !== planSub) return
+    planLoaded = true
+    planStatus = 'ready'
+    setSync('error')
+    emit()
+  })
+  if (sub !== planSub) { unsub(); return }
+  planUnsub = unsub
 }
 
-/* ─── Local plan cache (instant first paint) ─────────────────────────────── */
+async function leaveMissingPlan(planId: string) {
+  if (planId !== activePlanId) return
+  const rest = plans.filter((p) => p.id !== planId)
+  plans = rest.length ? rest : DEFAULT_PLANS
+  cachePlanList()
+  await switchPlan(plans[0].id, { force: true })
+}
+
+/* ─── Local caches (instant first paint) ─────────────────────────────────── */
+const EMPTY_PLAN = { version: PLAN_VERSION, schedule: {} }
+
 function loadLocalState() {
   let raw: unknown = null
   try {
-    raw = JSON.parse(localStorage.getItem(LOCAL_KEY) || 'null')
-    for (const key of OLD_LOCAL_KEYS) {
+    raw = JSON.parse(localStorage.getItem(localKey(activePlanId)) || 'null')
+    if (activePlanId === MAIN_PLAN_ID) for (const key of OLD_LOCAL_KEYS) {
       if (!raw && localStorage.getItem(key)) raw = JSON.parse(localStorage.getItem(key)!)
       localStorage.removeItem(key)
     }
   } catch { /* unreadable cache: start from the defaults */ }
-  const { data, migrated, info } = migratePlan(raw, planStartKey())
+  // Only the first plan ever gets the default path; another plan without a cache waits for Firebase.
+  const { data, migrated, info } = activePlanId === MAIN_PLAN_ID ? migratePlan(raw, planStartKey()) : { data: normalizePlan(raw ?? EMPTY_PLAN, planStartKey()), migrated: false, info: {} }
   plan = data
   refreshSemesters()
   writeLocal(data)
   return { hadLocal: !!raw, migrated, info }
 }
 
-function readFixture(): { record?: unknown; plan?: unknown; projection?: unknown } | null {
+function readActivePlanId(): string {
+  try { return localStorage.getItem(ACTIVE_PLAN_KEY) || MAIN_PLAN_ID } catch { return MAIN_PLAN_ID }
+}
+
+function writeActivePlanId(planId: string) {
+  if (fixture) return
+  try { localStorage.setItem(ACTIVE_PLAN_KEY, planId) } catch { /* private mode */ }
+}
+
+function readCachedPlanList(): PlanMeta[] {
+  try {
+    const raw = JSON.parse(localStorage.getItem(PLAN_LIST_KEY) || 'null') as { order?: unknown; names?: unknown } | null
+    return raw ? planListFrom(raw) : DEFAULT_PLANS
+  } catch { return DEFAULT_PLANS }
+}
+
+function cachePlanList() {
+  if (fixture) return
+  try { localStorage.setItem(PLAN_LIST_KEY, JSON.stringify({ order: plans.map((p) => p.id), names: Object.fromEntries(plans.map((p) => [p.id, p.name])) })) } catch { /* private mode */ }
+}
+
+interface Fixture {
+  record?: unknown
+  plan?: unknown
+  projection?: unknown
+  /** More plans: [{ id, name, plan }]. The fixture's `plan` is the first ("main") unless one has id "main". */
+  plans?: { id: string; name: string; plan: unknown }[]
+  activePlanId?: string
+}
+
+function readFixture(): Fixture | null {
   try {
     const raw = localStorage.getItem(FIXTURE_KEY)
     return raw ? JSON.parse(raw) : null
@@ -370,16 +494,28 @@ export function startPlanner() {
     sync = 'fixture'
     recordStatus = fx.record ? 'ready' : 'missing'
     setRecord(normalizeRecord(fx.record ?? null))
-    plan = migratePlan(fx.plan ?? null, planStartKey()).data
+    const extra = (fx.plans ?? []).filter((p) => p && /^[a-z0-9]{4,40}$|^main$/.test(p.id))
+    plans = [...(extra.some((p) => p.id === MAIN_PLAN_ID) ? [] : DEFAULT_PLANS), ...extra.map((p) => ({ id: p.id, name: cleanPlanName(p.name) || 'Untitled plan' }))]
+    fixturePlans = { [MAIN_PLAN_ID]: migratePlan(fx.plan ?? null, planStartKey()).data }
+    for (const p of extra) fixturePlans[p.id] = normalizePlan(p.plan ?? EMPTY_PLAN, planStartKey())
+    activePlanId = plans.some((p) => p.id === fx.activePlanId) ? fx.activePlanId! : plans[0].id
+    plan = clone(fixturePlans[activePlanId])
     refreshSemesters()
     pruneCompletedFromSchedule()
     projection = normalizeProjection(fx.projection ?? null)
     planLoaded = true
     projectionLoaded = true
-    ;(window as unknown as { __beePlanner: unknown }).__beePlanner = { getSnapshot, buildPlanPayload, recordForSave: () => recordForSave(record) }
+    ;(window as unknown as { __beePlanner: unknown }).__beePlanner = {
+      getSnapshot, buildPlanPayload, recordForSave: () => recordForSave(record),
+      /** Every plan as stored, with the open one's unsaved state. */
+      planDocs: () => ({ ...clone(fixturePlans), [activePlanId]: buildPlanPayload() }),
+    }
     emit()
     return
   }
+  plans = readCachedPlanList()
+  activePlanId = readActivePlanId()
+  if (!plans.some((p) => p.id === activePlanId)) activePlanId = plans[0].id
   const local = loadLocalState()
   emit()
   // Never lose a change to a closed tab or a backgrounded phone app mid-debounce.
@@ -408,8 +544,8 @@ function termLabelOf(id: TermId) {
   return termById(id)?.label ?? id
 }
 
-/** Adds (or moves) a course; toasts the outcome. Returns false when the rules refuse it. */
-export function addCourse(courseId: string, semId: TermId, opts: { quiet?: boolean } = {}): boolean {
+/** Adds (or moves) a course — at `index` in the term when given; toasts the outcome. Returns false when the rules refuse it. */
+export function addCourse(courseId: string, semId: TermId, opts: { quiet?: boolean; index?: number } = {}): boolean {
   const check = checkAdd(semesters, plan.schedule, courseId, semId)
   const course = findCourse(courseId)
   if (!check.ok) {
@@ -419,7 +555,7 @@ export function addCourse(courseId: string, semId: TermId, opts: { quiet?: boole
   }
   const before = plan.schedule
   const from = semesters.find((s) => before[s.id]?.some((e) => e.courseId === courseId))
-  setSchedule(withCourseAdded(semesters, plan.schedule, courseId, semId))
+  setSchedule(withCourseAdded(semesters, plan.schedule, courseId, semId, opts.index))
   savePlan()
   emit()
   if (!opts.quiet) {
@@ -428,6 +564,21 @@ export function addCourse(courseId: string, semId: TermId, opts: { quiet?: boole
     if (check.warnings.length) toast.warning(`${verb} ${termLabelOf(semId)}`, { description: `${course!.code} ${check.warnings.join('; ')}.`, action: undo })
     else toast.success(`${verb} ${termLabelOf(semId)}`, { action: undo })
   }
+  return true
+}
+
+/**
+ * Drag and drop: puts a course at `index` in a term — a new position within its term, a move
+ * from another term (the 18-credit cap still applies), or an add from the course list.
+ */
+export function placeCourse(courseId: string, semId: TermId, index: number): boolean {
+  const from = semesters.find((s) => plan.schedule[s.id]?.some((e) => e.courseId === courseId))?.id ?? null
+  if (from !== semId) return addCourse(courseId, semId, { index })
+  const at = (plan.schedule[semId] || []).findIndex((e) => e.courseId === courseId)
+  if (at === index) return true
+  setSchedule(withCourseReordered(plan.schedule, semId, courseId, index))
+  savePlan()
+  emit()
   return true
 }
 
@@ -508,7 +659,10 @@ export function saveSections(semId: TermId, courseId: string, picks: Record<stri
 }
 
 export function addSemester() {
-  if (semesters.length >= MAX_SEMESTER_COUNT) return
+  if (!nextTermToAdd(semesters)) {
+    toast.info(`She graduates in three semesters — the plan ends with ${GRADUATION_TERM.label}.`)
+    return
+  }
   plan = { ...plan, lastTermId: makeTerm(termIdKey(plan.lastTermId) + 1).id }
   refreshSemesters()
   savePlan()
@@ -580,6 +734,192 @@ export function setCalSemester(termId: TermId) {
   plan = { ...plan, calSemester: termId }
   savePlan()
   emit()
+}
+
+/* ─── Plans: make, open, rename, reorder, delete ──────────────────────────── */
+function indexBase(): fb.IndexBase | null {
+  return indexExists ? null : { order: plans.map((p) => p.id), names: Object.fromEntries(plans.map((p) => [p.id, p.name])) }
+}
+
+function connected(): boolean {
+  if (fixture || firebaseReady) return true
+  toast.warning('Not connected to Firebase — plans can’t be changed right now.')
+  return false
+}
+
+/** Opens another plan on this device (the other device keeps whatever it has open). */
+export async function switchPlan(planId: string, opts: { force?: boolean } = {}) {
+  if (!opts.force && (planId === activePlanId || !plans.some((p) => p.id === planId))) return
+  if (planTimer) await flushPlan()
+  planUnsub?.()
+  planUnsub = null
+  planSub++
+  activePlanId = planId
+  writeActivePlanId(planId)
+  // Paint from this device's copy right away; Firebase's copy replaces it a moment later.
+  const cached = readLocal(planId)
+  plan = normalizePlan(cached ?? EMPTY_PLAN, planStartKey())
+  refreshSemesters()
+  pruneCompletedFromSchedule()
+  lastPlanHash = ''
+  wasCovered = null
+  planLoaded = fixture
+  planStatus = fixture || !firebaseReady ? 'ready' : 'loading'
+  emit()
+  if (!fixture && firebaseReady) void subscribePlan(planId)
+}
+
+/** The stored copy of any plan (the open one includes unsaved changes). */
+export async function loadPlan(planId: string): Promise<PlanDoc | null> {
+  if (planId === activePlanId) return buildPlanPayload()
+  if (fixture) return fixturePlans[planId] ? clone(fixturePlans[planId]) : null
+  const raw = await fb.fetchPlan(planId)
+  if (!raw) return null
+  const data = normalizePlan(raw, planStartKey())
+  writeLocal(data, planId)
+  return data
+}
+
+export type PlanStart = 'copy' | 'empty' | { pathId: string }
+
+/** Makes a new plan — a copy of the open one, an empty one, or a suggested path — and opens it. */
+export async function createPlan(name: string, start: PlanStart): Promise<boolean> {
+  if (!connected()) return false
+  const id = newPlanId()
+  const title = cleanPlanName(name) || 'Untitled plan'
+  const base = buildPlanPayload()
+  const payload = start === 'copy'
+    ? base
+    : start === 'empty'
+      ? normalizePlan({ ...base, schedule: {} }, planStartKey())
+      : normalizePlan({ ...base, ...buildPathPlan(start.pathId, planStartKey(), isCourseDone) }, planStartKey())
+  return addPlan(id, title, payload)
+}
+
+async function addPlan(id: string, title: string, payload: PlanDoc): Promise<boolean> {
+  const first = indexBase()
+  if (!fixture) {
+    setSync('saving')
+    const ok = await fb.createPlan(id, title, payload, first)
+    setSync(ok ? 'online' : 'error')
+    if (!ok) {
+      toast.error('Couldn’t make the plan — check the connection and try again.')
+      return false
+    }
+  }
+  writeLocal(payload, id)
+  if (!plans.some((p) => p.id === id)) plans = [...plans, { id, name: title }]
+  indexExists = true
+  cachePlanList()
+  await switchPlan(id, { force: true })
+  toast.success(`Made “${title}” — it’s open now`)
+  return true
+}
+
+/** A copy of any plan, opened. */
+export async function duplicatePlan(planId: string): Promise<boolean> {
+  if (!connected()) return false
+  const meta = plans.find((p) => p.id === planId)
+  const data = await loadPlan(planId)
+  if (!meta || !data) {
+    toast.error('Couldn’t read that plan — try again.')
+    return false
+  }
+  return addPlan(newPlanId(), copyName(meta.name, plans), data)
+}
+
+export async function renamePlan(planId: string, name: string): Promise<boolean> {
+  const title = cleanPlanName(name)
+  const meta = plans.find((p) => p.id === planId)
+  if (!title || !meta || meta.name === title || !connected()) return false
+  const first = indexBase()
+  const before = plans
+  plans = plans.map((p) => (p.id === planId ? { ...p, name: title } : p))
+  cachePlanList()
+  emit()
+  if (fixture) return true
+  const ok = await fb.renamePlan(planId, title, first)
+  if (ok) indexExists = true
+  else {
+    plans = before
+    cachePlanList()
+    emit()
+    toast.error('Couldn’t rename the plan — check the connection and try again.')
+  }
+  return ok
+}
+
+/** A new order for the list (drag and drop). */
+export async function reorderPlans(ids: string[]): Promise<boolean> {
+  const next = ids.map((id) => plans.find((p) => p.id === id)).filter((p): p is PlanMeta => !!p)
+  if (next.length !== plans.length || next.every((p, i) => p.id === plans[i].id) || !connected()) return false
+  const first = indexBase()
+  const before = plans
+  plans = next
+  cachePlanList()
+  emit()
+  if (fixture) return true
+  const ok = await fb.reorderPlans(next.map((p) => p.id), first ? { ...first, order: next.map((p) => p.id) } : null)
+  if (ok) indexExists = true
+  else {
+    plans = before
+    cachePlanList()
+    emit()
+    toast.error('Couldn’t save the new order — check the connection and try again.')
+  }
+  return ok
+}
+
+/** Deletes a plan for both of you (Undo puts it back). The last plan can't be deleted. */
+export async function deletePlan(planId: string): Promise<boolean> {
+  const meta = plans.find((p) => p.id === planId)
+  if (!meta || !connected()) return false
+  if (plans.length < 2) {
+    toast.info('This is the only plan — make another one before deleting it.')
+    return false
+  }
+  const content = await loadPlan(planId)
+  const order = plans.map((p) => p.id)
+  const first = indexBase()
+  if (planId === activePlanId) {
+    const i = plans.findIndex((p) => p.id === planId)
+    await switchPlan((plans[i + 1] ?? plans[i - 1]).id)
+  }
+  plans = plans.filter((p) => p.id !== planId)
+  cachePlanList()
+  emit()
+  if (fixture) delete fixturePlans[planId]
+  else {
+    setSync('saving')
+    const ok = await fb.deletePlan(planId, first)
+    setSync(ok ? 'online' : 'error')
+    if (!ok) {
+      plans = order.map((id) => (id === planId ? meta : plans.find((p) => p.id === id))).filter((p): p is PlanMeta => !!p)
+      cachePlanList()
+      emit()
+      toast.error('Couldn’t delete the plan — check the connection and try again.')
+      return false
+    }
+    indexExists = true
+  }
+  toast(`Deleted “${meta.name}”`, {
+    duration: 8000,
+    action: content ? { label: 'Undo', onClick: () => void restoreDeletedPlan(meta, order, content) } : undefined,
+  })
+  return true
+}
+
+async function restoreDeletedPlan(meta: PlanMeta, order: string[], content: PlanDoc) {
+  if (!fixture) {
+    const ok = await fb.restorePlan(meta.id, meta.name, order, content)
+    if (!ok) { toast.error('Couldn’t restore the plan.'); return }
+  } else fixturePlans[meta.id] = clone(content)
+  writeLocal(content, meta.id)
+  const byId = new Map([...plans, meta].map((p) => [p.id, p]))
+  plans = [...order.filter((id) => byId.has(id)).map((id) => byId.get(id)!), ...plans.filter((p) => !order.includes(p.id))]
+  cachePlanList()
+  await switchPlan(meta.id, { force: true })
+  toast.success(`Restored “${meta.name}”`)
 }
 
 /* ─── Academic record mutations (never touched by Reset or a suggested path) ── */
@@ -681,7 +1021,7 @@ export async function finishTerm(semId: TermId, rows: { code: string; title: str
   let ok = fixture
   if (!fixture && firebaseReady) {
     setSync('saving')
-    ok = await fb.saveBoth(planPayload, recordPayload)
+    ok = await fb.saveBoth(activePlanId, planPayload, recordPayload)
     if (ok) lastPlanHash = JSON.stringify(planPayload)
     setSync(ok ? 'online' : 'error')
   }

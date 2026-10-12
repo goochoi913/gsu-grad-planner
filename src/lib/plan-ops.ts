@@ -2,10 +2,11 @@
  * Planning rules the old view files applied (js/app.js, board.js, library.js, modal.js,
  * record.js, gpa.js), as pure functions over the plan, the record and the audit.
  */
-import { BLOCKS, DEGREE, GRADE_POINTS, MAX_SEMESTER_COUNT, SUGGESTED_PATHS } from '@/data/degree'
+import { BLOCKS, DEFAULT_PATH_ID, DEFAULT_SEMESTER_COUNT, DEGREE, GRADE_POINTS, MAX_SEMESTER_COUNT, SUGGESTED_PATHS } from '@/data/degree'
 import type { AcademicRecord, CatalogCourse, MeetingBlock, PlanEntry, PlanSchedule, PrereqCondition, RecordCourse, RecordStatus, Term, TermId } from '@/lib/types'
 import {
   BLOCK_BY_KEY,
+  PLAN_START_KEY,
   SEASON_META,
   attemptsFor,
   buildPathPlan,
@@ -124,10 +125,11 @@ export function checkAdd(semesters: Term[], schedule: PlanSchedule, courseId: st
 }
 
 /**
- * Places a course in a term, taking it out of any other term. Hand-entered meeting
- * times move with it; chosen class-schedule sections belong to their term and don't.
+ * Places a course in a term, taking it out of any other term — at `index` when given
+ * (a drop between two courses), else at the end. Hand-entered meeting times move with
+ * it; chosen class-schedule sections belong to their term and don't.
  */
-export function withCourseAdded(semesters: Term[], schedule: PlanSchedule, courseId: string, semId: TermId): PlanSchedule {
+export function withCourseAdded(semesters: Term[], schedule: PlanSchedule, courseId: string, semId: TermId, index?: number): PlanSchedule {
   const next: PlanSchedule = {}
   let carried: MeetingBlock[] = []
   for (const s of semesters) {
@@ -136,17 +138,39 @@ export function withCourseAdded(semesters: Term[], schedule: PlanSchedule, cours
     if (existing?.blocks?.length && !existing.sections) carried = existing.blocks
     next[s.id] = list.filter((e) => e.courseId !== courseId)
   }
-  next[semId] = [...(next[semId] || []), { courseId, blocks: carried }]
+  const target = [...(next[semId] || [])]
+  const at = index == null ? target.length : Math.max(0, Math.min(target.length, index))
+  target.splice(at, 0, { courseId, blocks: carried })
+  next[semId] = target
   return next
+}
+
+/** Moves a course to position `index` within its term, keeping everything about it (sections, meeting times). */
+export function withCourseReordered(schedule: PlanSchedule, semId: TermId, courseId: string, index: number): PlanSchedule {
+  const list = [...(schedule[semId] || [])]
+  const from = list.findIndex((e) => e.courseId === courseId)
+  if (from < 0) return schedule
+  const [entry] = list.splice(from, 1)
+  list.splice(Math.max(0, Math.min(list.length, index)), 0, entry)
+  return { ...schedule, [semId]: list }
 }
 
 export function withCourseRemoved(schedule: PlanSchedule, courseId: string, semId: TermId): PlanSchedule {
   return { ...schedule, [semId]: (schedule[semId] || []).filter((e) => e.courseId !== courseId) }
 }
 
-/** The next term the plan can grow into, or null at the 12-term limit. */
+/**
+ * She graduates in three semesters — Spring, Summer and Fall 2027; a fourth isn't affordable.
+ * The plan never grows past this term, and only the 3-semester path is offered.
+ * (The degree data keeps the 4-semester path the original planner had; the app doesn't show it.)
+ */
+export const GRADUATION_TERM: Term = makeTerm(PLAN_START_KEY + DEFAULT_SEMESTER_COUNT - 1)
+export const OFFERED_PATHS = SUGGESTED_PATHS.filter((p) => p.id === DEFAULT_PATH_ID)
+
+/** The next term the plan can grow into, or null once it reaches the graduation term (or the 12-term limit). */
 export function nextTermToAdd(semesters: Term[]): Term | null {
-  return semesters.length >= MAX_SEMESTER_COUNT ? null : makeTerm(semesters[semesters.length - 1].key + 1)
+  const next = makeTerm(semesters[semesters.length - 1].key + 1)
+  return semesters.length >= MAX_SEMESTER_COUNT || next.key > GRADUATION_TERM.key ? null : next
 }
 
 /* ─── Meeting-time conflicts (block-aware) ───────────────────────────────── */
