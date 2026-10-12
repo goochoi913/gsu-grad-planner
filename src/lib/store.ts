@@ -530,6 +530,8 @@ export function startPlanner() {
 /* ─── Celebration when the plan first covers everything ─────────────────── */
 let wasCovered: boolean | null = null
 function celebrateIfCovered() {
+  // A plan that is still loading shows a blank placeholder — not a change worth celebrating.
+  if (planStatus === 'loading' || !planLoaded && !fixture && firebaseReady) return
   const covered = snapshot.audit.missing === 0 && recordStatus === 'ready'
   if (covered && wasCovered === false) {
     const last = [...semesters].reverse().find((s) => (plan.schedule[s.id] || []).length)
