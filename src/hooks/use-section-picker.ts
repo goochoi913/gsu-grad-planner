@@ -132,7 +132,7 @@ export function useSectionPicker(course: CatalogCourse, termId: TermId, snap: Pl
     save: () => {
       if (!canSave) return false
       const picks = Object.fromEntries(parts.map((p) => [p.part.codeId, draft[p.part.codeId] ?? null]))
-      const message = parts.some((p) => p.previewing) ? `${course.title}: ${label} saved` : `${course.title}: section choice cleared`
+      const message = parts.some((p) => p.previewing) ? `${course.title}: ${label} saved` : `${course.title}: section unselected`
       const ok = saveSections(termId, course.id, picks, message)
       if (ok) setTouched({})
       return ok

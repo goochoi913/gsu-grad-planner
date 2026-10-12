@@ -1,4 +1,4 @@
-import { LuCircleAlert, LuCheck, LuMapPin, LuClock, LuTriangleAlert } from 'react-icons/lu'
+import { LuCircleAlert, LuCheck, LuMapPin, LuClock, LuTriangleAlert, LuX } from 'react-icons/lu'
 import type { Section } from '@/lib/schedule-types'
 import { MODE_LABEL, clashText, isFull, locationText, seatsText, timedMeetings, type Clash } from '@/lib/schedule'
 import { fmtDaysLong, fmtShortDate, fmtTimeRange } from '@/lib/format'
@@ -17,6 +17,7 @@ export function SectionCard({
   clashes = [],
   readOnly = false,
   onSelect,
+  onUnselect,
 }: {
   section: Section
   previewing?: boolean
@@ -24,6 +25,8 @@ export function SectionCard({
   clashes?: Clash[]
   readOnly?: boolean
   onSelect?: () => void
+  /** Shows an "Unselect" button on the chosen section. */
+  onUnselect?: () => void
 }) {
   const timed = timedMeetings(s)
   const full = isFull(s)
@@ -133,6 +136,20 @@ export function SectionCard({
             {n}
           </div>
         ))}
+        {interactive && previewing && onUnselect && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onUnselect()
+            }}
+            className="mt-1 -ml-1 inline-flex items-center gap-1 rounded-md px-1 py-0.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+            aria-label={`Unselect Section ${s.section}`}
+          >
+            <LuX className="size-3.5" aria-hidden />
+            Unselect
+          </button>
+        )}
       </div>
     </div>
   )

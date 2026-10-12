@@ -63,15 +63,12 @@ export function PickerSections({ picker, snap }: { picker: SectionPicker; snap: 
                   previewing={previewing?.crn === s.crn}
                   saved={saved?.crn === s.crn}
                   clashes={clashesFor(term.id, entries, course.id, part.codeId, s, draft)}
-                  onSelect={() => picker.choose(part.codeId, s.crn)}
+                  // Tapping the chosen section again unselects it (Save confirms, like any change).
+                  onSelect={() => picker.choose(part.codeId, previewing?.crn === s.crn ? null : s.crn)}
+                  onUnselect={() => picker.choose(part.codeId, null)}
                 />
               ))}
             </div>
-          )}
-          {previewing && (
-            <button type="button" className="text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline" onClick={() => picker.choose(part.codeId, null)}>
-              {saved ? `Clear the ${multi ? (part.main ? 'lecture' : 'lab') : 'section'} choice` : 'Clear the preview'}
-            </button>
           )}
         </div>
       ))}
@@ -177,6 +174,12 @@ export function PickerFooter({ picker, onCancel, onSave }: { picker: SectionPick
   const anySaved = parts.some((p) => p.saved)
   const brk = shortestBreak(picker.gaps, course.id)
 
+  // Saved sections the draft unselects: "Section 4", or "Lab 2" for a lecture + lab course.
+  const unselected = parts
+    .filter((p) => p.saved && !p.previewing)
+    .map((p) => `${parts.length > 1 ? (p.part.main ? 'Lecture' : 'Lab') : 'Section'} ${p.saved!.section}`)
+    .join(' and ')
+
   let tone: 'muted' | 'ok' | 'bad' | 'saved' = 'muted'
   let text: React.ReactNode
   if (dirty && blockers.length) {
@@ -184,9 +187,10 @@ export function PickerFooter({ picker, onCancel, onSave }: { picker: SectionPick
     text = <>{blockers[0]}{/overlaps/.test(blockers[0]) ? ' — choose another to save.' : '.'}</>
   } else if (dirty && anyPreview) {
     tone = 'ok'
-    text = <>{picker.label} fits your week{brk ? <span className="font-normal text-muted-foreground"> · {brk}</span> : ''}. Not saved yet.</>
+    text = <>{picker.label} fits your week{brk ? <span className="font-normal text-muted-foreground"> · {brk}</span> : ''}{unselected ? ` · ${unselected} will be unselected` : ''}. Not saved yet.</>
   } else if (dirty) {
-    text = 'The section choice will be cleared.'
+    tone = 'ok'
+    text = <>{unselected} will be unselected. Press Save to confirm.</>
   } else if (anySaved) {
     tone = 'saved'
     text = <>Saved: {parts.filter((p) => p.saved).map((p) => `${parts.length > 1 ? (p.part.main ? 'Lecture' : 'Lab') : 'Section'} ${p.saved!.section} (CRN ${p.saved!.crn})`).join(' + ')}</>

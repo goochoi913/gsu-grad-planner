@@ -501,6 +501,7 @@ export function saveSections(semId: TermId, courseId: string, picks: Record<stri
   emit()
   const where = from?.id === semId ? '' : from ? ` — moved to ${termLabelOf(semId)}` : ` — added to ${termLabelOf(semId)}`
   toast.success(`${message}${where}`, {
+    duration: 8000,
     action: { label: 'Undo', onClick: () => { setSchedule(before); savePlan(); emit() } },
   })
   return true

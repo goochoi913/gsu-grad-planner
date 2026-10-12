@@ -245,14 +245,22 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
   await wait(page, 300)
   ok('  … and Thursday’s (System-Level Programming’s Thursday meeting)', /System-Level Programming/.test(await dayText()))
 
-  // a class card opens the picker; clearing a choice is a Save too
+  // a class card opens the picker; a saved section can be unselected (tap it again, or Unselect), then Save
   await page.getByRole('radio', { name: 'Week' }).click()
   await page.locator('aside [data-course="MATH2641"]').click()
   await wait(page, 600)
-  await dialog.getByRole('button', { name: /Clear the section choice/ }).click()
+  ok('a class card in Schedule opens the picker, with an Unselect button on the saved section', (await dialog.getByRole('button', { name: 'Unselect Section 4' }).count()) === 1)
+  await pick(dialog, '16637')
+  await wait(page, 300)
+  ok('  … tapping the saved section again unselects it (not saved until Save)', (await dialog.locator('[role=radio][aria-checked=true]').count()) === 0 && (await sectionsOf('MATH2641'))?.MATH2641 === '16637' && /Section 4 will be unselected/.test(await dialog.locator('[data-picker-footer]').innerText()))
+  await pick(dialog, '16637')
+  await wait(page, 300)
+  ok('  … tapping it once more selects it again', (await dialog.locator('[role=radio][data-crn="16637"][aria-checked=true]').count()) === 1 && /Saved: Section 4/.test(await dialog.locator('[data-picker-footer]').innerText()))
+  await dialog.getByRole('button', { name: 'Unselect Section 4' }).click()
+  await wait(page, 300)
   await dialog.locator('[data-picker-save]').click()
   await wait(page, 500)
-  ok('a class card in Schedule opens the picker, where a choice can be cleared', !(await sectionsOf('MATH2641')))
+  ok('  … Unselect then Save takes it out of the plan', !(await sectionsOf('MATH2641')) && /section unselected/.test(await t.toastText()), await t.toastText())
 
   // professors
   await page.locator('button[aria-label="Lan Gao — RateMyProfessors rating"]').first().click()
