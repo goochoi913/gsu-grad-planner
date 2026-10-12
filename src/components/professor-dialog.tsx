@@ -1,8 +1,7 @@
 import { LuArrowUpRight, LuClock, LuGauge, LuMessageSquare, LuRepeat, LuSearch, LuStar } from 'react-icons/lu'
-import { PROFESSORS, SCHEDULE_TERM_ID, meetingSummary, professorFor, scheduleFor, seatsText, isFull, sectionsTaughtBy, libraryCourseFor } from '@/lib/schedule'
+import { PROFESSORS, SCHEDULE_TERM_ID, meetingSummary, professorFor, scheduleFor, scheduleTitle, seatsText, isFull, sectionsTaughtBy, libraryCourseFor } from '@/lib/schedule'
 import { fmtDate } from '@/lib/format'
 import { AppDialog, DialogSection } from '@/components/app-dialog'
-import { Tag } from '@/components/bits'
 import { Button } from '@/components/ui/button'
 import { useUi } from '@/components/ui-context'
 import { cn } from '@/lib/utils'
@@ -91,12 +90,8 @@ export function ProfessorDialog({ profKey, onClose }: { profKey: string | null; 
                         className={cn('flex w-full items-start gap-3 px-3 py-2.5 text-left', course && 'hover:bg-accent/50')}
                       >
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-baseline gap-2">
-                            <span className="mono text-sm font-semibold">{s.code}</span>
-                            <span className="text-xs text-muted-foreground">Sec {s.section}</span>
-                            {s.honors && <Tag>Honors</Tag>}
-                          </div>
-                          <div className="truncate text-xs text-muted-foreground">{s.title}</div>
+                          <div className="truncate text-sm font-semibold">{scheduleTitle(s.codeId, s.title)}</div>
+                          <div className="mono text-xs text-muted-foreground">{s.code} · Sec {s.section}</div>
                           <div className="mt-0.5 inline-flex items-center gap-1.5 text-xs">
                             <LuClock className="size-3 text-muted-foreground" aria-hidden />
                             {meetingSummary(s).join(' · ')}

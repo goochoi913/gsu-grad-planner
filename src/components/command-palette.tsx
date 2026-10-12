@@ -58,10 +58,10 @@ export function CommandPalette({
         <CommandEmpty>No results.</CommandEmpty>
         <CommandGroup heading="Courses">
           {COURSES.map((c) => (
-            <CommandItem key={c.id} value={`${c.code} ${c.title}`} onSelect={() => run(() => onOpenCourse(c.id))}>
+            <CommandItem key={c.id} value={`${c.title} ${c.code}`} onSelect={() => run(() => onOpenCourse(c.id))}>
               <LuSearch className="size-3.5" aria-hidden />
-              <span className="mono">{c.code}</span>
-              <span className="truncate text-muted-foreground">{c.title}</span>
+              <span className="truncate">{c.title}</span>
+              <span className="mono ml-auto shrink-0 text-xs text-muted-foreground">{c.code}</span>
             </CommandItem>
           ))}
         </CommandGroup>
@@ -70,10 +70,10 @@ export function CommandPalette({
             <CommandSeparator />
             <CommandGroup heading={`Add to ${term.label}`}>
               {placeable.map((c) => (
-                <CommandItem key={`add-${c.id}`} value={`add ${c.code} ${c.title}`} onSelect={() => run(() => addCourse(c.id, term.id))}>
+                <CommandItem key={`add-${c.id}`} value={`add ${c.title} ${c.code}`} onSelect={() => run(() => addCourse(c.id, term.id))}>
                   <LuPlus className="size-3.5" aria-hidden />
-                  <span className="mono">{c.code}</span>
-                  <span className="truncate text-muted-foreground">{c.title}</span>
+                  <span className="truncate">{c.title}</span>
+                  <span className="mono ml-auto shrink-0 text-xs text-muted-foreground">{c.code}</span>
                 </CommandItem>
               ))}
             </CommandGroup>

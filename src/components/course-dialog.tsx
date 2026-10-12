@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { LuCalendarPlus, LuCheck, LuHourglass, LuPlus, LuRepeat, LuTrash2, LuTriangleAlert } from 'react-icons/lu'
+import { LuCalendarRange, LuCheck, LuHourglass, LuPlus, LuRepeat, LuTrash2, LuTriangleAlert } from 'react-icons/lu'
 import { BLOCK_TYPES, DAY_LABELS, DAY_ORDER, FOS_NOTE, OFFERING_TERMS, RPE_NOTE, SUBSTITUTIONS } from '@/data/degree'
 import type { CatalogCourse, MeetingBlock, PrereqCondition, TermId } from '@/lib/types'
 import {
@@ -17,11 +17,12 @@ import {
   offeringInfo,
 } from '@/lib/planner'
 import { cleanDescription, failedAttempts, lastPassingAttempt, roleText, scheduledIn, semesterCredits, unmetPrereqs } from '@/lib/plan-ops'
-import { SCHEDULE_TERM_ID, isOfferedIn, scheduleFor } from '@/lib/schedule'
-import { addCourse, pickSection, removeCourse, setRepeatToReplace, updateBlocks, type PlannerSnapshot } from '@/lib/store'
+import { SCHEDULE_TERM_ID, isOfferedIn, scheduleFor, sectionCount } from '@/lib/schedule'
+import { addCourse, removeCourse, setRepeatToReplace, updateBlocks, type PlannerSnapshot } from '@/lib/store'
 import { genId, fmtTimeRange } from '@/lib/format'
 import { AppDialog, DialogSection } from '@/components/app-dialog'
-import { SectionChooser } from '@/components/section-list'
+import { PickerFooter, PickerSections, PickerWeek } from '@/components/section-picker'
+import { useSectionPicker, type SectionPicker } from '@/hooks/use-section-picker'
 import { CategoryTag, GradePill, Tag } from '@/components/bits'
 import { categoryOf } from '@/lib/colors'
 import { confirmAction } from '@/components/confirm'
@@ -31,6 +32,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { useUi } from '@/components/ui-context'
+import { useMedia } from '@/hooks/use-media'
 import { cn } from '@/lib/utils'
 
 export const R2R_STATUS_TEXT: Record<string, string> = {
@@ -43,10 +45,41 @@ export const R2R_STATUS_TEXT: Record<string, string> = {
 }
 
 export function CourseDialog({ courseId, onClose, snap }: { courseId: string | null; onClose: () => void; snap: PlannerSnapshot }) {
-  const course = courseId ? findCourse(courseId) : null
+  // Keep showing the last course while the dialog animates closed; start fresh each time one opens.
+  const [shown, setShown] = useState({ id: courseId, n: 0, open: !!courseId })
+  if (!!courseId !== shown.open || (courseId && courseId !== shown.id)) {
+    const fresh = !!courseId && (!shown.open || courseId !== shown.id)
+    setShown({ id: courseId ?? shown.id, n: fresh ? shown.n + 1 : shown.n, open: !!courseId })
+  }
+  const course = shown.id ? findCourse(shown.id) : null
+  if (!course) return null
+  return <CourseDialogFor key={`${course.id}:${shown.n}`} course={course} open={!!courseId} onClose={onClose} snap={snap} />
+}
+
+function CourseDialogFor({ course, open, onClose, snap }: { course: CatalogCourse; open: boolean; onClose: () => void; snap: PlannerSnapshot }) {
+  const wide = useMedia('(min-width: 1024px)')
+  const tablet = useMedia('(min-width: 640px)')
   const dirtyRef = useRef(false)
+  const done = isCourseDone(course.id)
+  const inSem = done ? null : scheduledIn(snap.semesters, snap.plan.schedule, course.id)
+  const picker = useSectionPicker(course, SCHEDULE_TERM_ID, snap)
+  const offered = !!picker && isOfferedIn(course, SCHEDULE_TERM_ID)
+  // Planned for a later term: the sections open on request ("Compare … sections").
+  const [compare, setCompare] = useState(false)
+  const pickerOn = !done && offered && (inSem === SCHEDULE_TERM_ID || !inSem || compare)
 
   const attemptClose = async () => {
+    if (pickerOn && picker!.dirty && picker!.canSave) {
+      const save = await confirmAction({
+        title: `Save ${picker!.label}?`,
+        description: `You picked it for ${course.title} but haven’t saved it yet.`,
+        confirmLabel: 'Save',
+        cancelLabel: 'Don’t save',
+      })
+      if (save) picker!.save()
+      onClose()
+      return
+    }
     if (dirtyRef.current) {
       const ok = await confirmAction({ title: 'Discard the meeting-time changes?', description: 'You edited meeting times without saving them.', confirmLabel: 'Discard', destructive: true })
       if (!ok) return
@@ -55,21 +88,43 @@ export function CourseDialog({ courseId, onClose, snap }: { courseId: string | n
     onClose()
   }
 
+  const header = {
+    eyebrow: (
+      <span className="mono">
+        {course.code} · {course.credits} credits{course.kind !== 'Lecture' ? ` · ${course.kind}` : ''}
+      </span>
+    ),
+    title: course.title,
+    description: roleText(course, snap.audit),
+    headerExtra: <HeaderTags course={course} snap={snap} />,
+  }
+
+  if (pickerOn && picker) {
+    return (
+      <AppDialog
+        open={open}
+        onOpenChange={(o) => !o && attemptClose()}
+        size="wide"
+        compactHeaderOnPhone
+        {...header}
+        bodyClassName="p-0 sm:p-0 lg:overflow-hidden"
+        footer={<PickerFooter picker={picker} onCancel={() => { picker.reset(); onClose() }} onSave={() => { if (picker.save()) onClose() }} />}
+      >
+        <div className="lg:grid lg:h-full lg:grid-cols-[minmax(0,27rem)_minmax(0,1fr)]">
+          <div className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur lg:static lg:order-2 lg:h-full lg:min-h-0 lg:border-b-0 lg:bg-transparent lg:backdrop-blur-none">
+            <PickerWeek picker={picker} snap={snap} fill={wide} isTouch={!wide} stackHeight={tablet ? 300 : 156} />
+          </div>
+          <div className="px-5 py-4 sm:px-6 lg:order-1 lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:border-r">
+            <CourseBody course={course} snap={snap} dirtyRef={dirtyRef} picker={picker} />
+          </div>
+        </div>
+      </AppDialog>
+    )
+  }
+
   return (
-    <AppDialog
-      open={!!course}
-      onOpenChange={(o) => !o && attemptClose()}
-      size="lg"
-      eyebrow={course && (
-        <span className="mono">
-          {course.code} · {course.credits} credits{course.kind !== 'Lecture' ? ` · ${course.kind}` : ''}
-        </span>
-      )}
-      title={course?.title ?? ''}
-      description={course ? roleText(course, snap.audit) : undefined}
-      headerExtra={course && <HeaderTags course={course} snap={snap} />}
-    >
-      {course && <CourseBody course={course} snap={snap} dirtyRef={dirtyRef} />}
+    <AppDialog open={open} onOpenChange={(o) => !o && attemptClose()} size="lg" {...header}>
+      <CourseBody course={course} snap={snap} dirtyRef={dirtyRef} picker={null} onCompare={offered && !done ? () => setCompare(true) : undefined} />
     </AppDialog>
   )
 }
@@ -93,8 +148,15 @@ function HeaderTags({ course, snap }: { course: CatalogCourse; snap: PlannerSnap
   )
 }
 
-function CourseBody({ course, snap, dirtyRef }: { course: CatalogCourse; snap: PlannerSnapshot; dirtyRef: React.MutableRefObject<boolean> }) {
-  const ui = useUi()
+function CourseBody({ course, snap, dirtyRef, picker, onCompare }: {
+  course: CatalogCourse
+  snap: PlannerSnapshot
+  dirtyRef: React.MutableRefObject<boolean>
+  /** The section picker, when the dialog is showing it. */
+  picker: SectionPicker | null
+  /** Opens the picker for a course planned in another term. */
+  onCompare?: () => void
+}) {
   const { semesters, plan } = snap
   const done = isCourseDone(course.id)
   const inSem = done ? null : scheduledIn(semesters, plan.schedule, course.id)
@@ -106,8 +168,6 @@ function CourseBody({ course, snap, dirtyRef }: { course: CatalogCourse; snap: P
   const sub = SUBSTITUTIONS.find((s) => codeToId(s.course) === course.id)
   const subLine = sub && snap.audit.lineById[sub.line]
   const schedTerm = scheduleFor(SCHEDULE_TERM_ID)
-  const offeredInScheduleTerm = isOfferedIn(course, SCHEDULE_TERM_ID)
-  const plannedInScheduleTerm = inSem === SCHEDULE_TERM_ID
   const termHasSchedule = !!(inSem && scheduleFor(inSem))
   const notes = [course.note, course.section === 'rpe' ? RPE_NOTE : '', course.section === 'fos' ? FOS_NOTE : ''].filter(Boolean)
 
@@ -171,36 +231,20 @@ function CourseBody({ course, snap, dirtyRef }: { course: CatalogCourse; snap: P
         </div>
       </DialogSection>
 
-      {schedTerm && offeredInScheduleTerm && !done && (
-        <DialogSection
-          title={`${schedTerm.label} sections`}
-          action={!plannedInScheduleTerm && semesters.some((s) => s.id === SCHEDULE_TERM_ID) ? (
-            <Button size="xs" variant="outline" onClick={() => addCourse(course.id, SCHEDULE_TERM_ID)}>
-              <LuCalendarPlus className="size-3.5" aria-hidden />
-              Take it in {schedTerm.label}
-            </Button>
-          ) : undefined}
-        >
-          {plannedInScheduleTerm ? (
-            <p className="text-xs text-muted-foreground">Choose one{course.parts.length > 1 ? ' lecture and one lab' : ''}. Your week and the CRN list update right away.</p>
-          ) : (
-            <p className="text-xs text-muted-foreground">
-              {inSem ? `Planned for ${sem?.label}. Move it to ${schedTerm.label} to choose a section.` : `Not in your plan. Add it to ${schedTerm.label} to choose a section.`}
-            </p>
-          )}
-          <SectionChooser
-            termId={SCHEDULE_TERM_ID}
-            course={course}
-            entry={plannedInScheduleTerm ? entry : null}
-            entries={plan.schedule[SCHEDULE_TERM_ID] || []}
-            readOnly={!plannedInScheduleTerm}
-            onPick={(part, crn) => pickSection(SCHEDULE_TERM_ID, course.id, part, crn)}
-          />
-          {plannedInScheduleTerm && (
-            <Button variant="ghost" size="sm" className="w-full" onClick={() => ui.setView('schedule')}>
-              See the week
-            </Button>
-          )}
+      {picker && (
+        <DialogSection title={`${picker.term.label} sections`}>
+          <PickerSections picker={picker} snap={snap} />
+        </DialogSection>
+      )}
+      {!picker && onCompare && schedTerm && (
+        <DialogSection title={`${schedTerm.label} sections`}>
+          <p className="text-xs text-muted-foreground">
+            {sem ? `Planned for ${sem.label}. ` : ''}GSU has {sectionCount(course, SCHEDULE_TERM_ID)} section{sectionCount(course, SCHEDULE_TERM_ID) === 1 ? '' : 's'} of it in {schedTerm.label}.
+          </p>
+          <Button variant="outline" size="sm" onClick={onCompare}>
+            <LuCalendarRange className="size-3.5" aria-hidden />
+            See them on your {schedTerm.label} week
+          </Button>
         </DialogSection>
       )}
 
@@ -261,10 +305,13 @@ function Attempts({ course, snap }: { course: CatalogCourse; snap: PlannerSnapsh
         {list.map(({ rec, term }) => (
           <li key={rec.id}>
             <button type="button" onClick={() => ui.openRecord({ recordId: rec.id })} className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-accent/50">
-              <span className="mono font-semibold">{rec.code}</span>
-              <span className="text-muted-foreground">{term.label}</span>
-              <span className="text-xs text-muted-foreground">{RECORD_STATUS[rec.status].short}{rec.transfer ? ' · transfer' : ''}{rec.r2r ? ' · replaced' : ''}</span>
-              <GradePill grade={rec.grade} className="ml-auto" />
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-medium">{rec.title || rec.code}</span>
+                <span className="block text-xs text-muted-foreground">
+                  <span className="mono">{rec.code}</span> · {term.label} · {RECORD_STATUS[rec.status].short}{rec.transfer ? ' · transfer' : ''}{rec.r2r ? ' · replaced' : ''}
+                </span>
+              </span>
+              <GradePill grade={rec.grade} />
             </button>
           </li>
         ))}

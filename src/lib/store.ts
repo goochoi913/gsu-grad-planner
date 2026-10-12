@@ -11,7 +11,7 @@
  *
  * Test fixtures: when localStorage["bee-planner:fixture"] holds { record, plan, projection },
  * the app skips Firebase entirely and keeps every change in memory. scripts/flow-test.mjs
- * uses this so browser tests never touch Bee's real data.
+ * uses this so browser tests never touch Eunbee's real data.
  */
 import { useSyncExternalStore } from 'react'
 import { toast } from 'sonner'
@@ -452,22 +452,58 @@ export function updateBlocks(courseId: string, semId: TermId, blocks: MeetingBlo
   emit()
 }
 
+// A plan entry with some parts' sections set (a CRN) or cleared (null).
+function withSections(schedule: PlanSchedule, semId: TermId, courseId: string, picks: Record<string, string | null>): PlanSchedule {
+  return {
+    ...schedule,
+    [semId]: (schedule[semId] || []).map((e) => {
+      if (e.courseId !== courseId) return e
+      const sections = { ...(e.sections || {}) }
+      for (const [part, crn] of Object.entries(picks)) {
+        if (crn) sections[part] = crn
+        else delete sections[part]
+      }
+      const picked = Object.values(sections).map((c) => sectionByCrn(semId, c)).filter((s) => !!s)
+      const next = { courseId, blocks: blocksFromSections(picked) } as PlanDoc['schedule'][string][number]
+      if (Object.keys(sections).length) next.sections = sections
+      return next
+    }),
+  }
+}
+
 /** Chooses (or clears, with crn null) the class-schedule section for one graded part of a planned course. */
 export function pickSection(semId: TermId, courseId: string, partCodeId: string, crn: string | null) {
-  const schedule = { ...plan.schedule }
-  schedule[semId] = (schedule[semId] || []).map((e) => {
-    if (e.courseId !== courseId) return e
-    const sections = { ...(e.sections || {}) }
-    if (crn) sections[partCodeId] = crn
-    else delete sections[partCodeId]
-    const picked = Object.values(sections).map((c) => sectionByCrn(semId, c)).filter((s) => !!s)
-    const next = { courseId, blocks: blocksFromSections(picked) } as PlanDoc['schedule'][string][number]
-    if (Object.keys(sections).length) next.sections = sections
-    return next
-  })
-  setSchedule(schedule)
+  setSchedule(withSections(plan.schedule, semId, courseId, { [partCodeId]: crn }))
   savePlan()
   emit()
+}
+
+/**
+ * Saves the sections chosen in the section picker in one step — adding the course to the
+ * term (or moving it there) first when it isn't planned there yet. Toasts with Undo.
+ * Returns false when the term can't take it (the 18-credit cap, a completed course).
+ */
+export function saveSections(semId: TermId, courseId: string, picks: Record<string, string | null>, message: string): boolean {
+  const before = plan.schedule
+  let schedule = plan.schedule
+  const from = semesters.find((s) => before[s.id]?.some((e) => e.courseId === courseId)) ?? null
+  if (from?.id !== semId) {
+    const check = checkAdd(semesters, schedule, courseId, semId)
+    if (!check.ok) {
+      if (check.tone === 'info') toast.info(check.reason)
+      else toast.warning(check.reason)
+      return false
+    }
+    schedule = withCourseAdded(semesters, schedule, courseId, semId)
+  }
+  setSchedule(withSections(schedule, semId, courseId, picks))
+  savePlan()
+  emit()
+  const where = from?.id === semId ? '' : from ? ` — moved to ${termLabelOf(semId)}` : ` — added to ${termLabelOf(semId)}`
+  toast.success(`${message}${where}`, {
+    action: { label: 'Undo', onClick: () => { setSchedule(before); savePlan(); emit() } },
+  })
+  return true
 }
 
 export function addSemester() {

@@ -1,26 +1,26 @@
 # Spring 2027 class schedule — build report
 
-Generated 2026-10-12T10:35:49-04:00 by `scripts/build-schedule.mjs`.
+Generated 2026-10-12T14:11:56-04:00 by `scripts/build-schedule.mjs`.
 
 ## Sources
 
 - `data/sources/Spring 2027 - CSC Classes.csv` — 133 sections (copied 2026-10-12T09:28:15-04:00)
 - `data/sources/Spring 2027 - Other Classes.csv` — 36 sections (copied 2026-10-12T09:29:06-04:00)
-- GSU class search (term 202701), fetched 2026-10-12T09:53:42-04:00 — subjects ACCT, ASTR, BIOL, CHEM, CSC, ECON, GEOL, JAPN, MATH, PERS, PHIL, PHYS, SCOM
-  - sections listed per subject: ACCT 98, ASTR 116, BIOL 686, CHEM 406, CSC 407, ECON 184, GEOL 99, JAPN 17, MATH 549, PERS 40, PHIL 160, PHYS 173, SCOM 152
+- GSU class search (term 202701), fetched 2026-10-12T13:58:24-04:00 — subjects ACCT, ASTR, BIOL, CHEM, CSC, ECON, GEOL, JAPN, MATH, PERS, PHIL, PHYS, SCOM
+  - sections listed per subject: ACCT 98, ASTR 116, BIOL 686, CHEM 406, CSC 407, ECON 184, GEOL 99, JAPN 17, MATH 549, PERS 40, PHIL 159, PHYS 173, SCOM 152
 
 ## Counts
 
-- Courses: 69; sections: 296
-- From the CSVs: 169; added from the class search: 127
+- Courses: 67; sections: 285
+- From the CSVs: 169; added from the class search: 127; left out: 11
 
 | Subject | From CSV | Added from class search |
 |---|---:|---:|
 | ACCT | 0 | 9 |
 | ASTR | 0 | 20 |
-| BIOL | 0 | 37 |
-| CHEM | 0 | 29 |
-| CSC | 133 | 0 |
+| BIOL | 0 | 36 |
+| CHEM | 0 | 27 |
+| CSC | 125 | 0 |
 | ECON | 9 | 9 |
 | GEOL | 0 | 9 |
 | MATH | 9 | 3 |
@@ -30,6 +30,22 @@ Generated 2026-10-12T10:35:49-04:00 by `scripts/build-schedule.mjs`.
 | SCOM | 0 | 9 |
 
 - CSV CRNs found on the class search: 169 of 169
+
+## Left out
+
+Sections she can’t register for are not in the app:
+
+- CSC 3210-2 (CRN 21635) — no seats offered (capacity 0) · Lan Gao · Tue/Thu 11:00 AM–12:15 PM, Aderhold Learning Center 325
+- CSC 4520-8 (CRN 16141) — Honors · Abdullah Bal · Tue/Thu 2:45 PM–4:30 PM, Classroom South 107
+- CSC 4710-4 (CRN 16899) — Honors · Farhan Tanvir · Mon/Wed 10:00 AM–11:45 AM, Petit Science Center 255
+- CSC 4870-2 (CRN 16290) — Honors · Rafal Angryk · TBA, no room
+- CSC 4870-4 (CRN 14994) — Honors · Ashwin Ashok · TBA, no room
+- CSC 4880-2 (CRN 16274) — Honors · Ashwin Ashok · TBA, no room
+- CSC 4880-4 (CRN 15006) — Honors · no instructor listed · TBA, no room
+- CSC 4880-6 (CRN 20221) — Honors · Kiril Kuzmin · TBA, no room
+- BIOL 2107-6 (CRN 14902) — Honors · Hongmei Zhang · Mon/Wed 9:30 AM–10:45 AM, online
+- CHEM 1211-6 (CRN 18554) — Honors · Danzhu Wang · Mon/Wed/Fri 12:30 PM–1:20 PM, Aderhold Learning Center 24
+- CHEM 1211L-4 (CRN 18555) — Honors · Shashank Mishra · Tue 9:00 AM–9:45 AM, Natural Science Center 218; Tue 9:55 AM–12:00 PM, Natural Science Center 234
 
 ## CSV ↔ class search differences
 
@@ -224,13 +240,11 @@ Seat counts come from the class search (fresher than the CSV copy). None changed
 
 ## Worth knowing
 
-- Full sections: CSC 3210-2 (CRN 21635) 0/0
-- Honors sections (usually Honors College only): BIOL 2107-6 (CRN 14902); CHEM 1211-6 (CRN 18554); CHEM 1211L-4 (CRN 18555); CSC 4520-8 (CRN 16141); CSC 4710-4 (CRN 16899)
 - Part-of-term sections: PERS 2001-18 (CRN 21126) Second half (Mar 1 – Apr 23); PERS 2001-20 (CRN 18320) First half (Jan 11 – Feb 27)
-- Variable credit hours: CSC 4870-2 (CRN 16290) 1 TO 6; CSC 4880-2 (CRN 16274) 1 TO 6; CSC 4880-6 (CRN 20221) 1 TO 6; CSC 4940-2 (CRN 11764) 1 TO 2; CSC 4999-2 (CRN 10646) 1 TO 4; CSC 4999-8 (CRN 16091) 1 TO 4; CSC 4999-10 (CRN 10645) 1 TO 4; CSC 4999-12 (CRN 10644) 1 TO 4
-- Very small scheduled sections (≤5 seats — often reserved, honors, or cross-listed): CSC 4330-2 (CRN 16140) 5 seats, Tue/Thu 12:45 PM–2:30 PM, Classroom South 101; CSC 4520-4 (CRN 16898) 5 seats, Mon/Wed 2:30 PM–4:15 PM, Aderhold Learning Center 107; CSC 4520-8 (CRN 16141) 5 seats, Tue/Thu 2:45 PM–4:30 PM, Classroom South 107; CSC 4710-4 (CRN 16899) 5 seats, Mon/Wed 10:00 AM–11:45 AM, Petit Science Center 255; CSC 4810-2 (CRN 20012) 4 seats, Mon/Wed 2:30 PM–3:15 PM, Langdale Hall 215; CSC 4841-2 (CRN 16882) 5 seats, Tue 12:45 PM–4:10 PM, CMII Annex 25 Park Place 0312
+- Variable credit hours: CSC 4940-2 (CRN 11764) 1 TO 2; CSC 4999-2 (CRN 10646) 1 TO 4; CSC 4999-8 (CRN 16091) 1 TO 4; CSC 4999-10 (CRN 10645) 1 TO 4; CSC 4999-12 (CRN 10644) 1 TO 4
+- Very small scheduled sections (≤5 seats — often reserved or cross-listed): CSC 4330-2 (CRN 16140) 5 seats, Tue/Thu 12:45 PM–2:30 PM, Classroom South 101; CSC 4520-4 (CRN 16898) 5 seats, Mon/Wed 2:30 PM–4:15 PM, Aderhold Learning Center 107; CSC 4810-2 (CRN 20012) 4 seats, Mon/Wed 2:30 PM–3:15 PM, Langdale Hall 215; CSC 4841-2 (CRN 16882) 5 seats, Tue 12:45 PM–4:10 PM, CMII Annex 25 Park Place 0312
 - Unusually short meetings for the credit hours: CSC 4810-2 (CRN 20012) 4 cr, Mon/Wed 2:30 PM–3:15 PM, Langdale Hall 215
 - Timed meetings with no building listed: CSC 4900-2 (CRN 18431) Mon 4:30 PM–7:00 PM, no room
 - Same day and time listed in two rooms, merged into one meeting: PERS 2001 section 4 (CRN 14786)
-- No instructor listed (not a lab): ACCT 2102-2 (CRN 10001); ACCT 2102-4 (CRN 14361); ACCT 2102-6 (CRN 13089); CSC 4880-4 (CRN 15006); ECON 2105-4 (CRN 11130); ECON 2105-10 (CRN 10426); ECON 2106-2 (CRN 16594); ECON 2106-12 (CRN 14485); PERS 2001-12 (CRN 20256); SCOM 1500-2 (CRN 14662)
+- No instructor listed (not a lab): ACCT 2102-2 (CRN 10001); ACCT 2102-4 (CRN 14361); ACCT 2102-6 (CRN 13089); ECON 2105-4 (CRN 11130); ECON 2105-10 (CRN 10426); ECON 2106-2 (CRN 16594); ECON 2106-12 (CRN 14485); PERS 2001-12 (CRN 20256); SCOM 1500-2 (CRN 14662)
 

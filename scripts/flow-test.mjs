@@ -1,11 +1,13 @@
 /**
- * Browser checks for the flows Bee uses: placing and moving courses, the 18-credit cap,
- * choosing sections, the week and day calendars, the CRN list, professor ratings, the
- * class browser, the record, final grades, the GPA projection, advisor exceptions,
- * suggested paths, reset + undo, search, themes — on a computer and at phone size.
+ * Browser checks for the flows Eunbee uses: placing and moving courses, the 18-credit cap,
+ * the course list's "what you still need", choosing sections in the section picker (preview on
+ * the week, then Save; clashes can't be saved), the week and day calendars, breaks between
+ * classes, the CRN list, professor ratings, the class browser, live seat counts, the record,
+ * final grades, the GPA projection, advisor exceptions, suggested paths, reset + undo, search,
+ * themes — on a computer and at phone size.
  *
  * Runs entirely on the synthetic fixture (scripts/fixtures/demo.json, loaded through
- * localStorage["bee-planner:fixture"]) with every Firebase request blocked, so Bee's real
+ * localStorage["bee-planner:fixture"]) with every Firebase request blocked, so Eunbee's real
  * plan and record are never touched.
  *
  *   npm run dev -- --port 5199
@@ -17,6 +19,7 @@ import { chromium } from 'playwright-core'
 
 const URL = process.env.URL || 'http://localhost:5199/gsu-grad-planner/'
 const FIXTURE = fs.readFileSync(path.join(import.meta.dirname, 'fixtures/demo.json'), 'utf8')
+const BUNDLED = fs.readFileSync(path.join(import.meta.dirname, '../src/data/spring2027.json'), 'utf8')
 const browser = await chromium.launch({ channel: process.env.CHROME_CHANNEL || 'chrome' })
 let fails = 0
 const ok = (label, cond, extra) => {
@@ -24,12 +27,18 @@ const ok = (label, cond, extra) => {
   console.log(`${cond ? '  ok  ' : ' FAIL '} ${label}${!cond && extra ? `  ${JSON.stringify(extra)}` : ''}`)
 }
 
-async function open({ mobile = false, fixture = FIXTURE } = {}) {
+async function open({ mobile = false, fixture = FIXTURE, live = null } = {}) {
   const ctx = await browser.newContext(mobile
     ? { viewport: { width: 393, height: 852 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }
     : { viewport: { width: 1440, height: 900 } })
   let firebaseCalls = 0
+  let liveCalls = 0
   await ctx.route(/googleapis\.com|firebaseinstallations/, (r) => { firebaseCalls++; return r.abort() })
+  // The published seat counts: a given copy, or the bundled one (as the live site has it — no swap).
+  await ctx.route(/\/live\/spring2027\.json/, (r) => {
+    liveCalls++
+    return r.fulfill({ status: 200, contentType: 'application/json', body: live ? JSON.stringify(live) : BUNDLED })
+  })
   await ctx.addInitScript((f) => {
     localStorage.clear()
     localStorage.setItem('bee-planner:fixture', f)
@@ -47,9 +56,11 @@ async function open({ mobile = false, fixture = FIXTURE } = {}) {
   const overflow = () => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
   const toastText = async () => (await page.locator('[data-sonner-toast]').allInnerTexts()).join(' | ')
   const clearToasts = () => page.evaluate(() => document.querySelectorAll('[data-sonner-toast] button[aria-label="Close toast"]').forEach((b) => b.click()))
-  return { ctx, page, errs, snap, plan, overflow, toastText, clearToasts, firebaseCalls: () => firebaseCalls }
+  return { ctx, page, errs, snap, plan, overflow, toastText, clearToasts, firebaseCalls: () => firebaseCalls, liveCalls: () => liveCalls }
 }
 const wait = (page, ms = 350) => page.waitForTimeout(ms)
+/** Taps a section card on its "Section N" label (the professor's name inside it opens their ratings). */
+const pick = (scope, crn) => scope.locator(`[role=radio][data-crn="${crn}"]`).getByText(/^Section \d+$/).click()
 const term = (page, id) => page.locator(`section[data-term="${id}"]`)
 const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
 
@@ -68,9 +79,26 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
   ok('six Degree Works meters in the rail', (await page.locator('[aria-label="Degree progress"] button[data-block]').count()) === 6)
   ok('the latest completed term is expanded, earlier ones are chips', (await page.locator('section[aria-label="Fall 2025 (completed)"] li').count()) > 0 && (await page.locator('section[aria-label="Fall 2023 (completed)"] li').count()) === 0)
   ok('no horizontal overflow at 1440px', (await t.overflow()) <= 1)
+  ok('plan rows lead with the course name, then the code', /^Software Development \(CTW\)\s*\n?CSC 3350/.test((await term(page, 'spring2027').locator('li[role=button]', { hasText: 'CSC 3350' }).innerText()).trim()))
 
-  // the 18-credit cap: CSC 4740 (4 cr) does not fit in Spring 2027 (17 cr), the focused term
+  // the course list opens on what she still needs
+  const needs = await page.locator('[data-need]').evaluateAll((els) => els.map((e) => e.getAttribute('data-need')))
+  ok('the course list shows only courses still needed (planned, or for an open requirement)', needs.length > 0 && needs.every((n) => n === 'planned' || n === 'open'), needs)
+  ok('  … and says so', /you still need/.test(await page.locator('text=/you still need/').first().innerText()))
+  await page.getByRole('button', { name: 'Show all options' }).click()
+  await wait(page)
+  const all = await page.locator('[data-need]').evaluateAll((els) => els.map((e) => e.getAttribute('data-need')))
+  ok('“Show all options” adds the alternatives, marked not needed', all.length > needs.length && all.includes('covered') && /not needed/.test(await page.locator('[data-need=covered]').first().innerText()))
+  ok('  … but never courses GSU hasn’t offered or scheduled (CSC 4340 Compilers)', (await page.locator('[data-course="CSC4340"]').count()) === 0 && !all.includes('unavailable'))
+  await page.getByRole('button', { name: 'Only what you need' }).click()
+  await wait(page)
+
+  // the 18-credit cap: CSC 4740 (4 cr) does not fit in Spring 2027 (17 cr), the focused term.
+  // Electives are covered in this plan, so a search offers it among the other options.
   await page.locator('input[aria-label="Search courses"]').fill('4740')
+  await wait(page)
+  ok('searching for a course she doesn’t need offers the other options', (await page.locator('[data-course="CSC4740"]').count()) === 0 && (await page.getByRole('button', { name: /Show 1 other option/ }).count()) === 1)
+  await page.getByRole('button', { name: /Show 1 other option/ }).click()
   await wait(page)
   await page.locator('[data-course="CSC4740"] button[aria-label="Add CSC 4740 to Spring 2027"]').click()
   await wait(page)
@@ -124,53 +152,107 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
   await t.ctx.close()
 }
 
-/* ── choosing sections, the calendar, the CRN list ─────────────────────── */
+/* ── the section picker: preview on the week, then Save ─────────────────── */
 {
   const t = await open()
   const { page } = t
+  const sectionsOf = async (courseId) => (await t.plan()).schedule.spring2027.find((e) => e.courseId === courseId)?.sections
   await term(page, 'spring2027').locator('li[role=button]', { hasText: 'CSC 3350' }).click()
-  await wait(page, 500)
+  await wait(page, 600)
   const dialog = page.locator('[role=dialog]')
   ok('a planned course opens its details', await dialog.isVisible())
   ok('  … with the Spring 2027 sections', /Spring 2027 sections/i.test(await dialog.innerText()))
-  ok('  … each with its professor’s rating', (await dialog.locator('[aria-label$="RateMyProfessors rating"]').count()) >= 3)
-  ok('  … and a clash warning where a section overlaps', /Overlaps/.test(await dialog.innerText()))
-  await dialog.locator('[role=radio][data-crn="17250"]').click()
+  ok('  … beside a calendar of the week', (await dialog.locator('[data-picker-week] [data-calendar=week]').count()) === 1)
+  ok('  … each section with its professor’s rating', (await dialog.locator('[aria-label$="RateMyProfessors rating"]').count()) >= 3)
+  ok('  … and a clash warning where a section overlaps, by name', /Overlaps Computer Organization & Programming/.test(await dialog.innerText()))
+
+  await pick(dialog, '17250')
   await wait(page, 400)
-  let p = await t.plan()
-  const entry = p.schedule.spring2027.find((e) => e.courseId === 'CSC3350')
-  ok('choosing a section saves its CRN in the plan', entry.sections?.CSC3350 === '17250')
-  ok('  … and writes its meeting times as blocks (for older copies of the app)', entry.blocks.length > 0 && entry.blocks.every((b) => b.crn === '17250'))
-  ok('  … and the option shows as chosen', (await dialog.locator('[role=radio][data-crn="17250"][aria-checked=true]').count()) === 1)
-  await page.keyboard.press('Escape')
-  await wait(page)
+  ok('tapping a section previews it — nothing is saved yet', !(await sectionsOf('CSC3350')))
+  ok('  … it shows on the week (Tue & Thu)', (await dialog.locator('[data-picker-week] [data-preview]').count()) === 2)
+  ok('  … and the footer says it fits and isn’t saved', /fits your week.*Not saved yet/.test(await dialog.locator('[data-picker-footer]').innerText()))
+
+  await pick(dialog, '17252')
+  await wait(page, 400)
+  ok('an overlapping section can be previewed (shown in red on the week)', (await dialog.locator('[data-picker-week] [data-preview][data-conflict]').count()) > 0)
+  ok('  … but not saved', await dialog.locator('[data-picker-save]').isDisabled())
+  ok('  … and the footer says why', /overlaps .*choose another to save/i.test(await dialog.locator('[data-picker-footer]').innerText()))
+
+  await pick(dialog, '17250')
+  await wait(page, 300)
+  await dialog.locator('[data-picker-save]').click()
+  await wait(page, 500)
+  const entry = (await t.plan()).schedule.spring2027.find((e) => e.courseId === 'CSC3350')
+  ok('Save writes the CRN into the plan', entry.sections?.CSC3350 === '17250')
+  ok('  … with its meeting times as blocks (for older copies of the app)', entry.blocks.length > 0 && entry.blocks.every((b) => b.crn === '17250'))
+  ok('  … closes the picker and confirms', !(await dialog.isVisible()) && /saved/i.test(await t.toastText()), await t.toastText())
   ok('the plan row shows the chosen section', /Sec 4/.test(await term(page, 'spring2027').locator('li[role=button]', { hasText: 'CSC 3350' }).innerText()))
+  await page.locator('[data-sonner-toast] button', { hasText: 'Undo' }).first().click()
+  await wait(page, 400)
+  ok('  … and Undo takes it back', !(await sectionsOf('CSC3350')))
+  await page.locator('[data-sonner-toast] button[aria-label="Close toast"]').first().click().catch(() => {})
+
+  // a short break shows on the week; closing with an unsaved choice asks first
+  await term(page, 'spring2027').locator('li[role=button]', { hasText: 'MATH 2641' }).click()
+  await wait(page, 600)
+  await pick(dialog, '16637')
+  await wait(page, 400)
+  ok('a 15-minute break before the next class is labelled on the week (Mon & Wed)', (await dialog.locator('[data-picker-week] [data-gap="15"]').count()) === 2)
+  ok('  … and in the footer', /15-min break/.test(await dialog.locator('[data-picker-footer]').innerText()))
+  await page.keyboard.press('Escape')
+  await wait(page, 400)
+  const ask = page.getByRole('alertdialog')
+  ok('closing with an unsaved section asks to save it', /Save Section 4\?/.test(await ask.innerText()))
+  await ask.getByRole('button', { name: 'Don’t save' }).click()
+  await wait(page, 500)
+  ok('  … “Don’t save” leaves the plan alone', !(await sectionsOf('MATH2641')) && !(await dialog.isVisible()))
+  await term(page, 'spring2027').locator('li[role=button]', { hasText: 'MATH 2641' }).click()
+  await wait(page, 600)
+  ok('  … and the next time it opens fresh', (await dialog.locator('[role=radio][aria-checked=true]').count()) === 0)
+  await pick(dialog, '16637')
+  await page.keyboard.press('Escape')
+  await wait(page, 400)
+  await page.getByRole('alertdialog').getByRole('button', { name: 'Save', exact: true }).click()
+  await wait(page, 500)
+  ok('  … “Save” keeps it', (await sectionsOf('MATH2641'))?.MATH2641 === '16637')
+
+  // a lecture and its lab are previewed and saved together
+  await term(page, 'spring2027').locator('li[role=button]', { hasText: 'CSC 3210' }).click()
+  await wait(page, 600)
+  ok('a lecture + lab course lists both, with what is saved marked', (await dialog.locator('[role=radiogroup]').count()) === 2 && (await dialog.locator('[data-saved]').count()) === 2)
+  await pick(dialog, '20708')
+  await wait(page, 300)
+  ok('  … a lab that overlaps its own lecture can’t be saved', /overlaps Computer Organization & Programming \(Wed\)/i.test(await dialog.locator('[data-picker-footer]').innerText()) && await dialog.locator('[data-picker-save]').isDisabled())
+  await dialog.getByRole('button', { name: 'Cancel' }).click()
+  await wait(page, 400)
+  ok('  … and Cancel closes without saving', !(await dialog.isVisible()) && (await sectionsOf('CSC3210'))?.CSC3210L === '20706')
 
   // the Schedule view
+  await t.clearToasts()
   await page.getByRole('radio', { name: /Schedule/ }).click()
   await wait(page, 600)
-  ok('the Schedule view shows the week', (await page.locator('[role=list][aria-label="Tuesday"] [role=listitem]').count()) > 0)
-  ok('  … with CSC 3350 on Tuesday', /CSC 3350/.test(await page.locator('[role=list][aria-label="Tuesday"]').innerText()))
-  ok('  … and the CRN list includes it', /17250/.test(await page.locator('text=CRNs for registration').locator('..').locator('..').innerText()))
+  ok('the Schedule view shows the week', (await page.locator('[role=list][aria-label="Monday"] [role=listitem]').count()) > 0)
+  ok('  … with the classes by name (Linear Algebra I on Monday)', /Linear Algebra I/.test(await page.locator('[role=list][aria-label="Monday"]').innerText()))
+  ok('  … and the CRN list includes it', /16637/.test(await page.locator('text=CRNs for registration').locator('..').locator('..').innerText()))
   ok('time conflicts are counted', /time conflict/.test(await page.locator('main').innerText()))
   await page.getByRole('radio', { name: 'Day' }).click()
-  await page.getByRole('tab', { name: /Tue/ }).click()
+  await page.getByRole('tab', { name: /Wed/ }).click()
   await wait(page, 400)
   const dayText = () => page.locator('[data-calendar="day"]').innerText()
-  ok('the Day view lists Tuesday’s classes', /CSC 3350/.test(await dayText()) && !/CSC 3210L/.test(await dayText()))
+  ok('the Day view lists Wednesday’s classes', /Linear Algebra I/.test(await dayText()) && /Computer Organization & Programming Lab/.test(await dayText()))
+  ok('  … with the break between them', (await page.locator('[data-calendar="day"] [data-gap="15"]').count()) === 1)
   await page.getByRole('tab', { name: /Thu/ }).click()
   await wait(page, 300)
-  ok('  … and Thursday’s (CSC 3320’s Thursday meeting)', /CSC 3320/.test(await dayText()))
+  ok('  … and Thursday’s (System-Level Programming’s Thursday meeting)', /System-Level Programming/.test(await dayText()))
 
-  // un-choosing clears it again (from the Schedule view's class card)
+  // a class card opens the picker; clearing a choice is a Save too
   await page.getByRole('radio', { name: 'Week' }).click()
-  const card = page.locator('aside li', { hasText: 'CSC 3350' })
-  await card.locator('[role=button][aria-expanded]').click()
-  await wait(page, 300)
-  await card.locator('[role=radio][data-crn="17250"]').click()
-  await wait(page, 300)
-  p = await t.plan()
-  ok('tapping the chosen section again clears it', !p.schedule.spring2027.find((e) => e.courseId === 'CSC3350').sections)
+  await page.locator('aside [data-course="MATH2641"]').click()
+  await wait(page, 600)
+  await dialog.getByRole('button', { name: /Clear the section choice/ }).click()
+  await dialog.locator('[data-picker-save]').click()
+  await wait(page, 500)
+  ok('a class card in Schedule opens the picker, where a choice can be cleared', !(await sectionsOf('MATH2641')))
 
   // professors
   await page.locator('button[aria-label="Lan Gao — RateMyProfessors rating"]').first().click()
@@ -179,22 +261,48 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
   const href = await prof.locator('a', { hasText: 'Open on RateMyProfessors' }).getAttribute('href')
   ok('a professor opens with their RateMyProfessors numbers', /Rating/.test(await prof.innerText()) && /Would take again/.test(await prof.innerText()))
   ok('  … and a direct link to their RMP profile', /^https:\/\/www\.ratemyprofessors\.com\/professor\/\d+$/.test(href || ''), href)
-  ok('  … and the sections they teach', /CSC 3210/.test(await prof.innerText()) && /CSC 4370/.test(await prof.innerText()))
+  ok('  … and the classes they teach, by name', /Computer Organization & Programming/.test(await prof.innerText()) && /Web Programming/.test(await prof.innerText()))
   await page.keyboard.press('Escape')
   await wait(page)
 
   // every class, including ones outside the CSVs
   await page.getByRole('button', { name: 'All classes' }).click()
   await wait(page, 400)
+  const browser = page.locator('[role=dialog]')
+  ok('the class browser opens on the classes she needs', /Classes you need/.test(await browser.innerText()) && (await browser.locator('li[data-code="ECON2106"]').count()) === 0)
+  await browser.getByRole('radio', { name: /Every class/ }).click()
   await page.locator('input[aria-label="Search classes"]').fill('ECON 2106')
   await wait(page, 300)
-  const econ = page.locator('[role=dialog] li', { hasText: 'ECON 2106' })
-  ok('the class browser finds courses beyond the CSVs (ECON 2106)', (await econ.count()) === 1)
+  const econ = browser.locator('li[data-code="ECON2106"]')
+  ok('  … “Every class” finds courses beyond the CSVs (ECON 2106)', (await econ.count()) === 1)
   await econ.locator('button').first().click()
   await wait(page, 300)
-  ok('  … and lists their sections', (await page.locator('[role=dialog] [data-crn]').count()) > 1)
+  ok('  … and lists their sections', (await browser.locator('[data-crn]').count()) > 1)
+  await page.locator('input[aria-label="Search classes"]').fill('16141')
+  await wait(page, 300)
+  ok('Honors sections are gone (CSC 4520-8, CRN 16141)', (await browser.locator('li[data-code]').count()) === 0)
   await page.keyboard.press('Escape')
   ok('no page errors in Schedule', t.errs.length === 0, t.errs)
+  await t.ctx.close()
+}
+
+/* ── live seat counts ───────────────────────────────────────────────────── */
+{
+  const bundled = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '../src/data/spring2027.json'), 'utf8'))
+  const live = JSON.parse(JSON.stringify(bundled))
+  live.sources.banner.fetchedAt = new Date().toISOString()
+  const sec = live.courses.find((c) => c.codeId === 'CSC3350').sections.find((x) => x.crn === '17250')
+  sec.seats = { remaining: 0, capacity: 90, full: true, asOf: live.sources.banner.fetchedAt, source: 'banner' }
+  sec.waitlist = { capacity: 99, count: 7, remaining: 92 }
+  const t = await open({ live })
+  const { page } = t
+  await wait(page, 800)
+  ok('the app asks for the published seat counts when it opens', t.liveCalls() >= 1)
+  await term(page, 'spring2027').locator('li[role=button]', { hasText: 'CSC 3350' }).click()
+  await wait(page, 600)
+  ok('fresher seat counts replace the bundled ones', /Full · waitlist 7\/99/.test(await page.locator('[role=dialog] [data-crn="17250"]').innerText()))
+  ok('  … and say how fresh they are', /updated just now/.test(await page.locator('[role=dialog] [data-picker-sections]').innerText()))
+  ok('no page errors with live data', t.errs.length === 0, t.errs)
   await t.ctx.close()
 }
 
@@ -322,6 +430,7 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
   await wait(page, 500)
   const dialog = page.locator('[role=dialog]')
   ok('a term without a schedule offers hand-entered meeting times', /Meeting times · Summer 2027/i.test(await dialog.innerText()))
+  ok('  … and offers to compare its Spring 2027 sections', (await dialog.getByRole('button', { name: /See them on your Spring 2027 week/ }).count()) === 1)
   await dialog.getByRole('button', { name: 'Add a meeting time' }).click()
   await dialog.getByRole('button', { name: 'Mon', exact: true }).click()
   await dialog.getByRole('button', { name: 'Wed', exact: true }).click()
@@ -332,6 +441,15 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
   await wait(page, 400)
   const blocks = (await t.plan()).schedule.summer2027.find((e) => e.courseId === 'CSC4520').blocks
   ok('  … and saving stores them as meeting blocks', blocks.length === 1 && blocks[0].days.join() === 'M,W' && blocks[0].startTime === '13:00' && blocks[0].endTime === '15:30', blocks)
+  await dialog.getByRole('button', { name: /See them on your Spring 2027 week/ }).click()
+  await wait(page, 500)
+  await dialog.locator('[role=radio][data-crn]').first().getByText(/^Section \d+$/).click()
+  await wait(page, 300)
+  ok('  … where saving would move it — refused while Spring 2027 is full', /Move to Spring 2027/.test(await dialog.locator('[data-picker-save]').innerText()) && await dialog.locator('[data-picker-save]').isDisabled() && /18-credit limit/.test(await dialog.locator('[data-picker-footer]').innerText()))
+  await dialog.getByRole('button', { name: 'Cancel' }).click()
+  await wait(page, 400)
+  await term(page, 'summer2027').locator('li[role=button]', { hasText: 'CSC 4520' }).click()
+  await wait(page, 500)
   await page.keyboard.press('Escape')
   await wait(page, 400)
   await page.getByRole('radio', { name: /Schedule/ }).click()
@@ -339,7 +457,7 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
   await page.locator('aside [aria-label="Term"]').click()
   await page.getByRole('option', { name: /Summer 2027/ }).click()
   await wait(page, 500)
-  ok('  … which appear on that term’s calendar', /4520/.test(await page.locator('[role=list][aria-label="Monday"]').innerText()) && /4520/.test(await page.locator('[role=list][aria-label="Wednesday"]').innerText()))
+  ok('  … which appear on that term’s calendar', /Design & Analysis of Algorithms/.test(await page.locator('[role=list][aria-label="Monday"]').innerText()) && /4520/.test(await page.locator('[role=list][aria-label="Wednesday"]').innerText()))
   ok('no page errors', t.errs.length === 0, t.errs)
   await t.ctx.close()
 }
@@ -351,30 +469,33 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
   ok('the bottom tab bar is there', (await page.getByRole('navigation', { name: 'Main' }).count()) === 1)
   ok('no horizontal overflow on Plan (393px)', (await t.overflow()) <= 1)
 
-  // add a course in a few taps: Courses → search → +
+  // add a course she needs in a few taps, found by its name: Courses → search → +
   let taps = 0
   await page.locator('nav button', { hasText: 'Courses' }).click(); taps++
   await wait(page, 500)
-  await page.locator('[role=dialog] input[aria-label="Search courses"]').fill('4740')
+  await page.locator('[role=dialog] input[aria-label="Search courses"]').fill('ethics of computing')
   await wait(page, 300)
   await page.locator('[role=dialog] [aria-label="Term to add courses to"]').click(); taps++
   await page.getByRole('option', { name: /Summer 2027/ }).click(); taps++
-  await page.locator('[role=dialog] button[aria-label="Add CSC 4740 to Summer 2027"]').click(); taps++
+  await page.locator('[role=dialog] button[aria-label="Add PHIL 2920 to Summer 2027"]').click(); taps++
   await wait(page, 500)
-  ok(`a course is found and added in ${taps} taps`, courseIds(await t.plan(), 'summer2027').includes('CSC4740') && taps <= 4)
+  ok(`a course is found by name and added in ${taps} taps`, courseIds(await t.plan(), 'summer2027').includes('PHIL2920') && taps <= 4)
   await page.keyboard.press('Escape')
   await wait(page, 400)
 
-  // choose a section in two taps from the plan
+  // choose a section from the plan: open, preview, Save
   await term(page, 'spring2027').locator('li[role=button]', { hasText: 'MATH 2641' }).click()
-  await wait(page, 500)
-  ok('the course opens as a bottom sheet', await page.locator('[role=dialog]').isVisible())
-  ok('  … with no horizontal overflow', (await t.overflow()) <= 1)
-  await page.locator('[role=dialog] [role=radio][data-crn]').first().click()
+  await wait(page, 600)
+  const sheet = page.locator('[role=dialog]')
+  ok('the section picker opens as a bottom sheet', await sheet.isVisible())
+  ok('  … with the week on top of the options', await sheet.locator('[data-picker-week]').isVisible())
+  ok('  … and no horizontal overflow', (await t.overflow()) <= 1 && (await sheet.evaluate((d) => d.scrollWidth - d.clientWidth)) <= 1)
+  await pick(sheet, '16637')
   await wait(page, 300)
-  ok('a section is chosen with one more tap', !!(await t.plan()).schedule.spring2027.find((e) => e.courseId === 'MATH2641').sections)
-  await page.keyboard.press('Escape')
-  await wait(page, 400)
+  ok('  … a tap previews the section on the week', (await sheet.locator('[data-picker-week] [data-preview]').count()) === 2 && !(await t.plan()).schedule.spring2027.find((e) => e.courseId === 'MATH2641').sections)
+  await sheet.locator('[data-picker-save]').click()
+  await wait(page, 500)
+  ok('  … and Save keeps it', (await t.plan()).schedule.spring2027.find((e) => e.courseId === 'MATH2641').sections?.MATH2641 === '16637')
 
   await page.locator('nav button', { hasText: 'Schedule' }).click()
   await wait(page, 500)

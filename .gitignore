@@ -23,3 +23,6 @@ dev-dist
 
 # Raw API caches from scripts/build-schedule.mjs and scripts/fetch-rmp.mjs
 .cache/
+
+# Seat counts the deploy job fetches every 30 minutes (scripts/build-schedule.mjs --live)
+public/live/

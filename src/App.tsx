@@ -4,6 +4,7 @@ import { useDefaultLayout, usePanelRef } from 'react-resizable-panels'
 import type { TermId } from '@/lib/types'
 import { semesterCredits } from '@/lib/plan-ops'
 import { resetPlan, setCalSemester, usePlanner } from '@/lib/store'
+import { useScheduleVersion } from '@/lib/schedule'
 import { usePrefs, type View } from '@/hooks/use-prefs'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useMedia } from '@/hooks/use-media'
@@ -37,6 +38,8 @@ type MobileSheet = 'library' | 'audit' | null
 
 export default function App() {
   const snap = usePlanner()
+  // Re-render everything when fresher seat counts arrive (src/lib/live-schedule.ts).
+  useScheduleVersion()
   const { prefs, set: setPref } = usePrefs()
   const isMobile = useIsMobile()
   const wide = useMedia('(min-width: 1024px)')

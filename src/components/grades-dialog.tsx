@@ -123,11 +123,8 @@ export function GradesDialog({ termId, onClose, snap }: { termId: TermId | null;
                         </div>
                       ) : (
                         <>
-                          <div className="flex items-baseline gap-2">
-                            <span className="mono text-sm font-semibold">{r.code}</span>
-                            <span className="mono text-xs text-muted-foreground">{fmtCredits(r.credits)} cr</span>
-                          </div>
-                          <div className="truncate text-xs text-muted-foreground">{r.title}</div>
+                          <div className="truncate text-sm font-semibold">{r.title || r.code}</div>
+                          <div className="mono text-xs text-muted-foreground">{r.code} · {fmtCredits(r.credits)} cr</div>
                         </>
                       )}
                     </div>

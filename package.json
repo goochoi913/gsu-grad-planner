@@ -3,7 +3,7 @@
   "private": true,
   "version": "2.0.0",
   "type": "module",
-  "description": "Bee's degree planner for the GSU B.S. in Computer Science: academic timeline, Degree Works audit, GPA projection, and the Spring 2027 class schedule.",
+  "description": "Eunbee's degree planner for the GSU B.S. in Computer Science: academic timeline, Degree Works audit, GPA projection, and the Spring 2027 class schedule.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

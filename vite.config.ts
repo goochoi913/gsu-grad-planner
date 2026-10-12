@@ -19,8 +19,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'favicon.svg', 'apple-touch-icon-180x180.png'],
       manifest: {
-        name: "Bee's Grad Planner",
-        short_name: 'Bee Planner',
+        name: "Eunbee's Grad Planner",
+        short_name: 'Eunbee Planner',
         description: 'GSU Computer Science degree plan, Degree Works audit, GPA, and class schedule.',
         theme_color: '#ffffff',
         background_color: '#ffffff',
@@ -36,6 +36,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest}'],
+        // Seat counts refreshed every 30 minutes — always fetched, never cached (src/lib/live-schedule.ts).
+        globIgnores: ['live/**'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         skipWaiting: true,

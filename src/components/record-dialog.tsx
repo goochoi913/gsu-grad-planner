@@ -331,15 +331,14 @@ export function RecordDialog({ opts, onClose, snap }: { opts: RecordDialogOption
                     <li key={c.id} className={cn('flex items-center gap-2 px-3 py-2', c.id === editingId && 'bg-accent/60')}>
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-1.5">
-                          <span className={cn('mono text-sm font-semibold', c.status === 'nocredit' && 'text-destructive')}>{c.code}</span>
+                          <span className={cn('text-sm font-semibold', c.status === 'nocredit' && 'text-destructive')}>{c.title || c.code}</span>
                           <GradePill grade={c.grade} />
                           {c.transfer && <Tag>transfer</Tag>}
                           {c.r2r && <Tag>replaced</Tag>}
                           {!c.gpa && <Tag>not in GPA</Tag>}
                         </div>
-                        <div className="truncate text-xs text-foreground/80">{c.title}</div>
                         <div className="truncate text-[11px] text-muted-foreground">
-                          {fmtCredits(c.credits)} cr ·{' '}
+                          <span className="mono">{c.code}</span> · {fmtCredits(c.credits)} cr ·{' '}
                           <span className={cn(c.status === 'counted' && 'text-green-700 dark:text-green-400', c.status === 'nocredit' && 'text-destructive', c.status === 'notcounted' && 'text-orange-700 dark:text-orange-400')}>
                             {recordWhere(c, snap.audit)}
                           </span>

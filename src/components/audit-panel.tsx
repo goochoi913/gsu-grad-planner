@@ -346,8 +346,8 @@ function UnitRow({ u }: { u: AuditUnit }) {
     return (
       <button type="button" onClick={() => ui.openRecord({ recordId: u.rec.id })} className="flex w-full items-baseline gap-2 text-left hover:underline">
         {u.pending ? <AuditIcon status="pending" className="size-3 self-center" /> : <LuCheck className="size-3 shrink-0 self-center" aria-hidden />}
-        <span className="mono font-semibold">{u.code}</span>
-        <span className="min-w-0 flex-1 truncate text-muted-foreground">{u.rec.title}</span>
+        <span className="min-w-0 flex-1 truncate font-medium">{u.rec.title || u.code}</span>
+        <span className="mono shrink-0 text-[11px] text-muted-foreground">{u.code}</span>
         <GradePill grade={u.grade} />
         <span className="mono shrink-0 text-[11px] text-muted-foreground">{u.term.shortLabel}{u.rec.transfer ? ' · tr' : ''}</span>
       </button>
@@ -356,9 +356,8 @@ function UnitRow({ u }: { u: AuditUnit }) {
   return (
     <button type="button" onClick={() => ui.openCourse(u.courseId, u.term.id)} className="flex w-full items-baseline gap-2 text-left hover:underline">
       <AuditIcon status={u.pending ? 'pending' : 'planned'} className="size-3 self-center" />
-      <span className="mono font-semibold">{u.code}</span>
-      <span className="min-w-0 flex-1 truncate text-muted-foreground">{u.course.title}</span>
-      <span className="mono shrink-0 text-[11px] text-muted-foreground">{u.term.shortLabel}</span>
+      <span className="min-w-0 flex-1 truncate font-medium">{u.course.title}</span>
+      <span className="mono shrink-0 text-[11px] text-muted-foreground">{u.code} · {u.term.shortLabel}</span>
     </button>
   )
 }
@@ -383,9 +382,10 @@ function NotApplied({ rec }: { rec: AcademicRecord }) {
                   key={c.id}
                   type="button"
                   onClick={() => ui.openRecord({ recordId: c.id })}
-                  className={cn('mono inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] hover:bg-accent', st === 'nocredit' && 'border-destructive/30 text-destructive')}
+                  title={`${c.title} (${c.code})`}
+                  className={cn('inline-flex max-w-full items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] hover:bg-accent', st === 'nocredit' && 'border-destructive/30 text-destructive')}
                 >
-                  {c.code} <GradePill grade={c.grade} /> <span className="text-muted-foreground">{t.shortLabel}</span>
+                  <span className="truncate">{c.title || c.code}</span> <GradePill grade={c.grade} /> <span className="mono shrink-0 text-muted-foreground">{t.shortLabel}</span>
                 </button>
               ))}
             </div>

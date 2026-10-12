@@ -4,7 +4,7 @@ import {
   LuCalendarDays,
   LuCalendarRange,
   LuCheck,
-  LuChevronDown,
+  LuChevronRight,
   LuCircleAlert,
   LuClipboardCheck,
   LuCopy,
@@ -15,13 +15,12 @@ import type { PlanEntry, Term, TermId } from '@/lib/types'
 import type { DayCode } from '@/lib/schedule-types'
 import { findCourse, fmtCredits } from '@/lib/planner'
 import { semesterCredits } from '@/lib/plan-ops'
-import { isFull, meetingSummary, partPicks, scheduleFor, termEvents, type UntimedItem } from '@/lib/schedule'
-import { DAY_NAMES, fmtDate, fmtShortDate } from '@/lib/format'
+import { isFull, meetingSummary, partPicks, scheduleFor, seatsAsOf, shortGaps, termEvents, useScheduleVersion, type UntimedItem } from '@/lib/schedule'
+import { DAY_NAMES, fmtAgo, fmtDateTime, fmtShortDate } from '@/lib/format'
 import { courseColor } from '@/lib/colors'
-import { pickSection, usePlanner } from '@/lib/store'
+import { usePlanner } from '@/lib/store'
 import type { Prefs } from '@/hooks/use-prefs'
 import { DayCalendar, WeekCalendar } from '@/components/calendar'
-import { SectionChooser } from '@/components/section-list'
 import { CategoryTag, ProfessorLink, Tag } from '@/components/bits'
 import { categoryOf } from '@/lib/colors'
 import { Button } from '@/components/ui/button'
@@ -58,7 +57,9 @@ export function ScheduleView({
   const term = semesters.find((s) => s.id === termId) ?? semesters[0]
   const entries = plan.schedule[term.id] ?? NO_ENTRIES
   const sched = scheduleFor(term.id)
-  const { events, untimed, days } = useMemo(() => termEvents(term.id, entries), [term.id, entries])
+  const version = useScheduleVersion()
+  const { events, untimed, days } = useMemo(() => termEvents(term.id, entries), [term.id, entries, version]) // eslint-disable-line react-hooks/exhaustive-deps
+  const gaps = useMemo(() => shortGaps(events, { maxMinutes: 30 }), [events])
   const [day, setDay] = useState<DayCode>(() => todayCode())
   const conflicts = new Set(events.filter((e) => e.conflict).map((e) => e.partCode)).size
   const mode = prefs.calendarMode
@@ -119,11 +120,11 @@ export function ScheduleView({
   const calendarCard = (
     <div className="relative space-y-3 rounded-xl border bg-card p-3 shadow-sm sm:p-4">
       {dayChips}
-      {mode === 'week' ? <WeekCalendar events={events} days={days} compact={!wide} /> : <DayCalendar events={events} day={day} />}
+      {mode === 'week' ? <WeekCalendar events={events} days={days} compact={!wide} gaps={gaps} /> : <DayCalendar events={events} day={day} gaps={gaps} />}
       {!events.length && needPicks > 0 && (
         <div className="pointer-events-none absolute inset-x-4 top-1/3 flex justify-center">
           <p className="rounded-lg border bg-background/95 px-4 py-2.5 text-center text-sm shadow-sm">
-            Choose a section for each class {wide ? 'on the left' : 'below'} — your week fills in here.
+            Open a class {wide ? 'on the left' : 'below'} to choose its section — your week fills in here.
           </p>
         </div>
       )}
@@ -155,7 +156,7 @@ export function ScheduleView({
 
   const intro = sched ? (
     <p className="text-xs leading-relaxed text-muted-foreground">
-      Classes {fmtShortDate(sched.classesStart)} – {fmtShortDate(sched.classesEnd)}. Choose a section for each class and the week fills in.
+      Classes {fmtShortDate(sched.classesStart)} – {fmtShortDate(sched.classesEnd)}. Open a class to compare its sections on your week, then save one.
     </p>
   ) : (
     <p className="text-xs leading-relaxed text-muted-foreground">
@@ -221,7 +222,6 @@ export function ScheduleView({
 function ClassesPanel({ term, entries, untimed, hasSchedule }: { term: Term; entries: PlanEntry[]; untimed: UntimedItem[]; hasSchedule: boolean }) {
   const ui = useUi()
   const roles = usePlanner().audit.roles
-  const [open, setOpen] = useState<string | null>(null)
   const picks = entries.map((e) => {
     const course = findCourse(e.courseId)!
     return { entry: e, course, parts: hasSchedule ? partPicks(course, e, term.id) : [] }
@@ -229,6 +229,7 @@ function ClassesPanel({ term, entries, untimed, hasSchedule }: { term: Term; ent
   const allParts = picks.flatMap((p) => p.parts.filter((x) => x.sections.length))
   const chosen = allParts.filter((x) => x.picked)
   const crns = chosen.map((x) => x.picked!.crn)
+  const asOf = seatsAsOf(term.id)
 
   const copy = async () => {
     try {
@@ -263,31 +264,32 @@ function ClassesPanel({ term, entries, untimed, hasSchedule }: { term: Term; ent
       <ul className="space-y-2">
         {picks.map(({ entry, course, parts }, i) => {
           const color = courseColor(i)
-          const isOpen = open === course.id
-          const missingPick = parts.some((p) => p.sections.length && !p.picked)
           const notOffered = hasSchedule && !parts.some((p) => p.sections.length)
+          const multi = parts.filter((p) => p.sections.length).length > 1
           return (
-            <li key={course.id} className={cn('overflow-hidden rounded-xl border border-l-4 bg-card shadow-xs', color.edge)}>
+            <li key={course.id}>
               <div
                 role="button"
                 tabIndex={0}
-                onClick={() => setOpen(isOpen ? null : course.id)}
+                onClick={() => ui.openCourse(course.id, term.id)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
                     e.preventDefault()
-                    setOpen(isOpen ? null : course.id)
+                    ui.openCourse(course.id, term.id)
                   }
                 }}
-                aria-expanded={isOpen}
-                className="flex w-full cursor-pointer items-start gap-2 px-3 py-2.5 text-left hover:bg-accent/40 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+                data-course={course.id}
+                className={cn(
+                  'flex w-full cursor-pointer items-start gap-2 overflow-hidden rounded-xl border border-l-4 bg-card px-3 py-2.5 text-left shadow-xs transition-colors hover:bg-accent/40 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none',
+                  color.edge,
+                )}
               >
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-baseline gap-2">
-                    <span className="mono text-sm font-semibold">{course.code}</span>
-                    <span className="mono text-[11px] text-muted-foreground">{course.credits} cr</span>
-                    <CategoryTag category={categoryOf(course, roles[course.id])} className="ml-auto" />
+                  <div className="flex items-start gap-2">
+                    <span className="min-w-0 flex-1 text-sm leading-snug font-semibold">{course.title}</span>
+                    <CategoryTag category={categoryOf(course, roles[course.id])} className="mt-px" />
                   </div>
-                  <div className="truncate text-xs text-muted-foreground">{course.title}</div>
+                  <div className="mono text-[11px] text-muted-foreground">{course.code} · {course.credits} cr</div>
                   {hasSchedule && (
                     <div className="mt-1.5 space-y-1">
                       {notOffered && (
@@ -301,7 +303,7 @@ function ClassesPanel({ term, entries, untimed, hasSchedule }: { term: Term; ent
                           {p.picked ? (
                             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                               <LuCheck className="size-3.5 text-green-600 dark:text-green-400" aria-hidden />
-                              {parts.length > 1 && <span className="mono font-medium">{p.part.code}</span>}
+                              {multi && <span className="font-medium">{p.part.main ? 'Lecture' : 'Lab'}</span>}
                               <span>Sec {p.picked.section}</span>
                               <span className="mono text-muted-foreground">CRN {p.picked.crn}</span>
                               <span className="text-muted-foreground">{meetingSummary(p.picked).join(' · ')}</span>
@@ -311,7 +313,7 @@ function ClassesPanel({ term, entries, untimed, hasSchedule }: { term: Term; ent
                           ) : (
                             <span className="inline-flex items-center gap-1.5 font-medium text-foreground">
                               <span className="size-1.5 rounded-full bg-foreground/50" aria-hidden />
-                              Choose a {parts.length > 1 ? (p.part.main ? 'lecture' : 'lab') : ''} section · {p.sections.length} option{p.sections.length > 1 ? 's' : ''}
+                              Choose a {multi ? (p.part.main ? 'lecture' : 'lab') : ''} section · {p.sections.length} option{p.sections.length > 1 ? 's' : ''}
                             </span>
                           )}
                         </div>
@@ -324,25 +326,8 @@ function ClassesPanel({ term, entries, untimed, hasSchedule }: { term: Term; ent
                     </div>
                   )}
                 </div>
-                <LuChevronDown className={cn('mt-1 size-4 shrink-0 text-muted-foreground transition-transform', isOpen && 'rotate-180')} aria-hidden />
+                <LuChevronRight className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
               </div>
-              {isOpen && (
-                <div className="space-y-3 border-t bg-background/60 px-3 py-3">
-                  {hasSchedule && !notOffered ? (
-                    <SectionChooser
-                      termId={term.id}
-                      course={course}
-                      entry={entry}
-                      entries={entries}
-                      onPick={(partCodeId, crn) => pickSection(term.id, course.id, partCodeId, crn)}
-                    />
-                  ) : null}
-                  <Button variant="ghost" size="sm" className="w-full" onClick={() => ui.openCourse(course.id, term.id)}>
-                    Course details
-                  </Button>
-                </div>
-              )}
-              {missingPick && !isOpen && <span className="sr-only">Needs a section</span>}
             </li>
           )
         })}
@@ -354,7 +339,7 @@ function ClassesPanel({ term, entries, untimed, hasSchedule }: { term: Term; ent
           {untimed.filter((u) => u.reason === 'async' || u.reason === 'arranged').map((u) => (
             <div key={u.code} className="flex items-center gap-2 text-muted-foreground">
               <span className={cn('size-2 rounded-full', courseColor(u.colorIndex).dot)} aria-hidden />
-              <span className="mono">{u.code}</span>
+              <span className="text-foreground">{u.title}</span>
               {u.reason === 'async' ? 'online, at your own pace' : 'time arranged with the instructor'}
             </div>
           ))}
@@ -374,16 +359,15 @@ function ClassesPanel({ term, entries, untimed, hasSchedule }: { term: Term; ent
           <ul className="divide-y text-xs">
             {chosen.map((x) => (
               <li key={x.picked!.crn} className="flex items-center gap-2 py-1.5">
-                <span className="mono w-14 font-semibold">{x.picked!.crn}</span>
-                <span className="mono">{x.part.code}</span>
-                <span className="text-muted-foreground">Sec {x.picked!.section}</span>
-                <span className="mono ml-auto text-muted-foreground">{x.part.credits} cr</span>
+                <span className="mono w-12 shrink-0 font-semibold">{x.picked!.crn}</span>
+                <span className="min-w-0 flex-1 truncate">{x.part.title}</span>
+                <span className="mono shrink-0 text-muted-foreground">{x.part.code} · Sec {x.picked!.section}</span>
               </li>
             ))}
           </ul>
           <p className="text-[11px] leading-relaxed text-muted-foreground">
-            Paste these into PAWS → Registration → Add or Drop Classes → Enter CRNs. Seat counts are as of{' '}
-            {fmtDate(chosen[0].picked!.seats.asOf)}.
+            Paste these into PAWS → Registration → Add or Drop Classes → Enter CRNs.
+            {asOf && <> Seats from GSU, updated {fmtAgo(asOf)} ({fmtDateTime(asOf)}).</>}
           </p>
         </div>
       )}

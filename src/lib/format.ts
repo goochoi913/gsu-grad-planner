@@ -70,3 +70,32 @@ export function clone<T>(v: T): T {
 export function plural(n: number, one: string, many = `${one}s`): string {
   return `${n} ${n === 1 ? one : many}`
 }
+
+/** An ISO timestamp → "Oct 19, 3:07 PM" */
+export function fmtDateTime(iso: string | number | Date): string {
+  return new Date(iso).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+}
+
+/** How long ago, in words: "just now", "12 min ago", "3 hr ago", "Oct 12". */
+export function fmtAgo(iso: string | number | Date, now = Date.now()): string {
+  const min = Math.round((now - new Date(iso).getTime()) / 60000)
+  if (min < 1) return 'just now'
+  if (min < 60) return `${min} min ago`
+  if (min < 24 * 60) return `${Math.round(min / 60)} hr ago`
+  return fmtShortDate(new Date(iso).toISOString().slice(0, 10))
+}
+
+const SMALL_WORDS = new Set(['a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'in', 'of', 'on', 'or', 'the', 'to', 'with', 'vs'])
+const KEEP_UPPER = new Set(['I', 'II', 'III', 'IV', 'V', 'CS', 'CSC', 'AI', 'IOT', 'HCI', 'US', 'U.S.', 'GIS', 'UI', 'UX', 'XR', 'CTW'])
+
+/** GSU's class search shouts titles ("SYSTEM-LEVEL PROGRAMMING"); this writes them the way the catalog does. */
+export function titleCase(text: string): string {
+  if (!text || text !== text.toUpperCase()) return text
+  let first = true
+  return text.toLowerCase().replace(/[A-Za-z][A-Za-z.']*/g, (word) => {
+    const upper = word.toUpperCase()
+    const out = KEEP_UPPER.has(upper) ? upper : !first && SMALL_WORDS.has(word) ? word : word[0].toUpperCase() + word.slice(1)
+    first = false
+    return out
+  })
+}

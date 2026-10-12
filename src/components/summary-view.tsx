@@ -30,7 +30,7 @@ export function SummaryView({ snap }: { snap: PlannerSnapshot }) {
       <header className="flex items-center gap-3">
         <Logo className="size-9" />
         <div>
-          <h1 className="text-lg font-semibold tracking-tight">Bee’s degree plan</h1>
+          <h1 className="text-lg font-semibold tracking-tight">Eunbee’s degree plan</h1>
           <p className="text-xs text-muted-foreground">
             Georgia State University · {DEGREE.program} · catalog {DEGREE.catalogYear}
             {last ? ` · finishing after ${last.label}` : ''}
@@ -94,7 +94,7 @@ export function SummaryView({ snap }: { snap: PlannerSnapshot }) {
                   const c = findCourse(e.courseId)!
                   return partPicks(c, e, SCHEDULE_TERM_ID).map((p) => (
                     <tr key={p.part.codeId} className="align-top">
-                      <td className="px-3 py-1.5"><span className="mono font-semibold">{p.part.code}</span><div className="text-xs text-muted-foreground">{p.part.title}</div></td>
+                      <td className="px-3 py-1.5"><span className="font-semibold">{p.part.title}</span><div className="mono text-xs text-muted-foreground">{p.part.code}</div></td>
                       <td className="mono px-3 py-1.5 text-xs">{p.picked ? `${p.picked.section} · ${p.picked.crn}` : p.sections.length ? 'not chosen' : 'not offered'}</td>
                       <td className="px-3 py-1.5 text-xs">
                         {p.picked ? (timedMeetings(p.picked).length ? timedMeetings(p.picked).map((m, i) => <div key={i}>{fmtDaysLong(m.days)} {fmtTimeRange(m.start, m.end)} · {locationText(m)}</div>) : 'No set time') : '—'}
@@ -127,8 +127,8 @@ export function SummaryView({ snap }: { snap: PlannerSnapshot }) {
                   const c = findCourse(e.courseId)!
                   return (
                     <li key={e.courseId} className="flex items-baseline gap-2 px-3 py-1.5 text-sm">
-                      <span className="mono w-32 shrink-0 font-medium">{c.code}</span>
-                      <span className="min-w-0 flex-1 truncate">{c.title}</span>
+                      <span className="min-w-0 flex-1 truncate font-medium">{c.title}</span>
+                      <span className="mono shrink-0 text-xs text-muted-foreground">{c.code}</span>
                       <span className={cn('shrink-0 text-xs', CATEGORY[categoryOf(c, a.roles[c.id])].text)}>{roleShort(a.roles[c.id])}</span>
                     </li>
                   )
@@ -157,11 +157,11 @@ export function SummaryView({ snap }: { snap: PlannerSnapshot }) {
                   return (
                     <tr key={t.id} className="align-top">
                       <td className="px-3 py-1.5 whitespace-nowrap">{t.label}</td>
-                      <td className="mono px-3 py-1.5 text-xs">
+                      <td className="px-3 py-1.5 text-xs">
                         {t.courses.map((c, i) => (
-                          <span key={c.id}>
+                          <span key={c.id} title={c.code}>
                             {i > 0 && ' · '}
-                            {c.code} <b className={gradeText(c.grade)}>{c.grade || '—'}</b>
+                            {c.title || c.code} <b className={cn('mono', gradeText(c.grade))}>{c.grade || '—'}</b>
                           </span>
                         ))}
                       </td>

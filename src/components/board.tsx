@@ -333,14 +333,14 @@ function PastTermCard({ term, snap }: { term: RecordTerm; snap: PlannerSnapshot 
                 key={c.id}
                 type="button"
                 onClick={() => ui.openRecord({ recordId: c.id })}
-                title={`${c.code} — ${c.title} · ${RECORD_STATUS[c.status].label}`}
+                title={`${c.title} (${c.code}) · ${RECORD_STATUS[c.status].label}`}
                 className={cn(
-                  'mono inline-flex items-center gap-1.5 rounded-md border bg-background py-0.5 pr-0.5 pl-1.5 text-[11px] hover:bg-accent',
+                  'inline-flex max-w-full items-center gap-1.5 rounded-md border bg-background py-0.5 pr-0.5 pl-1.5 text-[11px] hover:bg-accent',
                   c.status === 'nocredit' && 'border-destructive/30 text-destructive',
                   (c.status === 'notcounted' || c.status === 'unused') && 'border-dashed text-muted-foreground',
                 )}
               >
-                <span className={cn(c.status === 'nocredit' && 'line-through decoration-destructive/60')}>{c.code}</span>
+                <span className={cn('truncate', c.status === 'nocredit' && 'line-through decoration-destructive/60')}>{c.title || c.code}</span>
                 <GradePill grade={c.grade} />
               </button>
             ))}
@@ -367,14 +367,13 @@ function PastRow({ c, snap }: { c: RecordCourse; snap: PlannerSnapshot }) {
         )}
       >
         <span className="flex items-center gap-2">
-          <span className={cn('mono text-[13px] font-semibold', c.status === 'nocredit' && 'text-destructive line-through decoration-destructive/50')}>{c.code}</span>
+          <span className={cn('min-w-0 flex-1 truncate text-[13px] font-semibold', c.status === 'nocredit' && 'text-destructive line-through decoration-destructive/50')}>{c.title || c.code}</span>
           {c.transfer && <Tag>transfer</Tag>}
           {c.r2r && <Tag>replaced</Tag>}
-          <GradePill grade={c.grade} className="ml-auto h-5 min-w-[26px] text-xs" />
+          <GradePill grade={c.grade} className="h-5 min-w-[26px] text-xs" />
         </span>
-        <span className="block truncate text-xs text-foreground/80">{c.title}</span>
         <span className={cn('block truncate text-[11px]', cat && cat !== 'extra' ? CATEGORY[cat].text : 'text-muted-foreground')}>
-          <span className="text-muted-foreground">{credits} · </span>{recordWhere(c, snap.audit)}
+          <span className="text-muted-foreground"><span className="mono">{c.code}</span> · {credits} · </span>{recordWhere(c, snap.audit)}
         </span>
       </button>
     </li>
@@ -575,7 +574,7 @@ function TermInfo({ term, snap }: { term: Term; snap: PlannerSnapshot }) {
         <p className="text-muted-foreground">Up to {term.maxCredits} credit hours without special permission (catalog 1330.30).</p>
         {notOffered.length > 0 && (
           <p className="text-muted-foreground">
-            Not offered in {SEASON_META[term.season].label} 2024–2026: {notOffered.map((c) => c.code).join(', ')}.
+            Not offered in {SEASON_META[term.season].label} 2024–2026: {notOffered.map((c) => c.title).join(", ")}.
           </p>
         )}
       </PopoverContent>
@@ -627,8 +626,7 @@ function CourseRow({ courseId, term, snap, conflict }: { courseId: string; term:
       )}
     >
       <div className="flex items-center gap-2">
-        <span className="mono shrink-0 text-[13px] font-bold">{course.code}</span>
-        <span className="min-w-0 flex-1 truncate text-[13px] text-foreground/75">{course.title}</span>
+        <span className="min-w-0 flex-1 truncate text-[13px] font-semibold">{course.title}</span>
         <span className="flex shrink-0 items-center gap-1.5">
           {retake.length > 0 && (
             <Hint label={`Retake — earlier: ${retake.map((a) => `${a.rec.grade || RECORD_STATUS[a.rec.status].short} (${a.term.label})`).join(', ')}`}>
@@ -672,7 +670,7 @@ function CourseRow({ courseId, term, snap, conflict }: { courseId: string; term:
         </span>
       </div>
       <div className="mt-0.5 flex min-w-0 items-center gap-2 text-[11px] text-muted-foreground">
-        <span className="mono shrink-0 whitespace-nowrap">{course.credits} cr</span>
+        <span className="mono shrink-0 whitespace-nowrap">{course.code} · {course.credits} cr</span>
         <span className="flex shrink-0 items-center gap-1 whitespace-nowrap">
           <CategoryTag category={cat} label={role ? roleShort(role) : CATEGORY[cat].short} />
           {role?.pending && <AuditIcon status="pending" className="size-3" />}

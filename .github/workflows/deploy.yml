@@ -4,9 +4,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  # Registration season: refresh seat counts from GSU's class search every six hours.
+  # Registration season (October–January): fresh seat counts from GSU's class search every
+  # 30 minutes. :07 and :37 stay clear of the top of the hour, when GitHub delays scheduled runs.
   schedule:
-    - cron: '23 */6 * 10,11,12,1 *'
+    - cron: '7,37 * * 10,11,12,1 *'
 
 permissions:
   contents: read
@@ -36,10 +37,11 @@ jobs:
       - name: Check the planning logic
         run: npm test
 
-      # The CSVs stay the source for every section; this only refreshes seat counts,
-      # waitlists and the extra course-list sections. Falls back to the committed snapshot.
-      - name: Refresh seat counts from GSU's class search
-        run: node scripts/build-schedule.mjs || echo "::warning::Class search unavailable — using the committed schedule"
+      # Seat counts, waitlists and any schedule changes, published as live/spring2027.json next to
+      # the app (the app loads it at runtime). The app's own files don't change, so the installed
+      # PWA doesn't have to update. If GSU's site is down the app keeps the committed schedule.
+      - name: Fetch live seat counts from GSU's class search
+        run: node scripts/build-schedule.mjs --live || echo "::warning::Class search unavailable — the app keeps the committed schedule"
 
       - name: Build
         run: npm run build

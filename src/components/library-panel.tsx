@@ -4,7 +4,8 @@ import { COURSES, FOS_NOTE, RPE_NOTE } from '@/data/degree'
 import type { CatalogCourse, TermId } from '@/lib/types'
 import { RECORD_STATUS, SEASONS, SEASON_META, conditionLabel, fmtCredits, isCourseDone, offeringInfo, round2 } from '@/lib/planner'
 import { blockMeter, cleanDescription, coveredBy, failedAttempts, lastPassingAttempt, scheduledIn, semesterCredits, unmetPrereqsGlobal } from '@/lib/plan-ops'
-import { SCHEDULE_TERM_ID, scheduleFor, sectionCount } from '@/lib/schedule'
+import { SCHEDULE_TERM_ID, scheduleFor, sectionCount, useScheduleVersion } from '@/lib/schedule'
+import { NEED_TEXT, courseNeed, type CourseNeed } from '@/lib/relevance'
 import { addCourse, removeCourse, type PlannerSnapshot } from '@/lib/store'
 import { readDrag } from '@/components/board'
 import { CategoryDot, Hint } from '@/components/bits'
@@ -22,8 +23,10 @@ export interface LibraryFilter {
   q: string
   group: 'all' | 'major' | 'elective' | 'core' | 'rpe'
   toggles: string[]
+  /** needed: only what she still needs (the plan, and options for open requirements) · all: every option */
+  scope: 'needed' | 'all'
 }
-export const EMPTY_FILTER: LibraryFilter = { q: '', group: 'all', toggles: [] }
+export const EMPTY_FILTER: LibraryFilter = { q: '', group: 'all', toggles: [], scope: 'needed' }
 
 interface Group {
   key: LibraryFilter['group']
@@ -83,7 +86,7 @@ export function LibraryPanel({
         note: 'Choose 16 credits (usually 4 courses) of CSC 3000/4000. A second OS/PLC course also counts here.',
         subgroups: [
           { courses: COURSES.filter((c) => c.section === 'elective' && c.tag !== 'rare').sort(byCode) },
-          { title: 'In the catalog, not offered Spring 2024 – Fall 2026', note: 'New or dormant courses — check PAWS before counting on them.', courses: COURSES.filter((c) => c.tag === 'rare').sort(byCode) },
+          { title: 'Rarely offered — not Spring 2024 – Fall 2026, but on a new schedule', note: 'New or dormant courses — check PAWS before counting on them.', courses: COURSES.filter((c) => c.tag === 'rare').sort(byCode) },
         ],
       },
       {
@@ -102,15 +105,20 @@ export function LibraryPanel({
     ]
   }, [audit])
 
-  const visible = useMemo(() => {
+  // What she still needs, worked out from the record and the plan (src/lib/relevance.ts).
+  const version = useScheduleVersion()
+  const needs = useMemo(() => new Map(COURSES.map((c) => [c.id, courseNeed(c, snap)])), [snap, version]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const filterBy = (scope: LibraryFilter['scope']) => {
     const words = filter.q.trim().toLowerCase().split(/\s+/).filter(Boolean)
     const springOnly = filter.toggles.includes('spring')
-    const hideDone = filter.toggles.includes('notdone')
     const keep = (c: CatalogCourse) => {
+      const need = needs.get(c.id)!
+      if (need.why === 'unavailable') return false
+      if (scope === 'needed' && !need.needed) return false
       if (springOnly && !sectionCount(c, SCHEDULE_TERM_ID)) return false
-      if (hideDone && isCourseDone(c.id)) return false
       if (!words.length) return true
-      const hay = `${c.code} ${c.parts.map((p) => p.code).join(' ')} ${c.title} ${c.description}`.toLowerCase().replace(/\s+/g, ' ')
+      const hay = `${c.title} ${c.code} ${c.parts.map((p) => p.code).join(' ')} ${c.description}`.toLowerCase().replace(/\s+/g, ' ')
       const compact = hay.replace(/ /g, '')
       return words.every((w) => hay.includes(w) || compact.includes(w))
     }
@@ -118,9 +126,13 @@ export function LibraryPanel({
       .filter((g) => filter.group === 'all' || g.key === filter.group)
       .map((g) => ({ ...g, subgroups: g.subgroups.map((s) => ({ ...s, courses: s.courses.filter(keep) })).filter((s) => s.courses.length) }))
       .filter((g) => g.subgroups.length)
-  }, [groups, filter])
+  }
+  const visible = filterBy(filter.scope)
+  const countOf = (gs: Group[]) => gs.reduce((n, g) => n + g.subgroups.reduce((m, s) => m + s.courses.length, 0), 0)
+  const allCount = countOf(filterBy('all'))
 
-  const count = visible.reduce((n, g) => n + g.subgroups.reduce((m, s) => m + s.courses.length, 0), 0)
+  const count = countOf(visible)
+  const more = filter.scope === 'needed' ? allCount - count : 0
 
   return (
     <div
@@ -178,9 +190,6 @@ export function LibraryPanel({
                 {springLabel}
               </ToggleGroupItem>
             )}
-            <ToggleGroupItem value="notdone" className="h-8 px-2 text-xs" aria-label="Hide completed courses">
-              To do
-            </ToggleGroupItem>
           </ToggleGroup>
         </div>
         {targetTerm && (
@@ -229,7 +238,7 @@ export function LibraryPanel({
                 )}
                 <div className="divide-y">
                   {s.courses.map((c) => (
-                    <LibraryRow key={c.id} course={c} snap={snap} targetTerm={targetTerm} springLabel={springLabel} onAfterAdd={onAfterAdd} />
+                    <LibraryRow key={c.id} course={c} need={needs.get(c.id)!} snap={snap} targetTerm={targetTerm} springLabel={springLabel} onAfterAdd={onAfterAdd} />
                   ))}
                 </div>
               </div>
@@ -238,15 +247,34 @@ export function LibraryPanel({
         ))}
         {!count && (
           <div className="space-y-2 p-6 text-center">
-            <p className="text-sm text-muted-foreground">Nothing matches.</p>
-            <Button variant="outline" size="sm" onClick={() => setFilter(EMPTY_FILTER)}>
-              Clear filters
-            </Button>
+            <p className="text-sm text-muted-foreground">{more ? 'Nothing she still needs matches.' : 'Nothing matches.'}</p>
+            {more > 0 ? (
+              <Button variant="outline" size="sm" onClick={() => setFilter({ ...filter, scope: 'all' })}>
+                Show {more} other option{more === 1 ? '' : 's'}
+              </Button>
+            ) : (
+              <Button variant="outline" size="sm" onClick={() => setFilter(EMPTY_FILTER)}>
+                Clear filters
+              </Button>
+            )}
           </div>
         )}
       </ScrollArea>
-      <div className="border-t px-3 py-1.5 text-[11px] text-muted-foreground">
-        <span className="mono">{count}</span> of <span className="mono">{COURSES.length}</span> courses
+      <div className="flex items-center gap-2 border-t px-3 py-1.5 text-[11px] text-muted-foreground">
+        <span className="min-w-0 flex-1 truncate">
+          <span className="mono">{count}</span> {filter.scope === 'needed' ? `course${count === 1 ? '' : 's'} you still need` : `course${count === 1 ? '' : 's'}`}
+        </span>
+        {filter.scope === 'needed' ? (
+          more > 0 && (
+            <button type="button" className="shrink-0 font-medium text-foreground underline-offset-2 hover:underline" onClick={() => setFilter({ ...filter, scope: 'all' })}>
+              Show all options
+            </button>
+          )
+        ) : (
+          <button type="button" className="shrink-0 font-medium text-foreground underline-offset-2 hover:underline" onClick={() => setFilter({ ...filter, scope: 'needed' })}>
+            Only what you need
+          </button>
+        )}
       </div>
     </div>
   )
@@ -279,12 +307,14 @@ function SeasonLetters({ course }: { course: CatalogCourse }) {
 
 function LibraryRow({
   course,
+  need,
   snap,
   targetTerm,
   springLabel,
   onAfterAdd,
 }: {
   course: CatalogCourse
+  need: CourseNeed
   snap: PlannerSnapshot
   targetTerm: TermId | null
   springLabel: string
@@ -295,7 +325,7 @@ function LibraryRow({
   const inSem = done ? null : scheduledIn(snap.semesters, snap.plan.schedule, course.id)
   const sem = inSem ? snap.semesters.find((s) => s.id === inSem) : null
   const unmet = done ? [] : unmetPrereqsGlobal(snap.semesters, snap.plan.schedule, course.id)
-  const covered = inSem || done ? '' : coveredBy(course, snap.audit)
+  const covered = need.why === 'covered' ? coveredBy(course, snap.audit) || NEED_TEXT.covered : ''
   const retake = done ? [] : failedAttempts(course.id)
   const passed = done ? lastPassingAttempt(course.id) : null
   const sections = sectionCount(course, SCHEDULE_TERM_ID)
@@ -322,19 +352,18 @@ function LibraryRow({
             }
           }}
           data-course={course.id}
+          data-need={need.why}
           className={cn(
             'group flex items-start gap-2 border-l-[3px] px-3 py-2 transition-colors hover:bg-accent/60 focus-visible:bg-accent focus-visible:outline-none',
             CATEGORY[categoryOfSection(course)].edge,
             !done && !ui.isMobile && 'cursor-grab',
-            done && 'opacity-60',
+            (done || need.why === 'covered') && 'opacity-60',
           )}
         >
           <div className="min-w-0 flex-1 space-y-0.5">
-            <div className="flex items-baseline gap-2">
-              <span className="mono shrink-0 text-[12.5px] font-semibold">{course.code}</span>
-              <span className="min-w-0 flex-1 truncate text-[12.5px] text-muted-foreground">{course.title}</span>
-            </div>
+            <div className="truncate text-[13px] leading-snug font-medium">{course.title}</div>
             <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-muted-foreground">
+              <span className="mono">{course.code}</span>
               <span className="mono">{course.credits} cr</span>
               {!done && <SeasonLetters course={course} />}
               {done && (
@@ -346,7 +375,7 @@ function LibraryRow({
               )}
               {covered && (
                 <Hint label={covered}>
-                  <span>covered</span>
+                  <span>not needed</span>
                 </Hint>
               )}
               {retake.length > 0 && (
@@ -392,8 +421,8 @@ function LibraryRow({
       </HoverCardTrigger>
       {!ui.isMobile && (
         <HoverCardContent side="right" align="start" className="w-80">
-          <div className="mono text-xs font-semibold">{course.code}</div>
-          <div className="mb-2 text-sm leading-snug">{course.title}</div>
+          <div className="text-sm leading-snug font-semibold">{course.title}</div>
+          <div className="mono mb-2 text-xs text-muted-foreground">{course.code} · {course.credits} credits</div>
           <p className="line-clamp-5 text-xs leading-relaxed text-muted-foreground">{cleanDescription(course.description)}</p>
           <p className="mt-2 text-xs text-muted-foreground">Prerequisites: {course.prereqText}</p>
         </HoverCardContent>

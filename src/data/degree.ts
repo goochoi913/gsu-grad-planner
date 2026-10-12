@@ -1,7 +1,7 @@
 import type { CatalogCourse, DegreeBlock, RequirementLine, Season, Substitution, SuggestedPath } from '@/lib/types'
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Bee's GSU Grad Planner — degree data (B.S. Computer Science)
+   Eunbee's GSU Grad Planner — degree data (B.S. Computer Science)
    Requirements: Degree Works structure for catalog year 2024–2025 and the GSU
    2024–2025 Undergraduate Catalog, "Computer Science, B.S.".
    Prerequisites: GSU 2026–2027 catalog (current), checked against PAWS for Fall 2026.

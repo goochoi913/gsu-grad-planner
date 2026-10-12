@@ -70,7 +70,7 @@ export function AppHeader({
       <div className="flex h-12 items-center gap-2 px-3">
         <Logo className="size-6" />
         <div className="min-w-0 leading-tight">
-          <div className="truncate text-sm font-semibold tracking-tight">Bee’s Planner</div>
+          <div className="truncate text-sm font-semibold tracking-tight">Eunbee’s Planner</div>
           <div className="hidden truncate text-[11px] text-muted-foreground sm:block">GSU · B.S. Computer Science</div>
         </div>
 

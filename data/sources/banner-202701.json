@@ -1,7 +1,7 @@
 {
  "_comment": "Compact copy of GSU's public class search (Banner) for Spring 2027, written by scripts/build-schedule.mjs. Only the sections and fields the build uses.",
  "term": "202701",
- "fetchedAt": "2026-10-12T09:53:42-04:00",
+ "fetchedAt": "2026-10-12T13:58:24-04:00",
  "subjects": [
   "ACCT",
   "ASTR",
@@ -28,7 +28,7 @@
   "JAPN": 17,
   "MATH": 549,
   "PERS": 40,
-  "PHIL": 160,
+  "PHIL": 159,
   "PHYS": 173,
   "SCOM": 152
  },

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   Bee's GSU Grad Planner — planning logic (no DOM, no React)
+   Eunbee's GSU Grad Planner — planning logic (no DOM, no React)
    Terms, the academic record (grades, GPA, statuses), prerequisites, offering
    history, the Degree Works-style audit with advisor exceptions, suggested paths,
    and saved-plan normalization/migration.

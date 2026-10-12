@@ -5,7 +5,7 @@
  *   requirement area   which kind of course it is — Major (required), CSC elective,
  *                      Core & Field of Study, Program elective, extra credit
  *   grade              A green · B light green · C yellow · D orange · F red · W grey
- *   progress           done green, planned light green (Bee's colours), waiting on the
+ *   progress           done green, planned light green (Eunbee's colours), waiting on the
  *                      advisor amber, a real problem red
  *   course hues        soft tints that tell classes apart on the calendar
  *

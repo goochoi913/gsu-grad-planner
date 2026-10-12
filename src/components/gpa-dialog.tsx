@@ -117,7 +117,7 @@ export function GpaDialog({ open, focusTerm, onClose, snap }: { open: boolean; f
               <div key={`${c.codeId}-${c.term.id}`} className="flex items-start gap-3 rounded-lg border px-3 py-2.5">
                 <Switch id={`gpa-r2r-${c.codeId}`} checked={c.on} onCheckedChange={(v) => setRepeatToReplace(c.codeId, v)} aria-label={`Repeat to Replace for ${c.code}`} />
                 <Label htmlFor={`gpa-r2r-${c.codeId}`} className="block flex-1 space-y-0.5 text-xs leading-relaxed font-normal">
-                  <span className="flex items-center gap-1.5 text-sm font-medium"><LuRepeat className="size-3.5" aria-hidden /><span className="mono">{c.code}</span></span>
+                  <span className="flex items-center gap-1.5 text-sm font-medium"><LuRepeat className="size-3.5 shrink-0" aria-hidden /><span>{c.title}</span><span className="mono text-xs font-normal text-muted-foreground">{c.code}</span></span>
                   <span className="block text-muted-foreground">
                     Retake in {c.term.label} · first grade <b className={cn('mono', gradeText(c.first.rec.grade))}>{c.first.rec.grade || '—'}</b> ({c.first.term.label}){c.grade ? <> · expected <b className={cn('mono', gradeText(c.grade))}>{c.grade}</b></> : null}
                   </span>
@@ -178,10 +178,10 @@ export function GpaDialog({ open, focusTerm, onClose, snap }: { open: boolean; f
                     <li key={r.codeId} className={cn('flex items-center gap-2 px-3 py-1.5', !r.grade && 'text-muted-foreground')}>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5">
-                          <span className="mono text-sm font-semibold text-foreground">{r.code}</span>
+                          <span className="min-w-0 truncate text-sm font-semibold text-foreground">{r.title}</span>
                           {r.candidate && <Tag>retake</Tag>}
                         </div>
-                        <div className="truncate text-xs">{r.title}</div>
+                        <div className="mono truncate text-xs">{r.code}</div>
                       </div>
                       <span className="mono text-xs">{fmtCredits(r.credits)} cr</span>
                       <Select value={r.grade || 'none'} onValueChange={(v) => setProjectedGrade(r.codeId, v === 'none' ? '' : v)}>

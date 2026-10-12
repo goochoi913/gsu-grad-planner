@@ -4,7 +4,7 @@
  "bannerTerm": "202701",
  "classesStart": "2027-01-11",
  "classesEnd": "2027-05-04",
- "generatedAt": "2026-10-12T10:35:49-04:00",
+ "generatedAt": "2026-10-12T14:11:56-04:00",
  "sources": {
   "csv": [
    {
@@ -17,7 +17,7 @@
    }
   ],
   "banner": {
-   "fetchedAt": "2026-10-12T09:53:42-04:00",
+   "fetchedAt": "2026-10-12T13:58:24-04:00",
    "subjects": [
     "ACCT",
     "ASTR",
@@ -85,7 +85,7 @@
       "remaining": 334,
       "capacity": 334,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -141,7 +141,7 @@
       "remaining": 334,
       "capacity": 334,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -196,7 +196,7 @@
       "remaining": 60,
       "capacity": 60,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -251,7 +251,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -311,7 +311,7 @@
       "remaining": 334,
       "capacity": 334,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -360,7 +360,7 @@
       "remaining": 334,
       "capacity": 334,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -408,7 +408,7 @@
       "remaining": 60,
       "capacity": 60,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -463,7 +463,7 @@
       "remaining": 60,
       "capacity": 60,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -518,7 +518,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -585,7 +585,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -641,7 +641,7 @@
       "remaining": 72,
       "capacity": 72,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -694,7 +694,7 @@
       "remaining": 96,
       "capacity": 96,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -749,7 +749,7 @@
       "remaining": 96,
       "capacity": 96,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -808,7 +808,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -856,7 +856,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -904,7 +904,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -952,7 +952,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1000,7 +1000,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1048,7 +1048,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1096,7 +1096,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1144,7 +1144,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1192,7 +1192,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1240,7 +1240,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1288,7 +1288,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1336,7 +1336,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1384,7 +1384,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1432,7 +1432,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1480,7 +1480,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1528,7 +1528,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1593,7 +1593,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1649,7 +1649,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1705,7 +1705,7 @@
       "remaining": 144,
       "capacity": 144,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1771,7 +1771,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1826,7 +1826,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1881,7 +1881,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1936,7 +1936,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -1991,7 +1991,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2046,7 +2046,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2101,7 +2101,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2156,7 +2156,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2211,7 +2211,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2266,7 +2266,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2321,7 +2321,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2376,7 +2376,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2431,7 +2431,7 @@
       "remaining": 48,
       "capacity": 48,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2498,7 +2498,7 @@
       "remaining": 100,
       "capacity": 100,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2565,7 +2565,7 @@
       "remaining": 100,
       "capacity": 100,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2577,65 +2577,6 @@
      "session": null,
      "attributes": [
       "Hybrid/Partially Online"
-     ],
-     "source": "banner",
-     "notes": [
-      "Not in your CSV — listed on GSU's class search"
-     ]
-    },
-    {
-     "crn": "14902",
-     "subject": "BIOL",
-     "number": "2107",
-     "code": "BIOL 2107",
-     "codeId": "BIOL2107",
-     "section": "6",
-     "title": "HON PRINCIPLES OF BIOLOGY I",
-     "credits": 3,
-     "creditsText": "3",
-     "scheduleType": "Lecture",
-     "campus": "Online - Atl US (Mand. Fees)",
-     "mode": "online-sync",
-     "instructors": [
-      {
-       "name": "Zhang, Hongmei",
-       "display": "Hongmei Zhang",
-       "key": "zhang|hongmei",
-       "primary": true
-      }
-     ],
-     "meetings": [
-      {
-       "days": [
-        "M",
-        "W"
-       ],
-       "start": "09:30",
-       "end": "10:45",
-       "building": null,
-       "room": null,
-       "startDate": "2027-01-11",
-       "endDate": "2027-05-04",
-       "online": true
-      }
-     ],
-     "seats": {
-      "remaining": 10,
-      "capacity": 10,
-      "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
-      "source": "banner"
-     },
-     "waitlist": {
-      "capacity": 99,
-      "count": 0,
-      "remaining": 99
-     },
-     "honors": true,
-     "session": null,
-     "attributes": [
-      "Honors College",
-      "Synchronous Online"
      ],
      "source": "banner",
      "notes": [
@@ -2682,7 +2623,7 @@
       "remaining": 110,
       "capacity": 110,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2740,7 +2681,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2806,7 +2747,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2861,7 +2802,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2916,7 +2857,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -2971,7 +2912,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3026,7 +2967,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3081,7 +3022,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3136,7 +3077,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3191,7 +3132,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3246,7 +3187,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3301,7 +3242,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3356,7 +3297,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3411,7 +3352,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3466,7 +3407,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3521,7 +3462,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3576,7 +3517,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3631,7 +3572,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3697,7 +3638,7 @@
       "remaining": 200,
       "capacity": 200,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3754,7 +3695,7 @@
       "remaining": 180,
       "capacity": 180,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3765,65 +3706,6 @@
      "honors": false,
      "session": null,
      "attributes": [],
-     "source": "banner",
-     "notes": [
-      "Not in your CSV — listed on GSU's class search"
-     ]
-    },
-    {
-     "crn": "18554",
-     "subject": "CHEM",
-     "number": "1211",
-     "code": "CHEM 1211",
-     "codeId": "CHEM1211",
-     "section": "6",
-     "title": "HON PRINCIPLES OF CHEMISTRY I",
-     "credits": 3,
-     "creditsText": "3",
-     "scheduleType": "Lecture",
-     "campus": "Atlanta",
-     "mode": "in-person",
-     "instructors": [
-      {
-       "name": "Wang, Danzhu",
-       "display": "Danzhu Wang",
-       "key": "wang|danzhu",
-       "primary": true
-      }
-     ],
-     "meetings": [
-      {
-       "days": [
-        "M",
-        "W",
-        "F"
-       ],
-       "start": "12:30",
-       "end": "13:20",
-       "building": "Aderhold Learning Center",
-       "room": "24",
-       "startDate": "2027-01-11",
-       "endDate": "2027-05-04",
-       "online": false
-      }
-     ],
-     "seats": {
-      "remaining": 12,
-      "capacity": 12,
-      "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
-      "source": "banner"
-     },
-     "waitlist": {
-      "capacity": 99,
-      "count": 0,
-      "remaining": 99
-     },
-     "honors": true,
-     "session": null,
-     "attributes": [
-      "Honors College"
-     ],
      "source": "banner",
      "notes": [
       "Not in your CSV — listed on GSU's class search"
@@ -3869,7 +3751,7 @@
       "remaining": 200,
       "capacity": 200,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3945,7 +3827,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -3956,75 +3838,6 @@
      "honors": false,
      "session": null,
      "attributes": [],
-     "source": "banner",
-     "notes": [
-      "Not in your CSV — listed on GSU's class search"
-     ]
-    },
-    {
-     "crn": "18555",
-     "subject": "CHEM",
-     "number": "1211L",
-     "code": "CHEM 1211L",
-     "codeId": "CHEM1211L",
-     "section": "4",
-     "title": "HON PRINCIPLES OF CHEMIS I LAB",
-     "credits": 1,
-     "creditsText": "1",
-     "scheduleType": "Supervised Laboratory",
-     "campus": "Atlanta",
-     "mode": "in-person",
-     "instructors": [
-      {
-       "name": "Mishra, Shashank (Shashank)",
-       "display": "Shashank Mishra",
-       "key": "mishra|shashank",
-       "primary": true
-      }
-     ],
-     "meetings": [
-      {
-       "days": [
-        "T"
-       ],
-       "start": "09:00",
-       "end": "09:45",
-       "building": "Natural Science Center",
-       "room": "218",
-       "startDate": "2027-01-11",
-       "endDate": "2027-05-04",
-       "online": false
-      },
-      {
-       "days": [
-        "T"
-       ],
-       "start": "09:55",
-       "end": "12:00",
-       "building": "Natural Science Center",
-       "room": "234",
-       "startDate": "2027-01-11",
-       "endDate": "2027-05-04",
-       "online": false
-      }
-     ],
-     "seats": {
-      "remaining": 6,
-      "capacity": 6,
-      "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
-      "source": "banner"
-     },
-     "waitlist": {
-      "capacity": 99,
-      "count": 0,
-      "remaining": 99
-     },
-     "honors": true,
-     "session": null,
-     "attributes": [
-      "Honors College"
-     ],
      "source": "banner",
      "notes": [
       "Not in your CSV — listed on GSU's class search"
@@ -4081,7 +3894,7 @@
       "remaining": 18,
       "capacity": 18,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4148,7 +3961,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4215,7 +4028,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4282,7 +4095,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4349,7 +4162,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4416,7 +4229,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4483,7 +4296,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4550,7 +4363,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4617,7 +4430,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4684,7 +4497,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4751,7 +4564,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4818,7 +4631,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4885,7 +4698,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -4952,7 +4765,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5019,7 +4832,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5086,7 +4899,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5153,7 +4966,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5220,7 +5033,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5287,7 +5100,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5354,7 +5167,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5421,7 +5234,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5488,7 +5301,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5555,7 +5368,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5620,7 +5433,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5674,7 +5487,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5729,7 +5542,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5775,7 +5588,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5821,7 +5634,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5867,7 +5680,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5913,7 +5726,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -5959,7 +5772,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6005,7 +5818,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6051,7 +5864,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6097,7 +5910,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6160,7 +5973,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6214,7 +6027,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6268,7 +6081,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6323,7 +6136,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6369,7 +6182,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6415,7 +6228,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6461,7 +6274,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6507,7 +6320,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6553,7 +6366,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6599,7 +6412,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6645,7 +6458,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6691,7 +6504,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6737,7 +6550,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6783,7 +6596,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6829,7 +6642,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6875,7 +6688,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6921,7 +6734,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -6996,7 +6809,7 @@
       "remaining": 50,
       "capacity": 50,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7062,7 +6875,7 @@
       "remaining": 50,
       "capacity": 50,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7128,7 +6941,7 @@
       "remaining": 50,
       "capacity": 50,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7194,7 +7007,7 @@
       "remaining": 50,
       "capacity": 50,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7269,7 +7082,7 @@
       "remaining": 44,
       "capacity": 44,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7335,7 +7148,7 @@
       "remaining": 44,
       "capacity": 44,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7401,7 +7214,7 @@
       "remaining": 44,
       "capacity": 44,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7467,7 +7280,7 @@
       "remaining": 44,
       "capacity": 44,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7533,7 +7346,7 @@
       "remaining": 44,
       "capacity": 44,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7599,7 +7412,7 @@
       "remaining": 44,
       "capacity": 44,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7662,7 +7475,7 @@
       "remaining": 25,
       "capacity": 25,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7716,7 +7529,7 @@
       "remaining": 25,
       "capacity": 25,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7739,56 +7552,6 @@
    "codeId": "CSC3210",
    "title": "COMPUTER ORG & PROGRAMMING",
    "sections": [
-    {
-     "crn": "21635",
-     "subject": "CSC",
-     "number": "3210",
-     "code": "CSC 3210",
-     "codeId": "CSC3210",
-     "section": "2",
-     "title": "COMPUTER ORG & PROGRAMMING",
-     "credits": 3,
-     "creditsText": "3",
-     "scheduleType": "Lecture/Supervised Laboratory",
-     "campus": "Atlanta",
-     "mode": "in-person",
-     "instructors": [
-      {
-       "name": "Gao, Chunlan (Lan)",
-       "display": "Lan Gao",
-       "key": "gao|chunlan",
-       "primary": true
-      }
-     ],
-     "meetings": [
-      {
-       "days": [
-        "T",
-        "Th"
-       ],
-       "start": "11:00",
-       "end": "12:15",
-       "building": "Aderhold Learning Center",
-       "room": "325",
-       "startDate": "2027-01-11",
-       "endDate": "2027-05-04",
-       "online": false
-      }
-     ],
-     "seats": {
-      "remaining": 0,
-      "capacity": 0,
-      "full": true,
-      "asOf": "2026-10-12T09:53:42-04:00",
-      "source": "banner"
-     },
-     "waitlist": null,
-     "honors": false,
-     "session": null,
-     "attributes": [],
-     "source": "csv",
-     "notes": []
-    },
     {
      "crn": "14634",
      "subject": "CSC",
@@ -7829,7 +7592,7 @@
       "remaining": 90,
       "capacity": 90,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7883,7 +7646,7 @@
       "remaining": 90,
       "capacity": 90,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7938,7 +7701,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -7984,7 +7747,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8030,7 +7793,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8076,7 +7839,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8122,7 +7885,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8168,7 +7931,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8214,7 +7977,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8260,7 +8023,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8306,7 +8069,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8352,7 +8115,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8427,7 +8190,7 @@
       "remaining": 44,
       "capacity": 44,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8493,7 +8256,7 @@
       "remaining": 44,
       "capacity": 44,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8559,7 +8322,7 @@
       "remaining": 44,
       "capacity": 44,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8625,7 +8388,7 @@
       "remaining": 44,
       "capacity": 44,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8691,7 +8454,7 @@
       "remaining": 44,
       "capacity": 44,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8757,7 +8520,7 @@
       "remaining": 44,
       "capacity": 44,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8820,7 +8583,7 @@
       "remaining": 90,
       "capacity": 90,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8876,7 +8639,7 @@
       "remaining": 90,
       "capacity": 90,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8932,7 +8695,7 @@
       "remaining": 90,
       "capacity": 90,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -8997,7 +8760,7 @@
       "remaining": 35,
       "capacity": 35,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9051,7 +8814,7 @@
       "remaining": 45,
       "capacity": 45,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9114,7 +8877,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9177,7 +8940,7 @@
       "remaining": 50,
       "capacity": 50,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9240,7 +9003,7 @@
       "remaining": 56,
       "capacity": 56,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9303,7 +9066,7 @@
       "remaining": 55,
       "capacity": 55,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9357,7 +9120,7 @@
       "remaining": 60,
       "capacity": 60,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9419,7 +9182,7 @@
       "remaining": 50,
       "capacity": 50,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9481,7 +9244,7 @@
       "remaining": 45,
       "capacity": 45,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9546,7 +9309,7 @@
       "remaining": 35,
       "capacity": 35,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9609,7 +9372,7 @@
       "remaining": 45,
       "capacity": 45,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9672,7 +9435,7 @@
       "remaining": 48,
       "capacity": 48,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9735,7 +9498,7 @@
       "remaining": 60,
       "capacity": 60,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9789,7 +9552,7 @@
       "remaining": 50,
       "capacity": 50,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9843,7 +9606,7 @@
       "remaining": 50,
       "capacity": 50,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9906,7 +9669,7 @@
       "remaining": 5,
       "capacity": 5,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -9960,7 +9723,7 @@
       "remaining": 55,
       "capacity": 55,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10014,7 +9777,7 @@
       "remaining": 60,
       "capacity": 60,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10077,7 +9840,7 @@
       "remaining": 60,
       "capacity": 60,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10133,7 +9896,7 @@
       "remaining": 60,
       "capacity": 60,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10189,7 +9952,7 @@
       "remaining": 60,
       "capacity": 60,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10253,7 +10016,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10318,7 +10081,7 @@
       "remaining": 45,
       "capacity": 45,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10372,7 +10135,7 @@
       "remaining": 45,
       "capacity": 45,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10435,7 +10198,7 @@
       "remaining": 45,
       "capacity": 45,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10489,7 +10252,7 @@
       "remaining": 40,
       "capacity": 40,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10552,7 +10315,7 @@
       "remaining": 45,
       "capacity": 45,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10606,7 +10369,7 @@
       "remaining": 5,
       "capacity": 5,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10660,7 +10423,7 @@
       "remaining": 45,
       "capacity": 45,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10671,62 +10434,6 @@
      "honors": false,
      "session": null,
      "attributes": [],
-     "source": "csv",
-     "notes": []
-    },
-    {
-     "crn": "16141",
-     "subject": "CSC",
-     "number": "4520",
-     "code": "CSC 4520",
-     "codeId": "CSC4520",
-     "section": "8",
-     "title": "HON DESIGN &ANALYSIS:ALGORITHM",
-     "credits": 4,
-     "creditsText": "4",
-     "scheduleType": "Lecture",
-     "campus": "Atlanta",
-     "mode": "in-person",
-     "instructors": [
-      {
-       "name": "Bal, Abdullah",
-       "display": "Abdullah Bal",
-       "key": "bal|abdullah",
-       "primary": true
-      }
-     ],
-     "meetings": [
-      {
-       "days": [
-        "T",
-        "Th"
-       ],
-       "start": "14:45",
-       "end": "16:30",
-       "building": "Classroom South",
-       "room": "107",
-       "startDate": "2027-01-11",
-       "endDate": "2027-05-04",
-       "online": false
-      }
-     ],
-     "seats": {
-      "remaining": 5,
-      "capacity": 5,
-      "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
-      "source": "banner"
-     },
-     "waitlist": {
-      "capacity": 99,
-      "count": 0,
-      "remaining": 99
-     },
-     "honors": true,
-     "session": null,
-     "attributes": [
-      "Honors College"
-     ],
      "source": "csv",
      "notes": []
     },
@@ -10770,7 +10477,7 @@
       "remaining": 45,
       "capacity": 45,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10824,7 +10531,7 @@
       "remaining": 50,
       "capacity": 50,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10887,7 +10594,7 @@
       "remaining": 45,
       "capacity": 45,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -10898,62 +10605,6 @@
      "honors": false,
      "session": null,
      "attributes": [],
-     "source": "csv",
-     "notes": []
-    },
-    {
-     "crn": "16899",
-     "subject": "CSC",
-     "number": "4710",
-     "code": "CSC 4710",
-     "codeId": "CSC4710",
-     "section": "4",
-     "title": "HON DATABASE SYSTEMS",
-     "credits": 4,
-     "creditsText": "4",
-     "scheduleType": "Lecture",
-     "campus": "Atlanta",
-     "mode": "in-person",
-     "instructors": [
-      {
-       "name": "Tanvir, Farhan (Farhan)",
-       "display": "Farhan Tanvir",
-       "key": "tanvir|farhan",
-       "primary": true
-      }
-     ],
-     "meetings": [
-      {
-       "days": [
-        "M",
-        "W"
-       ],
-       "start": "10:00",
-       "end": "11:45",
-       "building": "Petit Science Center",
-       "room": "255",
-       "startDate": "2027-01-11",
-       "endDate": "2027-05-04",
-       "online": false
-      }
-     ],
-     "seats": {
-      "remaining": 5,
-      "capacity": 5,
-      "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
-      "source": "banner"
-     },
-     "waitlist": {
-      "capacity": 99,
-      "count": 0,
-      "remaining": 99
-     },
-     "honors": true,
-     "session": null,
-     "attributes": [
-      "Honors College"
-     ],
      "source": "csv",
      "notes": []
     },
@@ -10997,7 +10648,7 @@
       "remaining": 50,
       "capacity": 50,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11060,7 +10711,7 @@
       "remaining": 23,
       "capacity": 23,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11123,7 +10774,7 @@
       "remaining": 45,
       "capacity": 45,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11186,7 +10837,7 @@
       "remaining": 25,
       "capacity": 25,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11249,7 +10900,7 @@
       "remaining": 4,
       "capacity": 4,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11303,7 +10954,7 @@
       "remaining": 47,
       "capacity": 47,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11366,7 +11017,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11429,7 +11080,7 @@
       "remaining": 19,
       "capacity": 19,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11491,7 +11142,7 @@
       "remaining": 5,
       "capacity": 5,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11554,7 +11205,7 @@
       "remaining": 40,
       "capacity": 40,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11608,7 +11259,7 @@
       "remaining": 40,
       "capacity": 40,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11670,7 +11321,7 @@
       "remaining": 40,
       "capacity": 40,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11733,7 +11384,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -11744,266 +11395,6 @@
      "honors": false,
      "session": null,
      "attributes": [],
-     "source": "csv",
-     "notes": []
-    }
-   ]
-  },
-  {
-   "subject": "CSC",
-   "number": "4870",
-   "code": "CSC 4870",
-   "codeId": "CSC4870",
-   "title": "HONORS THESIS I",
-   "sections": [
-    {
-     "crn": "16290",
-     "subject": "CSC",
-     "number": "4870",
-     "code": "CSC 4870",
-     "codeId": "CSC4870",
-     "section": "2",
-     "title": "HONORS THESIS I",
-     "credits": null,
-     "creditsText": "1 TO 6",
-     "scheduleType": "Independent Study (Correspond)",
-     "campus": "Atlanta",
-     "mode": "arranged",
-     "instructors": [
-      {
-       "name": "Angryk, Rafal A.",
-       "display": "Rafal Angryk",
-       "key": "angryk|rafal",
-       "primary": true
-      }
-     ],
-     "meetings": [
-      {
-       "days": [],
-       "start": null,
-       "end": null,
-       "building": null,
-       "room": null,
-       "startDate": "2027-01-11",
-       "endDate": "2027-05-04",
-       "online": false
-      }
-     ],
-     "seats": {
-      "remaining": 1,
-      "capacity": 1,
-      "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
-      "source": "banner"
-     },
-     "waitlist": null,
-     "honors": false,
-     "session": null,
-     "attributes": [
-      "Hybrid/Partially Online"
-     ],
-     "source": "csv",
-     "notes": []
-    },
-    {
-     "crn": "14994",
-     "subject": "CSC",
-     "number": "4870",
-     "code": "CSC 4870",
-     "codeId": "CSC4870",
-     "section": "4",
-     "title": "HONORS THESIS I",
-     "credits": 2,
-     "creditsText": "2",
-     "scheduleType": "Independent Study (Correspond)",
-     "campus": "Atlanta",
-     "mode": "arranged",
-     "instructors": [
-      {
-       "name": "Ashok, Ashwin",
-       "display": "Ashwin Ashok",
-       "key": "ashok|ashwin",
-       "primary": true
-      }
-     ],
-     "meetings": [
-      {
-       "days": [],
-       "start": null,
-       "end": null,
-       "building": null,
-       "room": null,
-       "startDate": "2027-01-11",
-       "endDate": "2027-05-04",
-       "online": false
-      }
-     ],
-     "seats": {
-      "remaining": 1,
-      "capacity": 1,
-      "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
-      "source": "banner"
-     },
-     "waitlist": null,
-     "honors": false,
-     "session": null,
-     "attributes": [
-      "Hybrid/Partially Online"
-     ],
-     "source": "csv",
-     "notes": []
-    }
-   ]
-  },
-  {
-   "subject": "CSC",
-   "number": "4880",
-   "code": "CSC 4880",
-   "codeId": "CSC4880",
-   "title": "HONORS THESIS II",
-   "sections": [
-    {
-     "crn": "16274",
-     "subject": "CSC",
-     "number": "4880",
-     "code": "CSC 4880",
-     "codeId": "CSC4880",
-     "section": "2",
-     "title": "HONORS THESIS II",
-     "credits": null,
-     "creditsText": "1 TO 6",
-     "scheduleType": "Directed Study (one-to-one)",
-     "campus": "Atlanta",
-     "mode": "arranged",
-     "instructors": [
-      {
-       "name": "Ashok, Ashwin",
-       "display": "Ashwin Ashok",
-       "key": "ashok|ashwin",
-       "primary": true
-      }
-     ],
-     "meetings": [
-      {
-       "days": [],
-       "start": null,
-       "end": null,
-       "building": null,
-       "room": null,
-       "startDate": "2027-01-11",
-       "endDate": "2027-05-04",
-       "online": false
-      }
-     ],
-     "seats": {
-      "remaining": 1,
-      "capacity": 1,
-      "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
-      "source": "banner"
-     },
-     "waitlist": null,
-     "honors": false,
-     "session": null,
-     "attributes": [
-      "Hybrid/Partially Online"
-     ],
-     "source": "csv",
-     "notes": []
-    },
-    {
-     "crn": "15006",
-     "subject": "CSC",
-     "number": "4880",
-     "code": "CSC 4880",
-     "codeId": "CSC4880",
-     "section": "4",
-     "title": "HONORS THESIS II",
-     "credits": 2,
-     "creditsText": "2",
-     "scheduleType": "Directed Study (one-to-one)",
-     "campus": "Atlanta",
-     "mode": "arranged",
-     "instructors": [],
-     "meetings": [
-      {
-       "days": [],
-       "start": null,
-       "end": null,
-       "building": null,
-       "room": null,
-       "startDate": "2027-01-11",
-       "endDate": "2027-05-04",
-       "online": false
-      }
-     ],
-     "seats": {
-      "remaining": 1,
-      "capacity": 1,
-      "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
-      "source": "banner"
-     },
-     "waitlist": null,
-     "honors": false,
-     "session": null,
-     "attributes": [
-      "Hybrid/Partially Online"
-     ],
-     "source": "csv",
-     "notes": []
-    },
-    {
-     "crn": "20221",
-     "subject": "CSC",
-     "number": "4880",
-     "code": "CSC 4880",
-     "codeId": "CSC4880",
-     "section": "6",
-     "title": "HONORS THESIS II",
-     "credits": null,
-     "creditsText": "1 TO 6",
-     "scheduleType": "Directed Study (one-to-one)",
-     "campus": "Off Campus-Tech & USG Fee only",
-     "mode": "arranged",
-     "instructors": [
-      {
-       "name": "Kuzmin, Kiril (Kiril)",
-       "display": "Kiril Kuzmin",
-       "key": "kuzmin|kiril",
-       "primary": true
-      }
-     ],
-     "meetings": [
-      {
-       "days": [],
-       "start": null,
-       "end": null,
-       "building": null,
-       "room": null,
-       "startDate": "2027-01-11",
-       "endDate": "2027-05-04",
-       "online": false
-      }
-     ],
-     "seats": {
-      "remaining": 1,
-      "capacity": 1,
-      "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
-      "source": "banner"
-     },
-     "waitlist": {
-      "capacity": 99,
-      "count": 0,
-      "remaining": 99
-     },
-     "honors": false,
-     "session": null,
-     "attributes": [
-      "Hybrid/Partially Online"
-     ],
      "source": "csv",
      "notes": []
     }
@@ -12055,7 +11446,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -12115,7 +11506,7 @@
       "remaining": 40,
       "capacity": 40,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -12176,7 +11567,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -12236,7 +11627,7 @@
       "remaining": 15,
       "capacity": 15,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -12290,7 +11681,7 @@
       "remaining": 1,
       "capacity": 1,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -12344,7 +11735,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -12398,7 +11789,7 @@
       "remaining": 1,
       "capacity": 1,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -12452,7 +11843,7 @@
       "remaining": 10,
       "capacity": 10,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -12506,7 +11897,7 @@
       "remaining": 5,
       "capacity": 5,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -12560,7 +11951,7 @@
       "remaining": 1,
       "capacity": 1,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -12614,7 +12005,7 @@
       "remaining": 5,
       "capacity": 5,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -12668,7 +12059,7 @@
       "remaining": 2,
       "capacity": 2,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -12731,7 +12122,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -12793,7 +12184,7 @@
       "remaining": 5,
       "capacity": 5,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -12842,7 +12233,7 @@
       "remaining": 10,
       "capacity": 10,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -12891,7 +12282,7 @@
       "remaining": 5,
       "capacity": 5,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -12940,7 +12331,7 @@
       "remaining": 15,
       "capacity": 15,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -12989,7 +12380,7 @@
       "remaining": 5,
       "capacity": 5,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13038,7 +12429,7 @@
       "remaining": 5,
       "capacity": 5,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13099,7 +12490,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13142,7 +12533,7 @@
       "remaining": 85,
       "capacity": 85,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13192,7 +12583,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13242,7 +12633,7 @@
       "remaining": 85,
       "capacity": 85,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13282,7 +12673,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13331,7 +12722,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13380,7 +12771,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13429,7 +12820,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13478,7 +12869,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13532,7 +12923,7 @@
       "remaining": 85,
       "capacity": 85,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13584,7 +12975,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13636,7 +13027,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13685,7 +13076,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13736,7 +13127,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13780,7 +13171,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13831,7 +13222,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13882,7 +13273,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13933,7 +13324,7 @@
       "remaining": 130,
       "capacity": 130,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -13993,7 +13384,7 @@
       "remaining": 84,
       "capacity": 84,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14048,7 +13439,7 @@
       "remaining": 120,
       "capacity": 120,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14107,7 +13498,7 @@
       "remaining": 28,
       "capacity": 28,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14155,7 +13546,7 @@
       "remaining": 28,
       "capacity": 28,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14203,7 +13594,7 @@
       "remaining": 27,
       "capacity": 27,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14251,7 +13642,7 @@
       "remaining": 28,
       "capacity": 28,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14297,7 +13688,7 @@
       "remaining": 37,
       "capacity": 37,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14345,7 +13736,7 @@
       "remaining": 37,
       "capacity": 37,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14393,7 +13784,7 @@
       "remaining": 37,
       "capacity": 37,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14460,7 +13851,7 @@
       "remaining": 47,
       "capacity": 47,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14516,7 +13907,7 @@
       "remaining": 45,
       "capacity": 45,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14572,7 +13963,7 @@
       "remaining": 47,
       "capacity": 47,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14639,7 +14030,7 @@
       "remaining": 80,
       "capacity": 80,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14693,7 +14084,7 @@
       "remaining": 80,
       "capacity": 80,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14747,7 +14138,7 @@
       "remaining": 80,
       "capacity": 80,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14801,7 +14192,7 @@
       "remaining": 80,
       "capacity": 80,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14855,7 +14246,7 @@
       "remaining": 80,
       "capacity": 80,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14920,7 +14311,7 @@
       "remaining": 80,
       "capacity": 80,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -14974,7 +14365,7 @@
       "remaining": 80,
       "capacity": 80,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15028,7 +14419,7 @@
       "remaining": 80,
       "capacity": 80,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15082,7 +14473,7 @@
       "remaining": 80,
       "capacity": 80,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15146,7 +14537,7 @@
       "remaining": 38,
       "capacity": 38,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -15209,7 +14600,7 @@
       "remaining": 38,
       "capacity": 38,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15263,7 +14654,7 @@
       "remaining": 59,
       "capacity": 59,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15317,7 +14708,7 @@
       "remaining": 90,
       "capacity": 90,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15370,7 +14761,7 @@
       "remaining": 25,
       "capacity": 25,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15414,7 +14805,7 @@
       "remaining": 360,
       "capacity": 360,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -15463,7 +14854,7 @@
       "remaining": 150,
       "capacity": 150,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -15512,7 +14903,7 @@
       "remaining": 300,
       "capacity": 300,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -15565,7 +14956,7 @@
       "remaining": 300,
       "capacity": 300,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": null,
@@ -15630,7 +15021,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15686,7 +15077,7 @@
       "remaining": 20,
       "capacity": 20,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15751,7 +15142,7 @@
       "remaining": 48,
       "capacity": 48,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15805,7 +15196,7 @@
       "remaining": 60,
       "capacity": 60,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15859,7 +15250,7 @@
       "remaining": 60,
       "capacity": 60,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15914,7 +15305,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -15960,7 +15351,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16006,7 +15397,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16052,7 +15443,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16098,7 +15489,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16144,7 +15535,7 @@
       "remaining": 24,
       "capacity": 24,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16200,7 +15591,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16256,7 +15647,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16312,7 +15703,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16368,7 +15759,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16424,7 +15815,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16477,7 +15868,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16532,7 +15923,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16587,7 +15978,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {
@@ -16642,7 +16033,7 @@
       "remaining": 30,
       "capacity": 30,
       "full": false,
-      "asOf": "2026-10-12T09:53:42-04:00",
+      "asOf": "2026-10-12T13:58:24-04:00",
       "source": "banner"
      },
      "waitlist": {

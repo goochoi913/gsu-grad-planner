@@ -20,6 +20,7 @@ export function AppDialog({
   size = 'md',
   bodyClassName,
   initialFocus,
+  compactHeaderOnPhone = false,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -30,10 +31,13 @@ export function AppDialog({
   headerExtra?: ReactNode
   footer?: ReactNode
   children: ReactNode
-  size?: 'sm' | 'md' | 'lg' | 'xl'
+  /** wide: the section picker — options beside the week, a fixed height so the calendar can fill it. */
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'wide'
   bodyClassName?: string
   /** Let the dialog put focus on its first field instead of the close button. */
   initialFocus?: boolean
+  /** On a phone, show only the eyebrow and title (room for the section picker's week). */
+  compactHeaderOnPhone?: boolean
 }) {
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
@@ -53,6 +57,7 @@ export function AppDialog({
             size === 'md' && 'sm:max-w-xl',
             size === 'lg' && 'sm:max-w-2xl',
             size === 'xl' && 'sm:max-w-4xl',
+            size === 'wide' && 'h-[92dvh] sm:h-[90vh] sm:max-h-[90vh] sm:max-w-6xl',
           )}
         >
           <div className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-muted-foreground/25 sm:hidden" aria-hidden />
@@ -60,11 +65,11 @@ export function AppDialog({
             {eyebrow && <div className="text-xs text-muted-foreground">{eyebrow}</div>}
             <DialogPrimitive.Title className="text-lg leading-snug font-semibold tracking-tight">{title}</DialogPrimitive.Title>
             {description ? (
-              <DialogPrimitive.Description className="text-sm text-muted-foreground">{description}</DialogPrimitive.Description>
+              <DialogPrimitive.Description className={cn('text-sm text-muted-foreground', compactHeaderOnPhone && 'max-sm:sr-only')}>{description}</DialogPrimitive.Description>
             ) : (
               <DialogPrimitive.Description className="sr-only">{typeof title === 'string' ? title : 'Details'}</DialogPrimitive.Description>
             )}
-            {headerExtra}
+            {headerExtra && <div className={cn(compactHeaderOnPhone && 'max-sm:hidden')}>{headerExtra}</div>}
           </div>
           <div className={cn('min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6 sm:py-5', bodyClassName)}>{children}</div>
           {footer && <div className="shrink-0 border-t bg-background px-5 py-3 sm:px-6">{footer}</div>}

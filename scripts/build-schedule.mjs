@@ -4,6 +4,8 @@
  *
  *   node scripts/build-schedule.mjs            fetch GSU's class search, then build
  *   node scripts/build-schedule.mjs --offline  build from data/sources/banner-202701.json only
+ *   node scripts/build-schedule.mjs --live     fetch GSU's class search and write only public/live/spring2027.json
+ *                                              (the deploy job's seat refresh; fails instead of falling back)
  *
  * Sources, in order of authority:
  *   1. data/sources/Spring 2027 - CSC Classes.csv and Spring 2027 - Other Classes.csv — copied from
@@ -15,6 +17,13 @@
  *
  * A compact snapshot of the class-search data is committed as data/sources/banner-202701.json, so
  * `--offline` rebuilds the same file without the network. Raw responses are cached in .cache/banner/.
+ *
+ * Left out: Honors sections (Honors College students only) and sections GSU lists with no seats
+ * at all (capacity 0 — not open for registration). Both are listed in the report.
+ *
+ * `--live` is what keeps seat counts fresh: the deploy job runs it every 30 minutes in registration
+ * season and publishes the result next to the app, which loads it at runtime (src/lib/live-schedule.ts).
+ * It never touches src/data/, so the app's own files — and the installed PWA — stay unchanged.
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -29,6 +38,7 @@ const CSV_META = path.join(SOURCES, 'csv-meta.json')
 const SNAPSHOT = path.join(SOURCES, 'banner-202701.json')
 const REPORT = path.join(SOURCES, 'schedule-report.md')
 const OUT = path.join(ROOT, 'src/data/spring2027.json')
+const LIVE_OUT = path.join(ROOT, 'public/live/spring2027.json')
 const CACHE = path.join(ROOT, '.cache/banner')
 
 export const TERM = {
@@ -44,6 +54,9 @@ const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (
 
 /** The campuses the CSVs cover. Sections elsewhere (Perimeter College, graduate online) are left out. */
 const CSV_CAMPUSES = new Set(['Atlanta', 'Online - Atl US (Mand. Fees)', 'Off Campus-Tech & USG Fee only'])
+
+/** Honors sections and courses ("HON SOFTWARE ENGINEERING", "HONORS THESIS I") are for Honors College students. */
+const HONORS = /^HON\b|\bHONORS\b/i
 
 /** Class-search attributes worth showing; the rest are degree-area codes. */
 const KEEP_ATTRIBUTES = [
@@ -414,7 +427,7 @@ function sectionFromCsv(row, file, asOf, stats) {
     meetings,
     seats: { ...seats, asOf, source: 'csv' },
     waitlist: null,
-    honors: /^HON\b/i.test(title),
+    honors: HONORS.test(title),
     session: sessionFor(meetings),
     attributes: [],
     source: 'csv',
@@ -597,7 +610,7 @@ function sectionFromBanner(b, asOf) {
       source: 'banner',
     },
     waitlist: b.waitCapacity > 0 ? { capacity: b.waitCapacity, count: b.waitCount, remaining: b.waitAvailable } : null,
-    honors: /^HON\b/i.test(b.title) || attributes.some((a) => /honors/i.test(a)),
+    honors: HONORS.test(b.title) || attributes.some((a) => /honors/i.test(a)),
     session: sessionFor(meetings),
     attributes,
     source: 'banner',
@@ -753,8 +766,16 @@ async function fetchBanner(subjects) {
   return { fetchedAt: localIso(new Date()), totals, sections: all }
 }
 
+/** Sections she can't register for: Honors College only, or no seats offered at all. */
+function leftOutReason(s) {
+  if (s.honors) return 'Honors'
+  if (s.seats.capacity === 0) return 'no seats offered (capacity 0)'
+  return null
+}
+
 async function main() {
-  const offline = process.argv.includes('--offline')
+  const live = process.argv.includes('--live')
+  const offline = !live && process.argv.includes('--offline')
   const stats = { mergedMeetings: [] }
 
   /* 1. the CSVs */
@@ -781,12 +802,12 @@ async function main() {
   if (!offline) {
     try {
       console.log(`Fetching GSU class search (term ${TERM.bannerTerm}) for ${subjects.join(', ')}…`)
-      const live = await fetchBanner(subjects)
+      const fetched = await fetchBanner(subjects)
       // Keep only what the build can use: CSV CRNs, every section of a CSV or library course,
       // and undergraduate CSC.
       const csvCrns = new Set(csvSections.map((s) => s.crn))
       // Sections on other campuses are only counted in the report, so they keep just their ids.
-      const relevant = live.sections
+      const relevant = fetched.sections
         .map(compactBanner)
         .filter((b) => {
           const id = codeToId(`${b.subject}${b.number}`)
@@ -797,16 +818,17 @@ async function main() {
       snapshot = {
         _comment: "Compact copy of GSU's public class search (Banner) for Spring 2027, written by scripts/build-schedule.mjs. Only the sections and fields the build uses.",
         term: TERM.bannerTerm,
-        fetchedAt: live.fetchedAt,
+        fetchedAt: fetched.fetchedAt,
         subjects,
-        totals: live.totals,
+        totals: fetched.totals,
         sections: relevant,
       }
       // One section per line: small, and a refresh diffs readably.
       const { sections: rows, ...head } = snapshot
       const headJson = JSON.stringify(head, null, 1).replace(/\n}$/, '')
-      fs.writeFileSync(SNAPSHOT, `${headJson},\n "sections": [\n${rows.map((r) => `  ${JSON.stringify(r)}`).join(',\n')}\n ]\n}\n`)
+      if (!live) fs.writeFileSync(SNAPSHOT, `${headJson},\n "sections": [\n${rows.map((r) => `  ${JSON.stringify(r)}`).join(',\n')}\n ]\n}\n`)
     } catch (err) {
+      if (live) throw new Error(`class search unavailable (${err.message}) — no live file written`)
       console.warn(`! Class search unavailable (${err.message}) — using the committed snapshot.`)
     }
   }
@@ -866,11 +888,18 @@ async function main() {
     }
   }
 
-  /* 6. assemble */
-  const sections = [...csvSections, ...added].map((s) => {
-    const { _file, ...rest } = s
-    return rest
-  })
+  /* 6. assemble — without the sections she can't register for */
+  const leftOut = []
+  const sections = [...csvSections, ...added]
+    .filter((s) => {
+      const why = leftOutReason(s)
+      if (why) leftOut.push({ sec: s, why })
+      return !why
+    })
+    .map((s) => {
+      const { _file, ...rest } = s
+      return rest
+    })
   const courses = new Map()
   for (const s of sections) {
     if (!courses.has(s.codeId)) courses.set(s.codeId, { subject: s.subject, number: s.number, code: s.code, codeId: s.codeId, title: '', sections: [] })
@@ -891,10 +920,16 @@ async function main() {
     },
     courses: list,
   }
+  if (live) {
+    fs.mkdirSync(path.dirname(LIVE_OUT), { recursive: true })
+    fs.writeFileSync(LIVE_OUT, JSON.stringify(out))
+    console.log(`Wrote ${path.relative(ROOT, LIVE_OUT)}: ${list.length} courses, ${sections.length} sections, seats as of ${snapshot.fetchedAt}`)
+    return
+  }
   fs.mkdirSync(path.dirname(OUT), { recursive: true })
   fs.writeFileSync(OUT, `${JSON.stringify(out, null, 1)}\n`)
 
-  writeReport({ out, csvSections, added, discrepancies, seatChanges, missingFromBanner, notAddedOther, stats, library, snapshot, copied })
+  writeReport({ out, csvSections, added, discrepancies, seatChanges, missingFromBanner, notAddedOther, stats, library, snapshot, copied, leftOut })
 
   const bySubject = (arr) =>
     Object.entries(arr.reduce((m, s) => ((m[s.subject] = (m[s.subject] ?? 0) + 1), m), {}))
@@ -903,6 +938,7 @@ async function main() {
   console.log(`\nWrote ${path.relative(ROOT, OUT)}: ${list.length} courses, ${sections.length} sections`)
   console.log(`  from the CSVs: ${csvSections.length} (${bySubject(csvSections)})`)
   console.log(`  added from GSU's class search: ${added.length} (${bySubject(added) || 'none'})`)
+  console.log(`  left out (Honors, or no seats offered): ${leftOut.length}${leftOut.length ? ` — ${leftOut.map(({ sec }) => `${sec.code}-${sec.section}`).join(', ')}` : ''}`)
   console.log(`  CSV CRNs checked against the class search: ${checked}/${csvSections.length}; discrepancies: ${discrepancies.length}; seat changes: ${seatChanges.length}`)
   console.log(`  library courses read from ${library.from}`)
   console.log(`Report: ${path.relative(ROOT, REPORT)}`)
@@ -910,7 +946,7 @@ async function main() {
 
 /* ─── report ────────────────────────────────────────────────────────────── */
 
-function writeReport({ out, csvSections, added, discrepancies, seatChanges, missingFromBanner, notAddedOther, stats, library, snapshot, copied }) {
+function writeReport({ out, csvSections, added, discrepancies, seatChanges, missingFromBanner, notAddedOther, stats, library, snapshot, copied, leftOut }) {
   const L = []
   const tag = (s) => `${s.code}-${s.section} (CRN ${s.crn})`
   const all = out.courses.flatMap((c) => c.sections)
@@ -925,7 +961,7 @@ function writeReport({ out, csvSections, added, discrepancies, seatChanges, miss
   L.push('')
   L.push(`## Counts`, '')
   L.push(`- Courses: ${out.courses.length}; sections: ${all.length}`)
-  L.push(`- From the CSVs: ${csvSections.length}; added from the class search: ${added.length}`)
+  L.push(`- From the CSVs: ${csvSections.length}; added from the class search: ${added.length}; left out: ${leftOut.length}`)
   const subj = {}
   for (const s of all) {
     subj[s.subject] ??= { csv: 0, banner: 0 }
@@ -935,6 +971,14 @@ function writeReport({ out, csvSections, added, discrepancies, seatChanges, miss
   for (const [k, v] of Object.entries(subj).sort()) L.push(`| ${k} | ${v.csv} | ${v.banner} |`)
   L.push('')
   if (snapshot) L.push(`- CSV CRNs found on the class search: ${out.sources.banner.checked} of ${csvSections.length}`, '')
+
+  L.push(`## Left out`, '')
+  if (!leftOut.length) L.push('Nothing.')
+  else {
+    L.push('Sections she can’t register for are not in the app:', '')
+    for (const { sec, why } of leftOut) L.push(`- ${tag(sec)} — ${why} · ${sec.instructors.map((i) => i.display).join(' & ') || 'no instructor listed'} · ${sec.meetings.map(meetingText).join('; ') || 'no meetings'}`)
+  }
+  L.push('')
 
   L.push(`## CSV ↔ class search differences`, '')
   if (!snapshot) L.push('Not checked (no class-search data).')
@@ -1013,8 +1057,6 @@ function writeReport({ out, csvSections, added, discrepancies, seatChanges, miss
   L.push(`## Worth knowing`, '')
   const full = all.filter((s) => s.seats.full)
   if (full.length) L.push(`- Full sections: ${full.map((s) => `${tag(s)} ${s.seats.remaining}/${s.seats.capacity}`).join('; ')}`)
-  const honors = all.filter((s) => s.honors)
-  if (honors.length) L.push(`- Honors sections (usually Honors College only): ${honors.map(tag).join('; ')}`)
   const half = all.filter((s) => s.session)
   if (half.length) L.push(`- Part-of-term sections: ${half.map((s) => `${tag(s)} ${s.session.label}`).join('; ')}`)
   const variable = all.filter((s) => s.credits == null)
@@ -1022,7 +1064,7 @@ function writeReport({ out, csvSections, added, discrepancies, seatChanges, miss
   const tiny = all.filter((s) => s.seats.capacity > 0 && s.seats.capacity <= 5 && s.mode !== 'arranged')
   if (tiny.length) {
     L.push(
-      `- Very small scheduled sections (≤5 seats — often reserved, honors, or cross-listed): ${tiny
+      `- Very small scheduled sections (≤5 seats — often reserved or cross-listed): ${tiny
         .map((s) => `${tag(s)} ${s.seats.capacity} seats, ${s.meetings.map(meetingText).join('; ')}`)
         .join('; ')}`,
     )
