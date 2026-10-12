@@ -39,10 +39,10 @@ export function SettingsSheet({
 
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-0.5">
-              <Label htmlFor="show-past" className="text-sm">Show completed terms on the plan</Label>
-              <p className="text-xs text-muted-foreground">Past terms and grades above the planned ones.</p>
+              <Label htmlFor="show-past" className="text-sm">Show completed terms when the app opens</Label>
+              <p className="text-xs text-muted-foreground">Off: the plan opens on the upcoming terms alone. Show or hide past terms and grades any time below the plan.</p>
             </div>
-            <Switch id="show-past" checked={prefs.showPast} onCheckedChange={(v) => onPref('showPast', v)} />
+            <Switch id="show-past" checked={prefs.showPastOnOpen} onCheckedChange={(v) => onPref('showPastOnOpen', v)} />
           </div>
 
           <div className="space-y-1.5">

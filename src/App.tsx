@@ -59,6 +59,8 @@ export default function App() {
   const [filter, setFilter] = useState<LibraryFilter>(EMPTY_FILTER)
   const [focusedRaw, setFocusedTerm] = useState<TermId | null>(null)
   const [auditFocus, setAuditFocus] = useState<string | null>(null)
+  // Completed terms start hidden (a clean board); Show/Hide on the board is for this visit.
+  const [showPast, setShowPast] = useState(() => prefs.showPastOnOpen)
 
   const libraryRef = usePanelRef()
   const auditRef = usePanelRef()
@@ -169,7 +171,7 @@ export default function App() {
     />
   )
   const audit = <AuditPanel snap={snap} focusBlock={auditFocus} onFocusDone={() => setAuditFocus(null)} />
-  const board = <Board snap={snap} showPast={prefs.showPast} onShowPast={(v) => setPref('showPast', v)} />
+  const board = <Board snap={snap} showPast={showPast} onShowPast={setShowPast} />
   const scheduleTerm = snap.semesters.some((s) => s.id === snap.plan.calSemester) ? snap.plan.calSemester : snap.semesters[0].id
 
   return (
@@ -299,7 +301,15 @@ export default function App() {
         <ExceptionsDialog opts={exceptionOpts} onClose={() => setExceptionOpts(null)} snap={snap} />
         <ClassBrowser query={browser} onClose={() => setBrowser(null)} snap={snap} />
         <PlanDialogs />
-        <SettingsSheet open={settingsOpen} onOpenChange={setSettingsOpen} prefs={prefs} onPref={setPref} />
+        <SettingsSheet
+          open={settingsOpen}
+          onOpenChange={setSettingsOpen}
+          prefs={prefs}
+          onPref={(k, v) => {
+            setPref(k, v)
+            if (k === 'showPastOnOpen') setShowPast(v as boolean)
+          }}
+        />
         <CommandPalette
           open={commandOpen}
           onOpenChange={setCommandOpen}

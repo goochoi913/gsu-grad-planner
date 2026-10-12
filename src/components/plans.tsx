@@ -137,8 +137,11 @@ function reorderedIds(plans: PlanMeta[], { active, over }: DragEndEvent): string
   return from < 0 || to < 0 ? null : arrayMove(ids, from, to)
 }
 
-/** One tab per plan — click to open it, drag to reorder; the open one has its menu. */
-export function PlanTabs({ snap }: { snap: PlannerSnapshot }) {
+/**
+ * One tab per plan — click to open it, drag to reorder; the open one has its menu.
+ * `compact`: just the tabs (the Schedule view's header).
+ */
+export function PlanTabs({ snap, compact = false }: { snap: PlannerSnapshot; compact?: boolean }) {
   const sensors = useListSensors()
   return (
     <div className="flex min-w-0 items-center gap-2">
@@ -159,11 +162,13 @@ export function PlanTabs({ snap }: { snap: PlannerSnapshot }) {
           </div>
         </SortableContext>
       </DndContext>
-      <Button variant="outline" size="sm" className="h-8 shrink-0 gap-1 px-2.5 text-xs" onClick={() => openPlanDialog({ kind: 'new' })} aria-label="New plan">
-        <LuPlus className="size-3.5" aria-hidden />
-        <span className="hidden sm:inline">New plan</span>
-      </Button>
-      {snap.plans.length > 1 && (
+      {!compact && (
+        <Button variant="outline" size="sm" className="h-8 shrink-0 gap-1 px-2.5 text-xs" onClick={() => openPlanDialog({ kind: 'new' })} aria-label="New plan">
+          <LuPlus className="size-3.5" aria-hidden />
+          <span className="hidden sm:inline">New plan</span>
+        </Button>
+      )}
+      {!compact && snap.plans.length > 1 && (
         <Button variant="ghost" size="sm" className="h-8 shrink-0 gap-1 px-2.5 text-xs" onClick={() => openPlanDialog({ kind: 'compare' })} aria-label="Compare plans">
           <LuArrowLeftRight className="size-3.5" aria-hidden />
           <span className="hidden sm:inline">Compare</span>
@@ -213,6 +218,10 @@ function PlanTab({ meta, snap }: { meta: PlanMeta; snap: PlannerSnapshot }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-52">
+            <DropdownMenuItem onClick={() => openPlanDialog({ kind: 'new' })}>
+              <LuPlus className="size-4" aria-hidden />
+              New plan…
+            </DropdownMenuItem>
             <PlanMenuItems meta={meta} snap={snap} />
           </DropdownMenuContent>
         </DropdownMenu>

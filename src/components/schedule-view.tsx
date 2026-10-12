@@ -21,6 +21,7 @@ import { courseColor } from '@/lib/colors'
 import { usePlanner } from '@/lib/store'
 import type { Prefs } from '@/hooks/use-prefs'
 import { DayCalendar, WeekCalendar } from '@/components/calendar'
+import { PlanTabs } from '@/components/plans'
 import { CategoryTag, ProfessorLink, Tag } from '@/components/bits'
 import { categoryOf } from '@/lib/colors'
 import { Button } from '@/components/ui/button'
@@ -53,7 +54,8 @@ export function ScheduleView({
   wide: boolean
 }) {
   const ui = useUi()
-  const { semesters, plan } = usePlanner()
+  const snap = usePlanner()
+  const { semesters, plan } = snap
   const term = semesters.find((s) => s.id === termId) ?? semesters[0]
   const entries = plan.schedule[term.id] ?? NO_ENTRIES
   const sched = scheduleFor(term.id)
@@ -184,10 +186,13 @@ export function ScheduleView({
           </ScrollArea>
         </aside>
         <div className="flex min-w-0 flex-1 flex-col bg-board">
-          <div className="flex items-center gap-2 border-b bg-background px-4 py-2">
-            <h2 className="text-sm font-semibold">{term.label}</h2>
-            <span className="mono text-xs text-muted-foreground">{fmtCredits(semesterCredits(plan.schedule, term.id))} cr</span>
-            <div className="flex-1" />
+          <div className="flex items-center gap-3 border-b bg-background px-4 py-2">
+            <h2 className="shrink-0 text-sm font-semibold">{term.label}</h2>
+            <span className="mono shrink-0 text-xs text-muted-foreground">{fmtCredits(semesterCredits(plan.schedule, term.id))} cr</span>
+            {/* Switch plans right here to compare their weeks. */}
+            <div className="min-w-0 flex-1">
+              <PlanTabs snap={snap} compact />
+            </div>
             {toolbar}
           </div>
           <ScrollArea className="min-h-0 flex-1 [&>[data-slot=scroll-area-viewport]>div]:!block">
@@ -202,6 +207,7 @@ export function ScheduleView({
     <ScrollArea className="h-full [&>[data-slot=scroll-area-viewport]>div]:!block">
       <div className="min-w-0 space-y-4 p-3 pb-8">
         <div className="space-y-2">
+          <PlanTabs snap={snap} compact />
           {termSelect}
           {toolbar}
           {intro}

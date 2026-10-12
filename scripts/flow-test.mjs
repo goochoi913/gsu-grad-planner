@@ -40,7 +40,10 @@ async function open({ mobile = false, fixture = FIXTURE, live = null, tall = fal
     liveCalls++
     return r.fulfill({ status: 200, contentType: 'application/json', body: live ? JSON.stringify(live) : BUNDLED })
   })
+  // A fresh device per test; a reload within the test keeps this device's settings.
   await ctx.addInitScript((f) => {
+    if (sessionStorage.getItem('flow-test')) return
+    sessionStorage.setItem('flow-test', '1')
     localStorage.clear()
     localStorage.setItem('bee-planner:fixture', f)
   }, fixture)
@@ -60,6 +63,11 @@ async function open({ mobile = false, fixture = FIXTURE, live = null, tall = fal
   return { ctx, page, errs, snap, plan, overflow, toastText, clearToasts, firebaseCalls: () => firebaseCalls, liveCalls: () => liveCalls }
 }
 const wait = (page, ms = 350) => page.waitForTimeout(ms)
+/** Completed terms start hidden; this shows them (the Show button under the plan). */
+const showPast = async (page) => {
+  const btn = page.locator('section[aria-label="Completed terms"] button[aria-pressed=false]', { hasText: 'Show' })
+  if (await btn.count()) { await btn.click(); await wait(page, 300) }
+}
 /** Taps a section card on its "Section N" label (the professor's name inside it opens their ratings). */
 const pick = (scope, crn) => scope.locator(`[role=radio][data-crn="${crn}"]`).getByText(/^Section \d+$/).click()
 const term = (page, id) => page.locator(`section[data-term="${id}"]`)
@@ -78,6 +86,9 @@ const courseIds = (plan, id) => (plan.schedule[id] || []).map((e) => e.courseId)
   ok('Spring 2027 shows 17/18 credits', /17\/18 cr/.test(await term(page, 'spring2027').locator('header').innerText()))
   ok('a term over 18 credits is flagged (Fall 2027 holds 20)', /20\/18 cr/.test(await term(page, 'fall2027').locator('header').innerText()) && (await term(page, 'fall2027').getAttribute('class')).includes('border-destructive'))
   ok('six Degree Works meters in the rail', (await page.locator('[aria-label="Degree progress"] button[data-block]').count()) === 6)
+  ok('completed terms are hidden when the app opens (a clean board)', (await page.locator('section[aria-label$="(completed)"]').count()) === 0 && /Show/.test(await page.locator('section[aria-label="Completed terms"]').innerText()))
+  await showPast(page)
+  ok('  … Show brings them back', (await page.locator('section[aria-label$="(completed)"]').count()) > 0)
   ok('the latest completed term is expanded, earlier ones are chips', (await page.locator('section[aria-label="Fall 2025 (completed)"] li').count()) > 0 && (await page.locator('section[aria-label="Fall 2023 (completed)"] li').count()) === 0)
   ok('no horizontal overflow at 1440px', (await t.overflow()) <= 1)
   ok('plan rows lead with the course name, then the code', /^Software Development \(CTW\)\s*\n?CSC 3350/.test((await term(page, 'spring2027').locator('li[role=button]', { hasText: 'CSC 3350' }).innerText()).trim()))
@@ -360,6 +371,7 @@ async function drag(page, fromSel, toSel, { dy = 0, hold = 150 } = {}) {
   await t.clearToasts()
 
   // completed terms are locked
+  await showPast(page)
   drop = await drag(page, row('fall2027', 0), 'section[aria-label$="(completed)"] >> nth=0')
   await drop()
   ok('a completed term refuses a drop', /finished/.test(await t.toastText()))
@@ -443,6 +455,36 @@ async function drag(page, fromSel, toSel, { dy = 0, hold = 150 } = {}) {
   await t.ctx.close()
 }
 
+/* ── completed terms on open; plans from the Schedule header ─────────────── */
+{
+  const t = await open({ fixture: JSON.stringify({ ...JSON.parse(FIXTURE), plans: [{ id: 'pdemoalt1', name: 'Other plan', plan: { version: 6, lastTermId: 'fall2027', schedule: { spring2027: [{ courseId: 'CSC3350', blocks: [], sections: { CSC3350: '17252' } }] } } }] }) })
+  const { page } = t
+  await showPast(page)
+  ok('Show is for this visit…', (await page.locator('section[aria-label$="(completed)"]').count()) > 0)
+  await page.reload({ waitUntil: 'load' })
+  await page.waitForSelector('section[data-term]')
+  await wait(page, 300)
+  ok('  … they’re hidden again the next time the app opens', (await page.locator('section[aria-label$="(completed)"]').count()) === 0)
+  await page.locator('button[aria-label="Settings"]').click()
+  await page.locator('#show-past').click()
+  await page.keyboard.press('Escape')
+  await wait(page, 300)
+  await page.reload({ waitUntil: 'load' })
+  await page.waitForSelector('section[data-term]')
+  await wait(page, 300)
+  ok('  … unless Settings says to show them on open', (await page.locator('section[aria-label$="(completed)"]').count()) > 0)
+
+  await page.getByRole('radio', { name: /Schedule/ }).click()
+  await wait(page, 500)
+  const header = page.locator('main [data-plan-tabs]').first()
+  ok('the Schedule view has the plan tabs right above the week', (await header.locator('[role=tab]').allInnerTexts()).join('|') === 'Eunbee’s plan|Other plan')
+  await header.locator('[role=tab]', { hasText: 'Other plan' }).click()
+  await wait(page, 500)
+  ok('  … and switching there changes the week shown', (await page.locator('[role=list][aria-label="Monday"] [role=listitem]').count()) === 1 && /Software Development/.test(await page.locator('[role=list][aria-label="Monday"]').innerText()))
+  ok('no page errors', t.errs.length === 0, t.errs)
+  await t.ctx.close()
+}
+
 /* ── the record, final grades, GPA, exceptions ─────────────────────────── */
 {
   const t = await open()
@@ -504,6 +546,9 @@ async function drag(page, fromSel, toSel, { dy = 0, hold = 150 } = {}) {
   const s = await t.snap()
   ok('finishing a term moves it into the record', s.record.terms.some((x) => x.id === 'spring2027' && x.courses.length === n))
   ok('  … and planning continues from Summer 2027', s.semesters[0].id === 'summer2027')
+  await page.keyboard.press('Escape')
+  await wait(page, 400)
+  await showPast(page)
   ok('  … and the board shows it as a completed term', (await page.locator('section[aria-label="Spring 2027 (completed)"]').count()) === 1)
   ok('no page errors in the record flows', t.errs.length === 0, t.errs)
   await t.ctx.close()

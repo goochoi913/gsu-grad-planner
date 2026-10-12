@@ -14,8 +14,8 @@ export interface Prefs {
   auditOpen: boolean
   /** Calendar: the whole week, or one day at a time. */
   calendarMode: 'week' | 'day'
-  /** Show completed terms on the board. */
-  showPast: boolean
+  /** Show completed terms when the app opens (off: the board opens on the plan alone; Show/Hide on the board is for this visit). */
+  showPastOnOpen: boolean
 }
 
 const KEY = 'bee-planner:prefs'
@@ -26,13 +26,15 @@ const DEFAULTS: Prefs = {
   libraryOpen: true,
   auditOpen: true,
   calendarMode: 'week',
-  showPast: true,
+  showPastOnOpen: false,
 }
 
 function read(): Prefs {
   try {
     const raw = localStorage.getItem(KEY)
-    return raw ? { ...DEFAULTS, ...(JSON.parse(raw) as Partial<Prefs>) } : DEFAULTS
+    // `showPast` (always shown before) became showPastOnOpen, off by default — older devices start clean too.
+    const { showPast: _old, ...stored } = raw ? (JSON.parse(raw) as Partial<Prefs> & { showPast?: boolean }) : {}
+    return { ...DEFAULTS, ...stored }
   } catch {
     return DEFAULTS
   }
