@@ -226,9 +226,9 @@ export function LibraryPanel({
               <span className="mono ml-auto text-[10.5px] text-muted-foreground">{g.badge}</span>
             </div>
             {g.subgroups.map((s, i) => (
-              <div key={i}>
+              <div key={i} className="px-2.5 pt-2 pb-1 last:pb-2.5">
                 {s.title && (
-                  <div className="flex items-center gap-1.5 bg-muted/50 px-3 py-1 text-[11px] text-muted-foreground">
+                  <div className="flex items-center gap-1.5 px-1 pb-1.5 text-[11px] text-muted-foreground">
                     <span className="min-w-0 flex-1 truncate">{s.title}</span>
                     {s.note && (
                       <Hint label={s.note}>
@@ -237,7 +237,7 @@ export function LibraryPanel({
                     )}
                   </div>
                 )}
-                <div className="divide-y">
+                <div className="space-y-1.5">
                   {s.courses.map((c) => (
                     <LibraryRow key={c.id} course={c} need={needs.get(c.id)!} snap={snap} targetTerm={targetTerm} springLabel={springLabel} onAfterAdd={onAfterAdd} />
                   ))}
@@ -372,7 +372,8 @@ function LibraryRow({
           data-course={course.id}
           data-need={need.why}
           className={cn(
-            'group flex items-start gap-2 border-l-[3px] px-3 py-2 transition-colors hover:bg-accent/60 focus-visible:bg-accent focus-visible:outline-none',
+            // A card like the ones in the terms: inset from the panel's edges, the category colour on its left.
+            'group flex items-start gap-2 rounded-lg border border-l-[3px] bg-card px-2.5 py-2 shadow-xs transition-colors hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none',
             CATEGORY[categoryOfSection(course)].edge,
             canDrag && 'cursor-grab',
             need.why === 'covered' && 'opacity-60',
@@ -380,7 +381,7 @@ function LibraryRow({
           )}
         >
           <div className="min-w-0 flex-1 space-y-0.5">
-            <div className="truncate text-[13px] leading-snug font-medium">{course.title}</div>
+            <div className="truncate text-[13px] leading-snug font-semibold">{course.title}</div>
             <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-muted-foreground">
               <span className="mono">{course.code}</span>
               <span className="mono">{course.credits} cr</span>
