@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { useDraggable, useDroppable } from '@dnd-kit/core'
-import { LuCheck, LuInfo, LuLock, LuPlus, LuRepeat, LuSearch } from 'react-icons/lu'
+import { LuInfo, LuLock, LuPlus, LuRepeat, LuSearch } from 'react-icons/lu'
 import { COURSES, FOS_NOTE, RPE_NOTE } from '@/data/degree'
 import type { CatalogCourse, TermId } from '@/lib/types'
-import { RECORD_STATUS, SEASONS, SEASON_META, conditionLabel, fmtCredits, isCourseDone, offeringInfo, round2 } from '@/lib/planner'
-import { blockMeter, cleanDescription, coveredBy, failedAttempts, lastPassingAttempt, scheduledIn, semesterCredits, unmetPrereqsGlobal } from '@/lib/plan-ops'
+import { RECORD_STATUS, SEASONS, SEASON_META, conditionLabel, fmtCredits, offeringInfo, round2 } from '@/lib/planner'
+import { blockMeter, cleanDescription, coveredBy, failedAttempts, scheduledIn, semesterCredits, unmetPrereqsGlobal } from '@/lib/plan-ops'
 import { SCHEDULE_TERM_ID, scheduleFor, sectionCount, useScheduleVersion } from '@/lib/schedule'
 import { NEED_TEXT, courseNeed, type CourseNeed } from '@/lib/relevance'
 import { addCourse, type PlannerSnapshot } from '@/lib/store'
@@ -24,7 +24,7 @@ export interface LibraryFilter {
   q: string
   group: 'all' | 'major' | 'elective' | 'core' | 'rpe'
   toggles: string[]
-  /** needed: only what she still needs (the plan, and options for open requirements) · all: every option */
+  /** needed: options for requirements still open · all: every option. Courses in the plan or passed are never listed. */
   scope: 'needed' | 'all'
 }
 export const EMPTY_FILTER: LibraryFilter = { q: '', group: 'all', toggles: [], scope: 'needed' }
@@ -56,6 +56,7 @@ export function LibraryPanel({
   onAfterAdd?: () => void
 }) {
   const dnd = useCourseDnd()
+  const ui = useUi()
   // Drop a planned course here to take it out of the plan.
   const { setNodeRef } = useDroppable({ id: 'library', data: { kind: 'library' } })
   const dropOver = dnd.over === 'library'
@@ -112,18 +113,22 @@ export function LibraryPanel({
   const version = useScheduleVersion()
   const needs = useMemo(() => new Map(COURSES.map((c) => [c.id, courseNeed(c, snap)])), [snap, version]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const words = filter.q.trim().toLowerCase().split(/\s+/).filter(Boolean)
+  const matches = (c: CatalogCourse) => {
+    if (!words.length) return true
+    const hay = `${c.title} ${c.code} ${c.parts.map((p) => p.code).join(' ')} ${c.description}`.toLowerCase().replace(/\s+/g, ' ')
+    const compact = hay.replace(/ /g, '')
+    return words.every((w) => hay.includes(w) || compact.includes(w))
+  }
   const filterBy = (scope: LibraryFilter['scope']) => {
-    const words = filter.q.trim().toLowerCase().split(/\s+/).filter(Boolean)
     const springOnly = filter.toggles.includes('spring')
     const keep = (c: CatalogCourse) => {
       const need = needs.get(c.id)!
-      if (need.why === 'unavailable') return false
+      // Only what's left to place: a course in the plan (or already passed) is on the board, not here.
+      if (need.why === 'unavailable' || need.why === 'planned' || need.why === 'done') return false
       if (scope === 'needed' && !need.needed) return false
       if (springOnly && !sectionCount(c, SCHEDULE_TERM_ID)) return false
-      if (!words.length) return true
-      const hay = `${c.title} ${c.code} ${c.parts.map((p) => p.code).join(' ')} ${c.description}`.toLowerCase().replace(/\s+/g, ' ')
-      const compact = hay.replace(/ /g, '')
-      return words.every((w) => hay.includes(w) || compact.includes(w))
+      return matches(c)
     }
     return groups
       .filter((g) => filter.group === 'all' || g.key === filter.group)
@@ -136,6 +141,11 @@ export function LibraryPanel({
 
   const count = countOf(visible)
   const more = filter.scope === 'needed' ? allCount - count : 0
+  const unfiltered = !words.length && filter.group === 'all' && !filter.toggles.length
+  // A search for a course that's already in the plan says where it is.
+  const placed = words.length
+    ? COURSES.filter((c) => needs.get(c.id)!.why === 'planned' && matches(c)).map((c) => ({ course: c, sem: snap.semesters.find((s) => s.id === scheduledIn(snap.semesters, snap.plan.schedule, c.id))! }))
+    : []
 
   return (
     <div ref={setNodeRef} className={cn('relative flex h-full min-h-0 flex-col bg-sidebar', dropOver && 'ring-2 ring-primary/40 ring-inset')}>
@@ -238,16 +248,36 @@ export function LibraryPanel({
         ))}
         {!count && (
           <div className="space-y-2 p-6 text-center">
-            <p className="text-sm text-muted-foreground">{more ? 'Nothing she still needs matches.' : 'Nothing matches.'}</p>
+            <p className="text-sm text-muted-foreground">
+              {filter.scope === 'needed' && unfiltered ? 'Everything she needs is in the plan.' : more ? 'Nothing she still needs matches.' : 'Nothing matches.'}
+            </p>
             {more > 0 ? (
               <Button variant="outline" size="sm" onClick={() => setFilter({ ...filter, scope: 'all' })}>
                 Show {more} other option{more === 1 ? '' : 's'}
               </Button>
             ) : (
-              <Button variant="outline" size="sm" onClick={() => setFilter(EMPTY_FILTER)}>
-                Clear filters
-              </Button>
+              !unfiltered && (
+                <Button variant="outline" size="sm" onClick={() => setFilter(EMPTY_FILTER)}>
+                  Clear filters
+                </Button>
+              )
             )}
+          </div>
+        )}
+        {placed.length > 0 && (
+          <div className="space-y-1 border-t px-3 py-2.5 text-[11px] text-muted-foreground" data-placed>
+            <div>Already in the plan</div>
+            {placed.map(({ course, sem }) => (
+              <button
+                key={course.id}
+                type="button"
+                className="flex w-full items-center gap-2 rounded-sm text-left hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
+                onClick={() => ui.openCourse(course.id, sem.id)}
+              >
+                <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-foreground/80">{course.title}</span>
+                <span className="mono shrink-0">{sem.shortLabel}</span>
+              </button>
+            ))}
           </div>
         )}
       </ScrollArea>
@@ -312,16 +342,13 @@ function LibraryRow({
   onAfterAdd?: () => void
 }) {
   const ui = useUi()
-  const done = isCourseDone(course.id)
-  const inSem = done ? null : scheduledIn(snap.semesters, snap.plan.schedule, course.id)
-  const sem = inSem ? snap.semesters.find((s) => s.id === inSem) : null
+  // (Only courses not yet in the plan or passed are listed.)
   // Drag into a term (on a computer); on a phone the list is a sheet over the plan, so the + button adds.
-  const canDrag = !done && !ui.isMobile
+  const canDrag = !ui.isMobile
   const { setNodeRef, attributes, listeners, isDragging } = useDraggable({ id: `lib:${course.id}`, data: { kind: 'lib', courseId: course.id }, disabled: !canDrag })
-  const unmet = done ? [] : unmetPrereqsGlobal(snap.semesters, snap.plan.schedule, course.id)
+  const unmet = unmetPrereqsGlobal(snap.semesters, snap.plan.schedule, course.id)
   const covered = need.why === 'covered' ? coveredBy(course, snap.audit) || NEED_TEXT.covered : ''
-  const retake = done ? [] : failedAttempts(course.id)
-  const passed = done ? lastPassingAttempt(course.id) : null
+  const retake = failedAttempts(course.id)
   const sections = sectionCount(course, SCHEDULE_TERM_ID)
   const target = snap.semesters.find((s) => s.id === targetTerm) ?? null
 
@@ -335,11 +362,11 @@ function LibraryRow({
           {...(canDrag ? listeners : {})}
           role="button"
           tabIndex={0}
-          onClick={() => { if (!justDragged()) ui.openCourse(course.id, inSem) }}
+          onClick={() => { if (!justDragged()) ui.openCourse(course.id) }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault()
-              ui.openCourse(course.id, inSem)
+              ui.openCourse(course.id)
             }
           }}
           data-course={course.id}
@@ -347,8 +374,8 @@ function LibraryRow({
           className={cn(
             'group flex items-start gap-2 border-l-[3px] px-3 py-2 transition-colors hover:bg-accent/60 focus-visible:bg-accent focus-visible:outline-none',
             CATEGORY[categoryOfSection(course)].edge,
-            !done && !ui.isMobile && 'cursor-grab',
-            (done || need.why === 'covered') && 'opacity-60',
+            canDrag && 'cursor-grab',
+            need.why === 'covered' && 'opacity-60',
             isDragging && 'opacity-40',
           )}
         >
@@ -357,14 +384,7 @@ function LibraryRow({
             <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-muted-foreground">
               <span className="mono">{course.code}</span>
               <span className="mono">{course.credits} cr</span>
-              {!done && <SeasonLetters course={course} />}
-              {done && (
-                <span className="inline-flex items-center gap-1 font-medium text-green-700 dark:text-green-400">
-                  <LuCheck className="size-3" aria-hidden />
-                  {passed?.rec.grade || 'Done'}
-                  {passed && <span className="mono">· {passed.term.shortLabel}</span>}
-                </span>
-              )}
+              <SeasonLetters course={course} />
               {covered && (
                 <Hint label={covered}>
                   <span>not needed</span>
@@ -384,16 +404,14 @@ function LibraryRow({
                   </span>
                 </Hint>
               )}
-              {!done && springLabel && sections > 0 && (
+              {springLabel && sections > 0 && (
                 <span className="mono">
                   {sections} sec · {springLabel}
                 </span>
               )}
             </div>
           </div>
-          {sem ? (
-            <span className="mono mt-0.5 shrink-0 rounded-md bg-secondary px-1.5 py-0.5 text-[10px] text-secondary-foreground">{sem.shortLabel}</span>
-          ) : !done && target ? (
+          {target && (
             <Hint label={`Add to ${target.label}`}>
               <Button
                 size="icon"
@@ -408,7 +426,7 @@ function LibraryRow({
                 <LuPlus className="size-4" aria-hidden />
               </Button>
             </Hint>
-          ) : null}
+          )}
         </div>
       </HoverCardTrigger>
       {!ui.isMobile && (
