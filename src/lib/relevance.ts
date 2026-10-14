@@ -4,8 +4,8 @@
  * already covers, and catalog courses GSU hasn't offered in years and hasn't scheduled.
  *
  * Worked out at runtime from the record and the plan (both in Firebase), so nothing about her
- * history is built into the site. Removing a course from the plan reopens its requirement, and
- * the alternatives come back on their own.
+ * history lives in this public repository. Removing a course from the plan reopens its
+ * requirement, and the alternatives come back on their own.
  */
 import type { CatalogCourse } from '@/lib/types'
 import { BLOCK_BY_KEY, courseCodes, isCourseDone, lineAccepts, subjectLevel, type Audit, type AuditUnit, type LineResult } from '@/lib/planner'

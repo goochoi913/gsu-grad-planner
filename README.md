@@ -94,12 +94,13 @@ minutes while open, and whenever a class's sections open, and swaps it in when i
 
 The app's own files don't change between refreshes, so the installed PWA never has to update for
 new seat counts, and the service worker never caches the file. If GSU's site is down, the app keeps
-the committed schedule. GitHub pauses scheduled jobs after 60 days without a commit; re-enable it
-from the Actions tab if that happens (GitHub sends an email first).
+the committed schedule. GitHub pauses scheduled jobs in a public repository after 60 days without a
+commit; re-enable it from the Actions tab if that happens (GitHub sends an email first).
 
 GitHub runs scheduled jobs on a best-effort basis: they can start late, be skipped, or not start at
-all for a newly added schedule. To refresh the seats by hand, open **Actions → Publish the site →
-Run workflow** (or `gh workflow run deploy.yml`); the new numbers are live about two minutes later.
+all for a newly added schedule. To refresh the seats by hand, open **Actions → Deploy to GitHub
+Pages → Run workflow** (or `gh workflow run deploy.yml`); the new numbers are live about two minutes
+later.
 
 ## Firebase
 
@@ -140,22 +141,9 @@ npm run build          # type-check and build to dist/
 
 ## Deploying
 
-This repository (`gsu-grad-planner-src`) is private, and GitHub Pages needs a public repository on a
-free account, so the two are split:
-
-| | |
-|---|---|
-| `goochoi913/gsu-grad-planner-src` | private: the source, the history, the schedule CSVs and this README |
-| `goochoi913/gsu-grad-planner` | public: **only** `dist` — the files a browser downloads anyway. Pages serves it at the usual URL |
-
-`.github/workflows/deploy.yml` runs the logic tests, fetches live seat counts, builds, and pushes
-`dist` to the public repository on every push to `main` and every 30 minutes in registration season.
-It pushes over an SSH deploy key (write access on the public repository, stored here as the
-`SITE_DEPLOY_KEY` secret) and replaces that repository's single commit, so it never grows. Pages is
-set to **Deploy from a branch: `main` /** there, and takes about a minute to go live.
-
-Production builds carry no source maps (`vite.config.ts`), since a source map would publish every
-file in `src/` alongside the bundle. The site is a PWA: a service worker caches the app so it opens
+`.github/workflows/deploy.yml` runs the logic tests, fetches live seat counts, builds, and publishes
+to GitHub Pages on every push to `main` and every 30 minutes in registration season (Settings →
+Pages → Source: **GitHub Actions**). The site is a PWA: a service worker caches the app so it opens
 fast and updates itself on the next visit after a code change.
 
 ## Project layout

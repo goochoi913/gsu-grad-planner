@@ -1,5 +1,5 @@
 # Personal academic records (degree evaluations, transcripts) — never publish:
-# the built site, and anything in it, is public at goochoi913.github.io/gsu-grad-planner/.
+# this repository and its GitHub Pages site are public.
 *.pdf
 
 # Academic record files stay local — the app keeps the record only in Firebase

@@ -49,9 +49,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    // No source maps: the built site is published to a public repository, and a source map
-    // would carry every file in src/ with it. `npm run dev` still has full maps.
-    sourcemap: false,
+    sourcemap: true,
     // The Spring 2027 schedule and the professors' ratings ship inside the main bundle (~440 kB of JSON).
     chunkSizeWarningLimit: 1600,
   },

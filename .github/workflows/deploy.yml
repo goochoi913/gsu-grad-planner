@@ -1,4 +1,4 @@
-name: Publish the site
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -11,14 +11,16 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
-# Let a running publish finish rather than cancelling it mid-push.
+# Let a running deploy finish rather than cancelling it mid-publish.
 concurrency:
-  group: publish
+  group: pages
   cancel-in-progress: false
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,32 +46,16 @@ jobs:
       - name: Build
         run: npm run build
 
-      # GitHub Pages needs a public repository, and this one is private, so only the built site —
-      # the same files a browser downloads, no source, history or notes — goes to the public
-      # goochoi913/gsu-grad-planner, which Pages serves at the usual URL. Each publish replaces
-      # that repository's single commit, so it stays as small as one copy of the site.
-      - name: Publish the built site
-        env:
-          DEPLOY_KEY: ${{ secrets.SITE_DEPLOY_KEY }}
-        run: |
-          install -m 700 -d ~/.ssh
-          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts
-          git clone --depth 1 git@github.com:goochoi913/gsu-grad-planner.git site
-          find site -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp -R dist/. site/
-          touch site/.nojekyll
-          cd site
-          git add -A
-          if git diff --cached --quiet; then
-            echo "The built site is unchanged — nothing to publish."
-            exit 0
-          fi
-          git checkout -q --orphan published
-          git add -A
-          git -c user.name='github-actions[bot]' \
-              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
-              commit -q -m "Built site from ${GITHUB_SHA:0:7}"
-          git push -q --force origin published:main
-          echo "Published https://goochoi913.github.io/gsu-grad-planner/ — Pages builds it in about a minute."
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
